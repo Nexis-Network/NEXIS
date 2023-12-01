@@ -1,146 +1,140 @@
-# Exzo Network
-**Chain Specs**
-* Native Token Name - Nexis
-* Symbol - NZT
-* Supply - 420 Million
-* Block finality - ~400ms
-* Consensus - Delegated Proof-of-Stake (DPoS)
-* P2P Port - 
-* JSON-RPC Port - 8899
-* ChainID Mainnet - 1229
-* ChainID Testnet -  2370
-* Ethereum Virtual Machine (EVM) Compatible
 
-**Official Links**
-* Website - https://nexis.network
-* Main Explorer - https://nexscan.io
-* Test Explorer - https://testnet.exzoscan.io
-* RPC Mainnet - https://rpc-main-1.nexis.network
-* RPC Testnet - https://rpc-test-1.nexis.network
-* Twitter - https://twitter.com/exzo_network
-* Telegram - https://t.me/Nexis_Network
+# Nexis Network - Readme
 
-## About the Nexis Network 
-* Nexis Network uses a modular architecture and provides Ethereum compatibility.
-* Users able to interact with industry standard wallets through JSON-RPC.
-* Develop with Solidity/Vyper, full EVM support.
-* Build using widely-adopted Ethereum tooling, libraries and development tools.
-* Streamlined UX when doing cross-chain operations.
-* Go beyond Ethereum’s Smart Contracts with Runtime plugins.
+## Chain Specifications
 
-The Nexis Network Token (NZT) features the following utilities, and the value of NZT token will accrue with the increased usage of the network and revenue from stability fees and liquidation penalties.
+- **Native Token**: Nexis (NZT)
+- **Symbol**: NZT
+- **Total Supply**: 420 Million
+- **Block Finality**: Approx. 400ms
+- **Consensus Mechanism**: Delegated Proof-of-Stake (DPoS)
+- **Networking Ports**: P2P (TBD), JSON-RPC (8899)
+- **Chain IDs**: Mainnet (1229), Testnet (2370)
+- **EVM Compatibility**: Fully compatible with Ethereum Virtual Machine
 
-* As Network Utility Token: to pay for network fees and stability fees.
-* As Governance Token: to vote for/against risk parameters and network change proposals.
-* As Economic Capital: in case of liquidation without sufficient collaterals.
-* As fee reducing token on decentralized applications and wallets upon the Exzo Network.
-* For staking to help secure the Nexis Network in a decentralized fashion.
+## Official Resources
 
-Cross-Chain Communication
-* Completely trustless and decentralized built-in Ethereum Bridge solution.
-* Transfer assets to and from any EVM compatible network, most notably Nexis Network and Ethereum mainnets.
-* Transfer ERC-20 tokens, NFTs or wrapped native currencies.
-* Customize the bridge functionality using Bridge plugins.
+- **Website**: [nexis.network](https://nexis.network)
+- **Blockchain Explorers**: [Mainnet Explorer](https://evm.nexiscan.io), [Testnet Explorer](https://testnet.nexiscan.io)
+- **RPC Endpoints**: [Mainnet](https://rpc-main-1.nexis.network), [Testnet](https://rpc-test-1.nexis.network), 
+- **Social Media**: [Twitter](https://twitter.com/exzo_network), [Telegram](https://t.me/Nexis_Network)
+- **Testnet Faucet**: [Faucet](https://evm-faucet.nexis.network)
 
-## Building
+## Key Features
 
-### **1. Install rustc, cargo and rustfmt.**
+- Modular architecture for scalability and adaptability.
+- Ethereum compatibility allows interaction with Ethereum wallets and tools via JSON-RPC.
+- Development support in Solidity/Vyper with full EVM integration.
+- Streamlined cross-chain operations for improved user experience.
+- Extend beyond Ethereum's capabilities with Runtime plugins.
 
-```bash
-$ curl https://sh.rustup.rs -sSf | sh
-$ source $HOME/.cargo/env
-$ rustup component add rustfmt
-```
+## NZT Token Utilities
 
-Please sure you are always using the latest stable rust version by running:
+- **Network Fees**: Used to pay transaction and stability fees.
+- **Governance**: Token holders can vote on network proposals.
+- **Economic Capital**: Utilized in liquidations.
+- **Discounts**: Fee reductions on DApps and wallets.
+- **Staking**: Secure the network through staking.
 
-```bash
-$ rustup update
-```
+## Cross-Chain Communication
 
-On Linux systems you may need to install libssl-dev, pkg-config, zlib1g-dev, etc.  On Ubuntu:
+- Trustless, decentralized Ethereum bridge for asset transfers.
+- Supports ERC-20 tokens, NFTs, and wrapped currencies.
+- Customizable bridge functionalities with plugins.
 
-```bash
-$ sudo apt-get update
-$ sudo apt-get install libssl-dev libudev-dev pkg-config zlib1g-dev llvm clang make cmake protobuf-compiler
-```
+## Development Guide
 
-On Mac M1s, make sure you set up your terminal & homebrew [to use](https://5balloons.info/correct-way-to-install-and-use-homebrew-on-m1-macs/) Rosetta. You can install it with:
+### Environment Setup
 
-```bash
-$ softwareupdate --install-rosetta
-```
+Follow these steps to set up your development environment:
 
-### **2. Download the source code.**
+1. **Install Rust and Dependencies**:
 
-```bash
-$ git clone https://github.com/ExzoNetwork/exzocoin.git
-$ cd exzocoin
-```
+   - Run the following command to install Rust and its dependencies:
+     ```bash
+     curl https://sh.rustup.rs -sSf | sh
+     source $HOME/.cargo/env
+     rustup component add rustfmt
+     rustup update
+     ```
 
-### **3. Build.**
+   - Additional Linux dependencies (Ubuntu):
+     ```bash
+     sudo apt-get update
+     sudo apt-get install libssl-dev libudev-dev pkg-config zlib1g-dev llvm clang make cmake protobuf-compiler
+     ```
 
-```bash
-$ cargo build
-```
+   - On Mac M1, install Rosetta:
+     ```bash
+     softwareupdate --install-rosetta
+     ```
 
-### **4. Run a minimal local cluster.**
-```bash
-$ ./run.sh
-```
+2. **Download and Build Source Code**:
 
-## Testing
+   - Clone the repository:
+     ```bash
+     git clone https://github.com/Nexis-Network/NEXIS.git
+     cd nexis
+     ```
 
-**Run the test suite:**
+   - Build the source code:
+     ```bash
+     cargo build
+     ```
 
-```bash
-$ cargo test --no-fail-fast
-```
+3. **Run a Local Cluster**:
 
-#### EVM integration
-Info about EVM integration is at our [docs](https://docs.exzo.technology/evm).
+   - Start a local cluster by running the following command:
+     ```bash
+     ./run.sh
+     ```
 
-#### Starting a local testnet
-Start your own Development network locally, instructions are in the [online docs](https://docs.exzo.technology/cluster/bench-tps).
+### Testing and Benchmarking
 
-#### Accessing the remote testnet and mainnet
-* `testnet` - public accessible via bootstrap.rpc-test-1.nexis.network.
-* `mainnet` - public accessible via bootstrap.exzo.technology.
+- **Run Tests**:
 
-## Benchmarking
+  - Execute the following command to run tests:
+    ```bash
+    cargo test --no-fail-fast
+    ```
 
-First install the nightly build of rustc. `cargo bench` requires use of the
-unstable features only available in the nightly build.
+- **EVM Integration and Local Testnet**:
 
-```bash
-$ rustup install nightly
-```
+  - Refer to the documentation at [docs.nexis.network/evm](https://docs.nexis.network/evm) for information on EVM integration and setting up a local testnet.
 
-Run the benchmarks:
+- **Benchmarking**:
 
-```bash
-$ cargo +nightly bench
-```
+  - Install the nightly Rust build:
+    ```bash
+    rustup install nightly
+    ```
 
-## Release Process
+  - Execute benchmarks:
+    ```bash
+    cargo +nightly bench
+    ```
 
-The release process for this project is described [here](RELEASE.md).
+### Troubleshooting
 
-## Copyright
----
-```
-Copyright 2022-2023 Exzo Network
+If you encounter any issues during the setup or development process, consider the following troubleshooting steps:
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+- Make sure you have installed all the required dependencies as mentioned in the environment setup section.
 
-       http://www.apache.org/licenses/LICENSE-2.0
+- Check if your Rust installation is up to date by running:
+  ```bash
+  rustup update
+  ```
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
----
+- If you are facing issues with building the source code, ensure that you have the necessary build tools and libraries installed.
+
+- For any specific errors or problems, refer to the project's issue tracker or community forums for assistance.
+
+## Release and Copyright
+
+- **Release Process**: Described in [RELEASE.md](RELEASE.md).
+- **Copyright**: 
+  ```
+  Copyright 2023-2024 Nexis Network
+  Licensed under the Apache License, Version 2.0.
+  Full license at http://www.apache.org/licenses/LICENSE-2.0
+  ```
