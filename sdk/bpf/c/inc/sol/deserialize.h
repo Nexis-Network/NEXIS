@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @brief Solana BPF loader deserializer to be used when deploying
+ * @brief Nexis BPF loader deserializer to be used when deploying
  * a program with `BPFLoader2111111111111111111111111111111111` or
  * `BPFLoaderUpgradeab1e11111111111111111111111`
  */
@@ -32,7 +32,7 @@ extern "C" {
  * @param params Pointer to a SolParameters structure
  * @return Boolean true if successful.
  */
-static bool sol_deserialize(
+static bool nzt_deserialize(
   const uint8_t *input,
   SolParameters *params,
   uint64_t ka_num

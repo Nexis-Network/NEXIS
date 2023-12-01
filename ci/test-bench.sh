@@ -23,7 +23,7 @@ fi
 BENCH_FILE=bench_output.log
 BENCH_ARTIFACT=current_bench_results.log
 
-# solana-keygen required when building C programs
+#nexis-keygen required when building C programs
 _ "$cargo" build --manifest-path=keygen/Cargo.toml
 export PATH="$PWD/target/debug":$PATH
 
@@ -63,12 +63,12 @@ _ "$cargo" nightly bench --manifest-path programs/bpf/Cargo.toml ${V:+--verbose}
 
 # Run banking/accounts bench. Doesn't require nightly, but use since it is already built.
 _ "$cargo" nightly run --release --manifest-path banking-bench/Cargo.toml ${V:+--verbose} | tee -a "$BENCH_FILE"
-_ "$cargo" nightly run --release --manifest-path accounts-bench/Cargo.toml ${V:+--verbose} -- --num_accounts 10000 --num_slots 4 | tee -a "$BENCH_FILE"
+_ "$cargo" nightly run --release --manifest-path accounts-benchmark/Cargo.toml ${V:+--verbose} -- --num_accounts 10000 --num_slots 4 | tee -a "$BENCH_FILE"
 
-# `solana-upload-perf` disabled as it can take over 30 minutes to complete for some
+# `nexis-upload-perf` disabled as it can take over 30 minutes to complete for some
 # reason
 exit 0
-_ "$cargo" nightly run --release --package solana-upload-perf \
+_ "$cargo" nightly run --release --packagenexis-upload-perf \
   -- "$BENCH_FILE" "$TARGET_BRANCH" "$UPLOAD_METRICS" | tee "$BENCH_ARTIFACT"
 
 upload-ci-artifact "$BENCH_FILE"

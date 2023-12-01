@@ -1,11 +1,11 @@
 [package]
-name = "solana-sdk-macro"
+name = "nexis-sdk-macro"
 version = "1.9.29"
-description = "Solana SDK Macro"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-sdk-macro"
+description = "Nexis SDK Macro"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-sdk-macro"
 license = "Apache-2.0"
 edition = "2021"
 

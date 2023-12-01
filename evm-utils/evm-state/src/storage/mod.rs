@@ -353,7 +353,7 @@ impl Storage {
             .map(|v| v.try_into().unwrap_or_default())?)
     }
 
-    // Because solana handle each bank independently.
+    // Because nexishandle each bank independently.
     // We also inherit this behaviour.
     /// Mark slot as removed, also find root_hash that correspond to this bank, and decrement its counter.
     /// Return root_hash if it counter == 0 after removing

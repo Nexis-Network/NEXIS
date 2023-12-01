@@ -1,8 +1,8 @@
 use {
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_poh::poh_recorder::PohRecorder,
-    solana_sdk::{clock::NUM_CONSECUTIVE_LEADER_SLOTS, pubkey::Pubkey},
-    solana_send_transaction_service::tpu_info::TpuInfo,
+    nexis_gossip::cluster_info::ClusterInfo,
+    nexis_poh::poh_recorder::PohRecorder,
+    nexis_sdk::{clock::NUM_CONSECUTIVE_LEADER_SLOTS, pubkey::Pubkey},
+    nexis_send_transaction_service::tpu_info::TpuInfo,
     std::{
         collections::HashMap,
         net::SocketAddr,
@@ -58,22 +58,22 @@ impl TpuInfo for ClusterTpuInfo {
 mod test {
     use {
         super::*,
-        solana_gossip::contact_info::ContactInfo,
-        solana_ledger::{
+        nexis_gossip::contact_info::ContactInfo,
+        nexis_ledger::{
             blockstore::Blockstore, get_tmp_ledger_path, leader_schedule_cache::LeaderScheduleCache,
         },
-        solana_runtime::{
+        nexis_runtime::{
             bank::Bank,
             genesis_utils::{
                 create_genesis_config_with_vote_accounts, GenesisConfigInfo, ValidatorVoteKeypairs,
             },
         },
-        solana_sdk::{
+        nexis_sdk::{
             poh_config::PohConfig,
             signature::{Keypair, Signer},
             timing::timestamp,
         },
-        solana_streamer::socket::SocketAddrSpace,
+        nexis_streamer::socket::SocketAddrSpace,
         std::sync::atomic::AtomicBool,
     };
 
@@ -146,13 +146,13 @@ mod test {
 
             let slot = bank.slot();
             let first_leader =
-                solana_ledger::leader_schedule_utils::slot_leader_at(slot, &bank).unwrap();
+                nexis_ledger::leader_schedule_utils::slot_leader_at(slot, &bank).unwrap();
             assert_eq!(
                 leader_info.get_leader_tpus(1),
                 vec![recent_peers.get(&first_leader).unwrap()]
             );
 
-            let second_leader = solana_ledger::leader_schedule_utils::slot_leader_at(
+            let second_leader = nexis_ledger::leader_schedule_utils::slot_leader_at(
                 slot + NUM_CONSECUTIVE_LEADER_SLOTS,
                 &bank,
             )
@@ -164,7 +164,7 @@ mod test {
             expected_leader_sockets.dedup();
             assert_eq!(leader_info.get_leader_tpus(2), expected_leader_sockets);
 
-            let third_leader = solana_ledger::leader_schedule_utils::slot_leader_at(
+            let third_leader = nexis_ledger::leader_schedule_utils::slot_leader_at(
                 slot + (2 * NUM_CONSECUTIVE_LEADER_SLOTS),
                 &bank,
             )

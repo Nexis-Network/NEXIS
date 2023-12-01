@@ -1,6 +1,6 @@
 use {
-    solana_program_test::{processor, ProgramTest},
-    solana_sdk::{
+    nexis_program_test::{processor, ProgramTest},
+    nexis_sdk::{
         account_info::{next_account_info, AccountInfo},
         entrypoint::ProgramResult,
         instruction::{AccountMeta, Instruction},

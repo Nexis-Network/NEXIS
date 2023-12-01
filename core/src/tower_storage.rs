@@ -2,7 +2,7 @@
 
 use {
     crate::consensus::{Result, Tower, TowerError},
-    solana_sdk::{
+    nexis_sdk::{
         pubkey::Pubkey,
         signature::{Signature, Signer},
     },
@@ -179,7 +179,7 @@ impl EtcdTowerStorage {
 
         Ok(Self {
             client: RwLock::new(client),
-            instance_id: solana_sdk::timing::timestamp().to_le_bytes(),
+            instance_id: nexis_sdk::timing::timestamp().to_le_bytes(),
             runtime,
         })
     }

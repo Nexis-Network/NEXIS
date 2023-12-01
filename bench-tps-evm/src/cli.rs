@@ -1,13 +1,20 @@
+/// This module defines the command-line interface (CLI) for the benchmark tool.
+/// It provides functions for building CLI arguments and extracting the parsed arguments into a `Config` struct.
+/// The `Config` struct holds the configuration for a single run of the benchmark.
+/// The CLI arguments are parsed using the `clap` crate.
+/// The `build_args` function builds the CLI arguments with their descriptions and default values.
+/// The `extract_args` function takes the parsed `ArgMatches` structure and extracts the values into a `Config` struct.
+/// Panics if there is any trouble parsing the arguments.
 use clap::{crate_description, crate_name, App, Arg, ArgMatches};
-use solana_faucet::faucet::FAUCET_PORT;
-use solana_sdk::fee_calculator::FeeRateGovernor;
-use solana_sdk::{
+use nexis_faucet::faucet::FAUCET_PORT;
+use nexis_sdk::fee_calculator::FeeRateGovernor;
+use nexis_sdk::{
     pubkey::Pubkey,
     signature::{read_keypair_file, Keypair},
 };
 use std::{net::SocketAddr, process::exit, time::Duration};
 
-const NUM_LAMPORTS_PER_ACCOUNT_DEFAULT: u64 = solana_sdk::native_token::LAMPORTS_PER_XZO;
+const NUM_LAMPORTS_PER_ACCOUNT_DEFAULT: u64 = nexis_sdk::native_token::LAMPORTS_PER_NZT;
 
 /// Holds the configuration for a single run of the benchmark
 pub struct Config {
@@ -191,14 +198,14 @@ pub fn extract_args(matches: &ArgMatches) -> Config {
     let mut args = Config::default();
 
     if let Some(addr) = matches.value_of("entrypoint") {
-        args.entrypoint_addr = solana_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
+        args.entrypoint_addr = nexis_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
             eprintln!("failed to parse entrypoint address: {}", e);
             exit(1)
         });
     }
 
     if let Some(addr) = matches.value_of("faucet") {
-        args.faucet_addr = solana_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
+        args.faucet_addr = nexis_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
             eprintln!("failed to parse faucet address: {}", e);
             exit(1)
         });

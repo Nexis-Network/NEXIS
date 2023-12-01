@@ -9,16 +9,16 @@ use {
         ThreadPool,
     },
     sha2::{Digest, Sha512},
-    solana_metrics::inc_new_counter_debug,
-    solana_perf::{
+    nexis_metrics::inc_new_counter_debug,
+    nexis_perf::{
         cuda_runtime::PinnedVec,
         packet::{Packet, PacketBatch},
         perf_libs,
         recycler_cache::RecyclerCache,
         sigverify::{self, count_packets_in_batches, TxOffset},
     },
-    solana_rayon_threadlimit::get_thread_count,
-    solana_sdk::{
+    nexis_rayon_threadlimit::get_thread_count,
+    nexis_sdk::{
         clock::Slot,
         pubkey::Pubkey,
         signature::{Keypair, Signature, Signer},
@@ -250,7 +250,7 @@ pub fn verify_shreds_gpu(
     out.set_pinnable();
     elems.push(perf_libs::Elems {
         #[allow(clippy::cast_ptr_alignment)]
-        elems: pubkeys.as_ptr() as *const solana_sdk::packet::Packet,
+        elems: pubkeys.as_ptr() as *const nexis_sdk::packet::Packet,
         num: num_packets as u32,
     });
 
@@ -387,7 +387,7 @@ pub fn sign_shreds_gpu(
     signatures_out.resize(total_sigs * sig_size, 0);
     elems.push(perf_libs::Elems {
         #[allow(clippy::cast_ptr_alignment)]
-        elems: pinned_keypair.as_ptr() as *const solana_sdk::packet::Packet,
+        elems: pinned_keypair.as_ptr() as *const nexis_sdk::packet::Packet,
         num: num_keypair_packets as u32,
     });
 
@@ -458,11 +458,11 @@ pub mod tests {
     use {
         super::*,
         crate::shred::{Shred, Shredder, SIZE_OF_DATA_SHRED_PAYLOAD},
-        solana_sdk::signature::{Keypair, Signer},
+        nexis_sdk::signature::{Keypair, Signer},
     };
 
     fn run_test_sigverify_shred_cpu(slot: Slot) {
-        solana_logger::setup();
+        nexis_logger::setup();
         let mut packet = Packet::default();
         let mut shred = Shred::new_from_data(
             slot,
@@ -508,7 +508,7 @@ pub mod tests {
     }
 
     fn run_test_sigverify_shreds_cpu(slot: Slot) {
-        solana_logger::setup();
+        nexis_logger::setup();
         let mut batches = [PacketBatch::default()];
         let mut shred = Shred::new_from_data(
             slot,
@@ -561,7 +561,7 @@ pub mod tests {
     }
 
     fn run_test_sigverify_shreds_gpu(slot: Slot) {
-        solana_logger::setup();
+        nexis_logger::setup();
         let recycler_cache = RecyclerCache::default();
 
         let mut batches = [PacketBatch::default()];
@@ -625,7 +625,7 @@ pub mod tests {
     }
 
     fn run_test_sigverify_shreds_sign_gpu(slot: Slot) {
-        solana_logger::setup();
+        nexis_logger::setup();
         let recycler_cache = RecyclerCache::default();
 
         let mut packet_batch = PacketBatch::default();
@@ -675,7 +675,7 @@ pub mod tests {
     }
 
     fn run_test_sigverify_shreds_sign_cpu(slot: Slot) {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let mut batches = [PacketBatch::default()];
         let keypair = Keypair::new();

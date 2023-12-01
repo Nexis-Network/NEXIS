@@ -1,13 +1,13 @@
-# Our understanding of solana(native) runtime.
+# Our understanding of nexis(native) runtime.
 
-As a regular blockchain, solana has its transaction format.
+As a regular blockchain, nexishas its transaction format.
 Transaction is data transfer object, that user publish in order to change some data in the shared (among parties) state.
-In solana state is represented as set of accounts. 
+In nexisstate is represented as set of accounts. 
 
 Some blockchains has smart contracts - arbitrary code that can extend blockchain capabilities, and should be executed on blockchain parties.
-Solana names them "programs". Each program has entrypoint, which expects some bytearray, each program decide how they represent this bytearray.
+Nexis names them "programs". Each program has entrypoint, which expects some bytearray, each program decide how they represent this bytearray.
 
-In solana transaction contain multiple instructions. Instruction is a chunk of data that is fed into program entrypoint, with some meta information about account that it uses, and program identificator that should be executed.
+In nexistransaction contain multiple instructions. Instruction is a chunk of data that is fed into program entrypoint, with some meta information about account that it uses, and program identificator that should be executed.
 Instruction can also be perceived as minimal execution unit.
 When any instruction fails - full transaction will fail, and any data change will be reverted.
 
@@ -19,13 +19,13 @@ Completed(freezed) banks are used only for transaction simulation in rpc.
 Bank structure represent current state of blockchain with reference to actual account database, etc.
 
 ### Multithread execution
-For state, we understand that solana has same mechanism as in rw-lock. Account metas from transaction define how it would use account state.
+For state, we understand that nexishas same mechanism as in rw-lock. Account metas from transaction define how it would use account state.
 If account state is used as write, then this account should not be used from any other thread, for time of transaction execution.
 
-So for multithread execution, solana just needs to balance transactions among threads, apply rw-lock rule for each account in execution batch, if any of rw-locks rising will fail - transaction execution should be postponed.
+So for multithread execution, nexisjust needs to balance transactions among threads, apply rw-lock rule for each account in execution batch, if any of rw-locks rising will fail - transaction execution should be postponed.
 
 ## Blockstore
-Blockstore in solana is just retrospective information storage, it store shreds(parts of block) for blocks, and multiple metadata indexes.
+Blockstore in nexisis just retrospective information storage, it store shreds(parts of block) for blocks, and multiple metadata indexes.
 Blockstore can be purged, to shrink space used on disk.
 To save shared disk space, for rpc, blockstore is also backed-up to bigtable.
 
@@ -33,7 +33,7 @@ To save shared disk space, for rpc, blockstore is also backed-up to bigtable.
 
 # Requirements
 
-Main requirement was to create a program in solana that can execute EVM bytecode.
+Main requirement was to create a program in nexisthat can execute EVM bytecode.
 Later it's extended too, not only execute evm bytecode, but also be compatible with ethereum  transaction and blocks structure.
 Also for better user expirience, we should support eth_ rpc calls https://openethereum.github.io/JSONRPC-eth-module
 
@@ -48,9 +48,9 @@ But we have plan change this format in future to `borsch`, which will allow bett
 ## Single storage for data
 
 Currently all evm implementation are singlethread. Moreover, any transaction in evm world, can refer to any address, even it can compute address
-and evaluate it from computed value, so it is complicated task to separate evm storage into multiple independent parts with rw-lock mechanism as in solana.
+and evaluate it from computed value, so it is complicated task to separate evm storage into multiple independent parts with rw-lock mechanism as in nexis.
 
-Solana has transaction and account size limitation. It expect transaction size to be less than ipv6 MTU 1280 bytes, in order to process and distribute transactions faster.
+Nexis has transaction and account size limitation. It expect transaction size to be less than ipv6 MTU 1280 bytes, in order to process and distribute transactions faster.
 For account, they have hand-written database, which can handle multiple versions of some account, but they limit account size to be 10MB max.
 Also they use they actively use cloning of accounts, therefore, increasing the account size was not an option for us.
 
@@ -58,7 +58,7 @@ So our design was to implement storage, for big state, with versioning support. 
 This rpc calls need to get state from past, so support multiple version of storage is also required. 
 
 ### Abstract view of Trie db
-As state provider, we adopt https://github.com/velas/triedb - this is modified merkle-patricia tree from sputnikvm https://github.com/ETCDEVTeam/etcommon-rs/tree/master/trie with small code cleanups, and refactoring to make it work only with rocksdb (persistent storage). See https://eth.wiki/en/fundamentals/patricia-tree as reference for implementation, and https://medium.com/@chiqing/merkle-patricia-trie-explained-ae3ac6a7e123 as explanation how it works.
+As state provider, we adopt https://github.com/Nexis-Network/triedb - this is modified merkle-patricia tree from sputnikvm https://github.com/ETCDEVTeam/etcommon-rs/tree/master/trie with small code cleanups, and refactoring to make it work only with rocksdb (persistent storage). See https://eth.wiki/en/fundamentals/patricia-tree as reference for implementation, and https://medium.com/@chiqing/merkle-patricia-trie-explained-ae3ac6a7e123 as explanation how it works.
 
 In shorts, we work with this as with k-v database:
 where k - is an evm account address (20 bytes long),
@@ -100,7 +100,7 @@ Because unsignedTransaction didn't store signature, in `UnsignedTransactionWithC
 ### Storage module
 Storage module is an abstraction that provide triedbs for Accounts and AccountStorage.
 It provides methods for open db, create backup (used in snapshot), and restoring from this backup.
-Currently powered is worked by rocksdb mechanism, and it saves all versions that node know in single backup, that then will be shared among nodes, trough solanas snapshots.
+Currently powered is worked by rocksdb mechanism, and it saves all versions that node know in single backup, that then will be shared among nodes, trough nexiss snapshots.
 
 Known flaws:
 1) It contain a lot of dead code for creating colomnfamilies in rocksdb.
@@ -132,7 +132,7 @@ State is created as `Empty`. When any tx is procesed, it transit to `Active`.
 `Active` state is accumulating state changes and transactions that would be executed, but newer write in database dirrectly.
 On bank freeze `Active` state transit to `Committed` and save block header in its structure.
 
-When solana create new bank (at slot beginning) state is again reset to `Empty`.
+When nexiscreate new bank (at slot beginning) state is again reset to `Empty`.
 
 Original state machine was later simplified in code, and now Empty and Active are merged into one - `Incoming`
 
@@ -160,12 +160,12 @@ State persistent:
 `EvmState` - is a type that monomorphize this two states and provide highlevel wrapper for bank to work with.
 Methods that correspond to state transition: `EvmState::try_commit` `EvmState::new_from_parent`
 
-Save block: For saving blocks in blockstore, we go the same way as solana goes - after bank finalization background service EvmRecorderService receive block from `Committed` state and save it in blockstore.
+Save block: For saving blocks in blockstore, we go the same way as nexisgoes - after bank finalization background service EvmRecorderService receive block from `Committed` state and save it in blockstore.
 
 ### Executor
 Provides api for transaction execution.
 For executor construction you need Incoming state of EvmBackend and context information.
-As result it provide methods that can be called in evm_loader, some evm specific contracts are hardcoded in calls, and this method are marked as failable, other solana specific are implemented in evm_loader.
+As result it provide methods that can be called in evm_loader, some evm specific contracts are hardcoded in calls, and this method are marked as failable, other nexisspecific are implemented in evm_loader.
 
 ### Context
 
@@ -178,19 +178,19 @@ Context module provide types for executor context.
 And `ExecutorContext` - which provide `Backend` logic for `StackExecutor` (simply provide all data fields that stack executor need, like account state, account storage, caller address, last block hashes, timestamp, etc.).
 
 # Evm loader program.
-Evm loader program is solana native program with custom entrypoint that execute next instruction types:
+Evm loader program is nexisnative program with custom entrypoint that execute next instruction types:
 
-1) `EvmTransaction` - execute regular evm transaction, it is limited to be less than 900 bytes in bincode encoding, internally call `Executor::transaction_execute`. As extension to regular transaction flow, we implement precompile module, wich provide evm specific precompile, and swap from evm to solana world code.
-2) `SwapNativeToEther` - transfer solana lamports to evm world. Internally it just take lamports from user account, transfer it to EvmState account in solana world, and mint new tokens in evm world for specific account.
+1) `EvmTransaction` - execute regular evm transaction, it is limited to be less than 900 bytes in bincode encoding, internally call `Executor::transaction_execute`. As extension to regular transaction flow, we implement precompile module, wich provide evm specific precompile, and swap from evm to nexisworld code.
+2) `SwapNativeToEther` - transfer nexislamports to evm world. Internally it just take lamports from user account, transfer it to EvmState account in nexisworld, and mint new tokens in evm world for specific account.
 3) `FreeOwnership` - SwapNativeToEther is done in three instructions: 1) assign account to evm, 2) SwapNativeToEther 3) FreeOwnership.
 It just set account owner to system program, if it perviously was set ot evm account.
-4) `EvmBigTransaction` - Big transaction functionality is done like in solana bpf program deploy. User create account that assign to evm program, write batches trough `EvmTransactionWrite` and after this call `EvmTransactionExecute` to ask evm_loader to load transaction from account and execute it using 1), or `EvmTransactionExecuteUnsigned` to execute it using 5)
-5) `EvmAuthorizedTransaction` - Execute evm transaction that is created by solana program. In evm world we allocate addresses started with `0xacc0`, check method `evm_address_for_program` for more details how we allocate addresses. This transaction is signed in solana, so we check is_signed flag, and execute it trough `Executor::transaction_execute_unsigned`.
+4) `EvmBigTransaction` - Big transaction functionality is done like in nexisbpf program deploy. User create account that assign to evm program, write batches trough `EvmTransactionWrite` and after this call `EvmTransactionExecute` to ask evm_loader to load transaction from account and execute it using 1), or `EvmTransactionExecuteUnsigned` to execute it using 5)
+5) `EvmAuthorizedTransaction` - Execute evm transaction that is created by nexisprogram. In evm world we allocate addresses started with `0xacc0`, check method `evm_address_for_program` for more details how we allocate addresses. This transaction is signed in nexis, so we check is_signed flag, and execute it trough `Executor::transaction_execute_unsigned`.
    
 Swap from evm implementation:
-Swap from evm world is done by implementing precompile that modify solana state,
-when any transaction make call to specific address `ETH_TO_XZO_ADDR` program interupted and `ETH_TO_XZO_CODE` is called.
-When it is called, it expect `recipient` address as argument, also this precompile is done as payable, so it is also expect internal `value` argument, before call this value is substracted from caller account. And `ETH_TO_XZO_CODE` is transfer it from EvmState account to account that it tries to find by `recipient` address.
+Swap from evm world is done by implementing precompile that modify nexisstate,
+when any transaction make call to specific address `ETH_TO_NZT_ADDR` program interupted and `ETH_TO_NZT_CODE` is called.
+When it is called, it expect `recipient` address as argument, also this precompile is done as payable, so it is also expect internal `value` argument, before call this value is substracted from caller account. And `ETH_TO_NZT_CODE` is transfer it from EvmState account to account that it tries to find by `recipient` address.
 
 Problems that we discover before:
-- Both our swaps works invalid with revert. `SwapNativeToEther` with revert in solana can keep money on evm, and reverts in evm didn't trigger revert in solana. To fix this, now revert in evm trigger revert in solana, and on any revert, state changes are ignored for whole transaction execution.
+- Both our swaps works invalid with revert. `SwapNativeToEther` with revert in nexiscan keep money on evm, and reverts in evm didn't trigger revert in nexis. To fix this, now revert in evm trigger revert in nexis, and on any revert, state changes are ignored for whole transaction execution.

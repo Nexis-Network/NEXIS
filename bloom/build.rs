@@ -1,3 +1,8 @@
+/// This is the build script for the `bloom` crate.
+/// It checks the Rust compiler version and sets the appropriate configuration flags based on the channel.
+/// If the channel is Stable or Beta, it sets the `RUSTC_WITHOUT_SPECIALIZATION` flag.
+/// If the channel is Nightly or Dev, it sets the `RUSTC_WITH_SPECIALIZATION` flag.
+/// Additionally, if the channel is Dev, it also sets the `RUSTC_NEEDS_PROC_MACRO_HYGIENE` flag.
 extern crate rustc_version;
 use rustc_version::{version_meta, Channel};
 
@@ -17,7 +22,7 @@ fn main() {
         }
         Channel::Dev => {
             println!("cargo:rustc-cfg=RUSTC_WITH_SPECIALIZATION");
-            // See https://github.com/solana-labs/solana/issues/11055
+            // See https://github.com/nexis-labs/nexis/issues/11055
             // We may be running the custom `rust-bpf-builder` toolchain,
             // which currently needs `#![feature(proc_macro_hygiene)]` to
             // be applied.

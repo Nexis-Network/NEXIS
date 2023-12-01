@@ -1,12 +1,12 @@
 [package]
-name = "solana-bloom"
+name = "nexis-bloom"
 version = "1.9.29"
-description = "Solana bloom filter"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "Nexis bloom filter"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-bloom"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-bloom"
 edition = "2021"
 
 [dependencies]
@@ -16,14 +16,14 @@ rand = "0.7.0"
 serde = { version = "1.0.133", features = ["rc"] }
 rayon = "1.5.1"
 serde_derive = "1.0.103"
-solana-frozen-abi = { path = "../frozen-abi", version = "=1.9.29" }
-solana-frozen-abi-macro = { path = "../frozen-abi/macro", version = "=1.9.29" }
-solana-sdk = { path = "../sdk", version = "=1.9.29" }
+nexis-frozen-abi = { path = "../frozen-abi", version = "=1.9.29" }
+nexis-frozen-abi-macro = { path = "../frozen-abi/macro", version = "=1.9.29" }
+nexis-sdk = { path = "../sdk", version = "=1.9.29" }
 log = "0.4.14"
 
 [lib]
 crate-type = ["lib"]
-name = "solana_bloom"
+name = "nexis_bloom"
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

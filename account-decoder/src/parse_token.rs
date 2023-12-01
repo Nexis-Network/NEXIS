@@ -3,9 +3,9 @@ use {
         parse_account_data::{ParsableAccount, ParseAccountError},
         StringAmount, StringDecimals,
     },
-    solana_sdk::pubkey::Pubkey,
+    nexis_sdk::pubkey::Pubkey,
     spl_token::{
-        solana_program::{
+        nexis_program::{
             program_option::COption, program_pack::Pack, pubkey::Pubkey as SplTokenPubkey,
         },
         state::{Account, AccountState, Mint, Multisig},
@@ -14,7 +14,7 @@ use {
 };
 
 // A helper function to convert spl_token::id() as spl_sdk::pubkey::Pubkey to
-// solana_sdk::pubkey::Pubkey
+// nexis_sdk::pubkey::Pubkey
 fn spl_token_id() -> Pubkey {
     Pubkey::new_from_array(spl_token::id().to_bytes())
 }
@@ -30,7 +30,7 @@ pub fn is_known_spl_token_id(program_id: &Pubkey) -> bool {
 }
 
 // A helper function to convert spl_token::native_mint::id() as spl_sdk::pubkey::Pubkey to
-// solana_sdk::pubkey::Pubkey
+// nexis_sdk::pubkey::Pubkey
 pub fn spl_token_native_mint() -> Pubkey {
     Pubkey::new_from_array(spl_token::native_mint::id().to_bytes())
 }
@@ -40,12 +40,12 @@ pub fn spl_token_native_mint_program_id() -> Pubkey {
     spl_token_id()
 }
 
-// A helper function to convert a solana_sdk::pubkey::Pubkey to spl_sdk::pubkey::Pubkey
+// A helper function to convert a nexis_sdk::pubkey::Pubkey to spl_sdk::pubkey::Pubkey
 pub fn spl_token_pubkey(pubkey: &Pubkey) -> SplTokenPubkey {
     SplTokenPubkey::new_from_array(pubkey.to_bytes())
 }
 
-// A helper function to convert a spl_sdk::pubkey::Pubkey to solana_sdk::pubkey::Pubkey
+// A helper function to convert a spl_sdk::pubkey::Pubkey to nexis_sdk::pubkey::Pubkey
 pub fn pubkey_from_spl_token(pubkey: &SplTokenPubkey) -> Pubkey {
     Pubkey::new_from_array(pubkey.to_bytes())
 }

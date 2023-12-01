@@ -1,4 +1,4 @@
-#include <solana_sdk.h>
+#include <nexis_sdk.h>
 
 struct foo {const uint8_t *input;};
 void foo(const uint8_t *input, struct foo foo) ;
@@ -11,6 +11,6 @@ extern uint64_t entrypoint(const uint8_t *input) {
 }
 
 void foo(const uint8_t *input, struct foo foo) {
-  sol_log_64(0, 0, 0, (uint64_t)input, (uint64_t)foo.input);
-  sol_assert(input == foo.input);
+  nzt_log_64(0, 0, 0, (uint64_t)input, (uint64_t)foo.input);
+  nzt_assert(input == foo.input);
 }

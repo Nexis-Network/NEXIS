@@ -1,10 +1,10 @@
 /farf/
-/exzo-release/
-/exzo-release.tar.bz2
-/solana-release/
-/solana-release.tar.bz2
-/solana-metrics/
-/solana-metrics.tar.bz2
+/nexis-release/
+/nexis-release.tar.bz2
+/nexis-release/
+/nexis-release.tar.bz2
+/nexis-metrics/
+/nexis-metrics.tar.bz2
 /target/
 /test-ledger/
 
@@ -21,7 +21,7 @@ log-*/
 
 # intellij files
 /.idea/
-/solana.iml
+/nexis.iml
 /.vscode/
 /.devcontainer/
 

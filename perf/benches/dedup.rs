@@ -5,7 +5,7 @@ extern crate test;
 
 use {
     rand::prelude::*,
-    solana_perf::{
+    nexis_perf::{
         packet::{to_packet_batches, PacketBatch},
         sigverify,
     },

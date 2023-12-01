@@ -20,12 +20,12 @@ extern uint64_t entrypoint(const uint8_t *input) {
     uint8_t bytes1[] = {'G', 'a', 'g', 'g', 'a', 'b', 'l', 'a',
                         'g', 'h', 'b', 'l', 'a', 'g', 'h', '!'};
     uint8_t bytes2[] = {'f', 'l', 'u', 'r', 'b', 'o', 's'};
-    const SolBytes bytes[] = {{bytes1, SOL_ARRAY_SIZE(bytes1)},
-                              {bytes2, SOL_ARRAY_SIZE(bytes2)}};
+    const SolBytes bytes[] = {{bytes1, NZT_ARRAY_SIZE(bytes1)},
+                              {bytes2, NZT_ARRAY_SIZE(bytes2)}};
 
-    sol_sha256(bytes, SOL_ARRAY_SIZE(bytes), result);
+    nzt_sha256(bytes, NZT_ARRAY_SIZE(bytes), result);
 
-    sol_assert(0 == sol_memcmp(result, expected, SHA256_RESULT_LENGTH));
+    nzt_assert(0 == nzt_memcmp(result, expected, SHA256_RESULT_LENGTH));
   }
 
   // Keccak
@@ -39,12 +39,12 @@ extern uint64_t entrypoint(const uint8_t *input) {
     uint8_t bytes1[] = {'G', 'a', 'g', 'g', 'a', 'b', 'l', 'a',
                         'g', 'h', 'b', 'l', 'a', 'g', 'h', '!'};
     uint8_t bytes2[] = {'f', 'l', 'u', 'r', 'b', 'o', 's'};
-    const SolBytes bytes[] = {{bytes1, SOL_ARRAY_SIZE(bytes1)},
-                              {bytes2, SOL_ARRAY_SIZE(bytes2)}};
+    const SolBytes bytes[] = {{bytes1, NZT_ARRAY_SIZE(bytes1)},
+                              {bytes2, NZT_ARRAY_SIZE(bytes2)}};
 
-    sol_keccak256(bytes, SOL_ARRAY_SIZE(bytes), result);
+    nzt_keccak256(bytes, NZT_ARRAY_SIZE(bytes), result);
 
-    sol_assert(0 == sol_memcmp(result, expected, KECCAK_RESULT_LENGTH));
+    nzt_assert(0 == nzt_memcmp(result, expected, KECCAK_RESULT_LENGTH));
   }
 
   // Blake3
@@ -58,12 +58,12 @@ extern uint64_t entrypoint(const uint8_t *input) {
     uint8_t bytes1[] = {'G', 'a', 'g', 'g', 'a', 'b', 'l', 'a',
                         'g', 'h', 'b', 'l', 'a', 'g', 'h', '!'};
     uint8_t bytes2[] = {'f', 'l', 'u', 'r', 'b', 'o', 's'};
-    const SolBytes bytes[] = {{bytes1, SOL_ARRAY_SIZE(bytes1)},
-                              {bytes2, SOL_ARRAY_SIZE(bytes2)}};
+    const SolBytes bytes[] = {{bytes1, NZT_ARRAY_SIZE(bytes1)},
+                              {bytes2, NZT_ARRAY_SIZE(bytes2)}};
 
-    sol_blake3(bytes, SOL_ARRAY_SIZE(bytes), result);
+    nzt_blake3(bytes, NZT_ARRAY_SIZE(bytes), result);
 
-    sol_assert(0 == sol_memcmp(result, expected, BLAKE3_RESULT_LENGTH));
+    nzt_assert(0 == nzt_memcmp(result, expected, BLAKE3_RESULT_LENGTH));
   }
 
   return SUCCESS;

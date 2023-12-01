@@ -1,10 +1,10 @@
 # Exzo Network
 **Chain Specs**
-* Native Token Name - EXZO
-* Symbol - XZO
-* Supply - 50 Million
-* Blocktime - ~400ms
-* Consensus - DelegatedProof-of-Stake (PoS)
+* Native Token Name - Nexis
+* Symbol - NZT
+* Supply - 420 Million
+* Block finality - ~400ms
+* Consensus - Delegated Proof-of-Stake (DPoS)
 * P2P Port - 
 * JSON-RPC Port - 8899
 * ChainID Mainnet - 1229
@@ -12,34 +12,33 @@
 * Ethereum Virtual Machine (EVM) Compatible
 
 **Official Links**
-* Website - https://exzo.network
-* Main Explorer - https://exzoscan.io
+* Website - https://nexis.network
+* Main Explorer - https://nexscan.io
 * Test Explorer - https://testnet.exzoscan.io
-* RPC Mainnet - https://rpc-main-1.exzo.network
-* RPC Testnet - https://rpc-test-1.exzo.network
+* RPC Mainnet - https://rpc-main-1.nexis.network
+* RPC Testnet - https://rpc-test-1.nexis.network
 * Twitter - https://twitter.com/exzo_network
-* Telegram - https://t.me/Exzo_Network
-* Telegram - https://t.me/exzoc
+* Telegram - https://t.me/Nexis_Network
 
-## About the Exzo Network 
-* Exzo Network uses a modular architecture and provides Ethereum compatibility.
+## About the Nexis Network 
+* Nexis Network uses a modular architecture and provides Ethereum compatibility.
 * Users able to interact with industry standard wallets through JSON-RPC.
 * Develop with Solidity/Vyper, full EVM support.
 * Build using widely-adopted Ethereum tooling, libraries and development tools.
 * Streamlined UX when doing cross-chain operations.
 * Go beyond Ethereum’s Smart Contracts with Runtime plugins.
 
-The Exzo Network Token (XZO) features the following utilities, and the value of XZO token will accrue with the increased usage of the network and revenue from stability fees and liquidation penalties.
+The Nexis Network Token (NZT) features the following utilities, and the value of NZT token will accrue with the increased usage of the network and revenue from stability fees and liquidation penalties.
 
 * As Network Utility Token: to pay for network fees and stability fees.
 * As Governance Token: to vote for/against risk parameters and network change proposals.
 * As Economic Capital: in case of liquidation without sufficient collaterals.
 * As fee reducing token on decentralized applications and wallets upon the Exzo Network.
-* For staking to help secure the Exzo Network in a decentralized fashion.
+* For staking to help secure the Nexis Network in a decentralized fashion.
 
 Cross-Chain Communication
 * Completely trustless and decentralized built-in Ethereum Bridge solution.
-* Transfer assets to and from any EVM compatible network, most notably Exzo Network and Ethereum mainnets.
+* Transfer assets to and from any EVM compatible network, most notably Nexis Network and Ethereum mainnets.
 * Transfer ERC-20 tokens, NFTs or wrapped native currencies.
 * Customize the bridge functionality using Bridge plugins.
 
@@ -105,7 +104,7 @@ Info about EVM integration is at our [docs](https://docs.exzo.technology/evm).
 Start your own Development network locally, instructions are in the [online docs](https://docs.exzo.technology/cluster/bench-tps).
 
 #### Accessing the remote testnet and mainnet
-* `testnet` - public accessible via bootstrap.rpc-test-1.exzo.network.
+* `testnet` - public accessible via bootstrap.rpc-test-1.nexis.network.
 * `mainnet` - public accessible via bootstrap.exzo.technology.
 
 ## Benchmarking

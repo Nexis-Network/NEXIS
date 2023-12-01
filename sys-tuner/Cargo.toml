@@ -1,21 +1,21 @@
 [package]
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
 edition = "2021"
-name = "solana-sys-tuner"
-description = "The solana cluster system tuner daemon"
+name = "nexis-sys-tuner"
+description = "The nexiscluster system tuner daemon"
 version = "1.9.29"
-repository = "https://github.com/solana-labs/solana"
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-sys-tuner"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-sys-tuner"
 publish = true
 
 [dependencies]
 clap = "2.33.1"
 log = "0.4.14"
 libc = "0.2.108"
-solana-logger = { path = "../logger", version = "=1.9.29" }
-solana-version = { path = "../version", version = "=0.6.3" }
+nexis-logger = { path = "../logger", version = "=1.9.29" }
+nexis-version = { path = "../version", version = "=0.6.3" }
 
 [target."cfg(unix)".dependencies]
 unix_socket2 = "0.5.4"
@@ -24,10 +24,10 @@ nix = "0.23.0"
 sysctl = "0.4.3"
 
 [lib]
-name = "solana_sys_tuner"
+name = "nexis_sys_tuner"
 
 [[bin]]
-name = "solana-sys-tuner"
+name = "nexis-sys-tuner"
 path = "src/main.rs"
 
 [package.metadata.docs.rs]

@@ -815,9 +815,9 @@ mod tests {
         super::*,
         crate::StoredConfirmedBlock,
         prost::Message,
-        solana_sdk::{hash::Hash, signature::Keypair, system_transaction},
-        solana_storage_proto::convert::generated,
-        solana_transaction_status::{
+        nexis_sdk::{hash::Hash, signature::Keypair, system_transaction},
+        nexis_storage_proto::convert::generated,
+        nexis_transaction_status::{
             ConfirmedBlock, ConfirmedBlockWithOptionalMetadata, TransactionStatusMeta,
             TransactionWithMetadata,
         },
@@ -849,7 +849,7 @@ mod tests {
     #[test]
     fn test_deserialize_protobuf_or_bincode_cell_data() {
         let from = Keypair::new();
-        let recipient = solana_sdk::pubkey::new_rand();
+        let recipient = nexis_sdk::pubkey::new_rand();
         let transaction = system_transaction::transfer(&from, &recipient, 42, Hash::default());
         let with_meta = TransactionWithMetadata {
             transaction,

@@ -9,25 +9,25 @@ use {
     bip39::{Language, Mnemonic, MnemonicType, Seed},
     clap::{App, AppSettings, Arg, ArgMatches, SubCommand},
     log::*,
-    solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig},
-    solana_bpf_loader_program::{syscalls::register_syscalls, BpfError, ThisInstructionMeter},
-    solana_clap_utils::{self, input_parsers::*, input_validators::*, keypair::*},
-    solana_cli_output::{
+    nexis_account_decoder::{UiAccountEncoding, UiDataSliceConfig},
+    nexis_bpf_loader_program::{syscalls::register_syscalls, BpfError, ThisInstructionMeter},
+    nexis_clap_utils::{self, input_parsers::*, input_validators::*, keypair::*},
+    nexis_cli_output::{
         CliProgram, CliProgramAccountType, CliProgramAuthority, CliProgramBuffer, CliProgramId,
         CliUpgradeableBuffer, CliUpgradeableBuffers, CliUpgradeableProgram,
         CliUpgradeableProgramClosed, CliUpgradeablePrograms,
     },
-    solana_client::{
+    nexis_client::{
         client_error::ClientErrorKind,
         rpc_client::RpcClient,
         rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig, RpcSendTransactionConfig},
         rpc_filter::{Memcmp, MemcmpEncodedBytes, RpcFilterType},
         tpu_client::{TpuClient, TpuClientConfig},
     },
-    solana_program_runtime::invoke_context::InvokeContext,
-    solana_rbpf::{elf::Executable, verifier, vm::Config},
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_sdk::{
+    nexis_program_runtime::invoke_context::InvokeContext,
+    nexis_rbpf::{elf::Executable, verifier, vm::Config},
+    nexis_remote_wallet::remote_wallet::RemoteWalletManager,
+    nexis_sdk::{
         account::Account,
         account_utils::StateMut,
         bpf_loader, bpf_loader_deprecated,
@@ -174,7 +174,7 @@ impl ProgramSubCommands for App<'_, '_> {
                             Arg::with_name("allow_excessive_balance")
                                 .long("allow-excessive-deploy-account-balance")
                                 .takes_value(false)
-                                .help("Use the designated program id even if the account already holds a large balance of SOL")
+                                .help("Use the designated program id even if the account already holds a large balance of NZT")
                         ),
                 )
                 .subcommand(
@@ -318,7 +318,7 @@ impl ProgramSubCommands for App<'_, '_> {
                             Arg::with_name("lamports")
                                 .long("lamports")
                                 .takes_value(false)
-                                .help("Display balance in lamports instead of SOL"),
+                                .help("Display balance in lamports instead of NZT"),
                         ),
                 )
                 .subcommand(
@@ -378,7 +378,7 @@ impl ProgramSubCommands for App<'_, '_> {
                             Arg::with_name("lamports")
                                 .long("lamports")
                                 .takes_value(false)
-                                .help("Display balance in lamports instead of SOL"),
+                                .help("Display balance in lamports instead of NZT"),
                         ),
                 )
         )
@@ -413,7 +413,7 @@ impl ProgramSubCommands for App<'_, '_> {
                     Arg::with_name("allow_excessive_balance")
                         .long("allow-excessive-deploy-account-balance")
                         .takes_value(false)
-                        .help("Use the designated program id, even if the account already holds a large balance of SOL")
+                        .help("Use the designated program id, even if the account already holds a large balance of NZT")
                 )
                 .arg(
                     Arg::with_name("skip_fee_check")
@@ -2231,10 +2231,10 @@ fn report_ephemeral_mnemonic(words: usize, mnemonic: bip39::Mnemonic) {
     );
     eprintln!("{}\n{}\n{}", divider, phrase, divider);
     eprintln!("To resume a deploy, pass the recovered keypair as the");
-    eprintln!("[BUFFER_SIGNER] to `solana program deploy` or `solana write-buffer'.");
+    eprintln!("[BUFFER_SIGNER] to `nexisprogram deploy` or `nexiswrite-buffer'.");
     eprintln!("Or to recover the account's lamports, pass it as the");
     eprintln!(
-        "[BUFFER_ACCOUNT_ADDRESS] argument to `solana program close`.\n{}",
+        "[BUFFER_ACCOUNT_ADDRESS] argument to `nexisprogram close`.\n{}",
         divider
     );
 }
@@ -2248,8 +2248,8 @@ mod tests {
             cli::{parse_command, process_command},
         },
         serde_json::Value,
-        solana_cli_output::OutputFormat,
-        solana_sdk::signature::write_keypair_file,
+        nexis_cli_output::OutputFormat,
+        nexis_sdk::signature::write_keypair_file,
     };
 
     fn make_tmp_path(name: &str) -> String {
@@ -3036,7 +3036,7 @@ mod tests {
 
     #[test]
     fn test_cli_keypair_file() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let default_keypair = Keypair::new();
         let program_pubkey = Keypair::new();

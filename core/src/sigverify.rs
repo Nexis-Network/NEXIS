@@ -4,12 +4,12 @@
 //! to the GPU.
 //!
 
-pub use solana_perf::sigverify::{
+pub use nexis_perf::sigverify::{
     count_packets_in_batches, ed25519_verify_cpu, ed25519_verify_disabled, init, TxOffset,
 };
 use {
     crate::sigverify_stage::SigVerifier,
-    solana_perf::{cuda_runtime::PinnedVec, packet::PacketBatch, recycler::Recycler, sigverify},
+    nexis_perf::{cuda_runtime::PinnedVec, packet::PacketBatch, recycler::Recycler, sigverify},
 };
 
 #[derive(Clone)]

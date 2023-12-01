@@ -1,7 +1,28 @@
+/// Holds the configuration for a single run of the benchmark
+pub struct Config {
+    pub entrypoint_addr: SocketAddr,
+    pub faucet_addr: SocketAddr,
+    pub id: Keypair,
+    pub threads: usize,
+    pub num_nodes: usize,
+    pub duration: Duration,
+    pub tx_count: usize,
+    pub keypair_multiplier: usize,
+    pub thread_batch_sleep_ms: usize,
+    pub sustained: bool,
+    pub client_ids_and_stake_file: String,
+    pub write_to_client_file: bool,
+    pub read_from_client_file: bool,
+    pub target_lamports_per_signature: u64,
+    pub multi_client: bool,
+    pub num_lamports_per_account: u64,
+    pub target_slots_per_epoch: u64,
+    pub target_node: Option<Pubkey>,
+}
 use {
     clap::{crate_description, crate_name, App, Arg, ArgMatches},
-    solana_faucet::faucet::FAUCET_PORT,
-    solana_sdk::{
+    nexis_faucet::faucet::FAUCET_PORT,
+    nexis_sdk::{
         fee_calculator::FeeRateGovernor,
         pubkey::Pubkey,
         signature::{read_keypair_file, Keypair},
@@ -9,7 +30,7 @@ use {
     std::{net::SocketAddr, process::exit, time::Duration},
 };
 
-const NUM_LAMPORTS_PER_ACCOUNT_DEFAULT: u64 = solana_sdk::native_token::LAMPORTS_PER_XZO;
+const NUM_LAMPORTS_PER_ACCOUNT_DEFAULT: u64 = nexis_sdk::native_token::LAMPORTS_PER_NZT;
 
 /// Holds the configuration for a single run of the benchmark
 pub struct Config {
@@ -202,14 +223,14 @@ pub fn extract_args(matches: &ArgMatches) -> Config {
     let mut args = Config::default();
 
     if let Some(addr) = matches.value_of("entrypoint") {
-        args.entrypoint_addr = solana_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
+        args.entrypoint_addr = nexis_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
             eprintln!("failed to parse entrypoint address: {}", e);
             exit(1)
         });
     }
 
     if let Some(addr) = matches.value_of("faucet") {
-        args.faucet_addr = solana_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
+        args.faucet_addr = nexis_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
             eprintln!("failed to parse faucet address: {}", e);
             exit(1)
         });

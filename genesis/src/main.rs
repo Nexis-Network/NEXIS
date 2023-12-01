@@ -1,11 +1,23 @@
 //! A command-line executable for generating the chain's genesis config.
+//!
+//! This executable is used to generate the genesis configuration for a blockchain. It takes various command-line arguments
+//! to customize the configuration, such as the creation time, bootstrap validator's identity, ledger path, faucet settings,
+//! stake account settings, fee and rent parameters, and more. The generated genesis configuration is used to initialize the
+//! blockchain with the specified parameters.
+//!
+//! Example usage:
+//!
+//! ```shell
+//! $ genesis-config --creation-time "2022-01-01T00:00:00Z" --bootstrap-validator "identity_pubkey vote_pubkey stake_pubkey" --ledger "/path/to/ledger" --faucet-lamports 1000
+//! ```
+//! A command-line executable for generating the chain's genesis config.
 #![allow(clippy::integer_arithmetic)]
 
 use {
     clap::{crate_description, crate_name, value_t, value_t_or_exit, App, Arg, ArgMatches},
     evm_state::U256,
     log::{error, info},
-    solana_clap_utils::{
+    nexis_clap_utils::{
         input_parsers::{
             cluster_type_of, pubkey_of, pubkeys_of, unix_timestamp_from_rfc3339_datetime,
         },
@@ -13,18 +25,18 @@ use {
             is_pubkey_or_keypair, is_rfc3339_datetime, is_slot, is_valid_percentage,
         },
     },
-    solana_entry::poh::compute_hashes_per_tick,
-    solana_genesis::Base64Account,
-    solana_ledger::{blockstore::create_new_ledger, blockstore_db::AccessType},
-    solana_runtime::hardened_unpack::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
-    solana_sdk::{
+    nexis_entry::poh::compute_hashes_per_tick,
+    nexis_genesis::Base64Account,
+    nexis_ledger::{blockstore::create_new_ledger, blockstore_db::AccessType},
+    nexis_runtime::hardened_unpack::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
+    nexis_sdk::{
         account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
         clock,
         epoch_schedule::EpochSchedule,
         fee_calculator::FeeRateGovernor,
     genesis_config::{self, ClusterType, GenesisConfig},
         inflation::Inflation,
-        native_token::sol_to_lamports,
+        native_token::nzt_to_lamports,
         poh_config::PohConfig,
         pubkey::Pubkey,
         rent::Rent,
@@ -32,8 +44,8 @@ use {
         stake::state::StakeState,
         system_program, timing,
     },
-    solana_stake_program::stake_state,
-    solana_vote_program::vote_state::{self, VoteState},
+    nexis_stake_program::stake_state,
+    nexis_vote_program::vote_state::{self, VoteState},
     std::{
         collections::HashMap,
         error,
@@ -104,7 +116,7 @@ pub fn load_genesis_accounts(file: &str, genesis_config: &mut GenesisConfig) -> 
 
 #[allow(clippy::cognitive_complexity)]
 fn main() -> Result<(), Box<dyn error::Error>> {
-    let default_faucet_pubkey = solana_cli_config::Config::default().keypair_path;
+    let default_faucet_pubkey = nexis_cli_config::Config::default().keypair_path;
     let fee_rate_governor = FeeRateGovernor::default();
     let (
         default_target_lamports_per_signature,
@@ -132,11 +144,11 @@ fn main() -> Result<(), Box<dyn error::Error>> {
     };
 
     // vote account
-    let default_bootstrap_validator_lamports = &sol_to_lamports(500.0)
+    let default_bootstrap_validator_lamports = &nzt_to_lamports(500.0)
         .max(VoteState::get_rent_exempt_reserve(&rent))
         .to_string();
     // stake account
-    let default_bootstrap_validator_stake_lamports = &sol_to_lamports(0.5)
+    let default_bootstrap_validator_stake_lamports = &nzt_to_lamports(0.5)
         .max(StakeState::get_rent_exempt_reserve(&rent))
         .to_string();
 
@@ -145,7 +157,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
     let default_ticks_per_slot = &clock::DEFAULT_TICKS_PER_SLOT.to_string();
     let default_cluster_type = "mainnet-beta";
     let default_genesis_archive_unpacked_size = MAX_GENESIS_ARCHIVE_UNPACKED_SIZE.to_string();
-    let version = solana_version::version!();
+    let version = nexis_version::version!();
     let app = App::new(crate_name!())
         .about(crate_description!())
         .version(version)
@@ -410,7 +422,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
     }
     .get_matches();
 
-    solana_logger::setup_with("info");
+    nexis_logger::setup_with("info");
 
     let ledger_path = PathBuf::from(matches.value_of("ledger_path").unwrap());
 
@@ -621,15 +633,15 @@ fn main() -> Result<(), Box<dyn error::Error>> {
         );
     }
 
-    solana_stake_program::add_genesis_accounts(&mut genesis_config);
+    nexis_stake_program::add_genesis_accounts(&mut genesis_config);
 
     if matches!(
         genesis_config.cluster_type,
         ClusterType::Development | ClusterType::Devnet
     ) {
-        solana_runtime::genesis_utils::activate_all_features(&mut genesis_config);
+        nexis_runtime::genesis_utils::activate_all_features(&mut genesis_config);
     } else {
-        solana_runtime::genesis_utils::activate_exzo_features_on_prod(&mut genesis_config);
+        nexis_runtime::genesis_utils::activate_exzo_features_on_prod(&mut genesis_config);
     }
 
     if let Some(files) = matches.values_of("primordial_accounts_file") {
@@ -651,14 +663,14 @@ fn main() -> Result<(), Box<dyn error::Error>> {
     }
 
     let (mut evm_state_lamports, change) =
-        solana_evm_loader_program::scope::evm::gweis_to_lamports(evm_state_balance);
+        nexis_evm_loader_program::scope::evm::gweis_to_lamports(evm_state_balance);
     if change != U256::zero() {
         evm_state_lamports += 1;
     }
 
     genesis_config.add_account(
-        solana_sdk::evm_state::ID,
-        solana_evm_loader_program::create_state_account(evm_state_lamports),
+        nexis_sdk::evm_state::ID,
+        nexis_evm_loader_program::create_state_account(evm_state_lamports),
     );
 
     let issued_lamports = genesis_config
@@ -729,7 +741,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
 mod tests {
     use {
         super::*,
-        solana_sdk::genesis_config::GenesisConfig,
+        nexis_sdk::genesis_config::GenesisConfig,
         std::{collections::HashMap, fs::remove_file, io::Write, path::Path},
     };
 
@@ -742,27 +754,27 @@ mod tests {
 
         let mut genesis_accounts = HashMap::new();
         genesis_accounts.insert(
-            solana_sdk::pubkey::new_rand().to_string(),
+            nexis_sdk::pubkey::new_rand().to_string(),
             Base64Account {
-                owner: solana_sdk::pubkey::new_rand().to_string(),
+                owner: nexis_sdk::pubkey::new_rand().to_string(),
                 balance: 2,
                 executable: false,
                 data: String::from("aGVsbG8="),
             },
         );
         genesis_accounts.insert(
-            solana_sdk::pubkey::new_rand().to_string(),
+            nexis_sdk::pubkey::new_rand().to_string(),
             Base64Account {
-                owner: solana_sdk::pubkey::new_rand().to_string(),
+                owner: nexis_sdk::pubkey::new_rand().to_string(),
                 balance: 1,
                 executable: true,
                 data: String::from("aGVsbG8gd29ybGQ="),
             },
         );
         genesis_accounts.insert(
-            solana_sdk::pubkey::new_rand().to_string(),
+            nexis_sdk::pubkey::new_rand().to_string(),
             Base64Account {
-                owner: solana_sdk::pubkey::new_rand().to_string(),
+                owner: nexis_sdk::pubkey::new_rand().to_string(),
                 balance: 3,
                 executable: true,
                 data: String::from("bWUgaGVsbG8gdG8gd29ybGQ="),
@@ -815,27 +827,27 @@ mod tests {
         // Test more accounts can be appended
         let mut genesis_accounts1 = HashMap::new();
         genesis_accounts1.insert(
-            solana_sdk::pubkey::new_rand().to_string(),
+            nexis_sdk::pubkey::new_rand().to_string(),
             Base64Account {
-                owner: solana_sdk::pubkey::new_rand().to_string(),
+                owner: nexis_sdk::pubkey::new_rand().to_string(),
                 balance: 6,
                 executable: true,
                 data: String::from("eW91IGFyZQ=="),
             },
         );
         genesis_accounts1.insert(
-            solana_sdk::pubkey::new_rand().to_string(),
+            nexis_sdk::pubkey::new_rand().to_string(),
             Base64Account {
-                owner: solana_sdk::pubkey::new_rand().to_string(),
+                owner: nexis_sdk::pubkey::new_rand().to_string(),
                 balance: 5,
                 executable: false,
                 data: String::from("bWV0YSBzdHJpbmc="),
             },
         );
         genesis_accounts1.insert(
-            solana_sdk::pubkey::new_rand().to_string(),
+            nexis_sdk::pubkey::new_rand().to_string(),
             Base64Account {
-                owner: solana_sdk::pubkey::new_rand().to_string(),
+                owner: nexis_sdk::pubkey::new_rand().to_string(),
                 balance: 10,
                 executable: false,
                 data: String::from("YmFzZTY0IHN0cmluZw=="),
@@ -900,7 +912,7 @@ mod tests {
         genesis_accounts2.insert(
             serde_json::to_string(&account_keypairs[0].to_bytes().to_vec()).unwrap(),
             Base64Account {
-                owner: solana_sdk::pubkey::new_rand().to_string(),
+                owner: nexis_sdk::pubkey::new_rand().to_string(),
                 balance: 20,
                 executable: true,
                 data: String::from("Y2F0IGRvZw=="),
@@ -909,7 +921,7 @@ mod tests {
         genesis_accounts2.insert(
             serde_json::to_string(&account_keypairs[1].to_bytes().to_vec()).unwrap(),
             Base64Account {
-                owner: solana_sdk::pubkey::new_rand().to_string(),
+                owner: nexis_sdk::pubkey::new_rand().to_string(),
                 balance: 15,
                 executable: false,
                 data: String::from("bW9ua2V5IGVsZXBoYW50"),
@@ -918,7 +930,7 @@ mod tests {
         genesis_accounts2.insert(
             serde_json::to_string(&account_keypairs[2].to_bytes().to_vec()).unwrap(),
             Base64Account {
-                owner: solana_sdk::pubkey::new_rand().to_string(),
+                owner: nexis_sdk::pubkey::new_rand().to_string(),
                 balance: 30,
                 executable: true,
                 data: String::from("Y29tYSBtb2Nh"),

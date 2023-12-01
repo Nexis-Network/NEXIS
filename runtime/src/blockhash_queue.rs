@@ -1,8 +1,8 @@
 #[allow(deprecated)]
-use solana_sdk::sysvar::recent_blockhashes;
+use nexis_sdk::sysvar::recent_blockhashes;
 use {
     serde::{Deserialize, Serialize},
-    solana_sdk::{fee_calculator::FeeCalculator, hash::Hash, timing::timestamp},
+    nexis_sdk::{fee_calculator::FeeCalculator, hash::Hash, timing::timestamp},
     std::{fmt, collections::HashMap},
 
 
@@ -231,12 +231,12 @@ impl Default for BlockHashEvm {
 #[cfg(test)]
 mod tests {
     #[allow(deprecated)]
-    use solana_sdk::sysvar::recent_blockhashes::IterItem;
+    use nexis_sdk::sysvar::recent_blockhashes::IterItem;
     use {
         super::*,
         bincode::serialize,
         evm_state::H256,
-        solana_sdk::{clock::MAX_RECENT_BLOCKHASHES, hash::hash},
+        nexis_sdk::{clock::MAX_RECENT_BLOCKHASHES, hash::hash},
     };
 
     #[test]

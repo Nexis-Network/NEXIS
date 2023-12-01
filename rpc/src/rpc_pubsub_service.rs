@@ -11,7 +11,7 @@ use {
     dashmap::{mapref::entry::Entry, DashMap},
     jsonrpc_core::IoHandler,
     soketto::handshake::{server, Server},
-    solana_metrics::TokenCounter,
+    nexis_metrics::TokenCounter,
     std::{
         io,
         net::SocketAddr,
@@ -85,7 +85,7 @@ impl PubSubService {
 
         let (trigger, tripwire) = Tripwire::new();
         let thread_hdl = Builder::new()
-            .name("solana-pubsub".to_string())
+            .name("nexis-pubsub".to_string())
             .spawn(move || {
                 let runtime = tokio::runtime::Builder::new_multi_thread()
                     .worker_threads(pubsub_config.worker_threads)
@@ -388,7 +388,7 @@ mod tests {
     use {
         super::*,
         crate::optimistically_confirmed_bank_tracker::OptimisticallyConfirmedBank,
-        solana_runtime::{
+        nexis_runtime::{
             bank::Bank,
             bank_forks::BankForks,
             commitment::BlockCommitmentCache,
@@ -423,6 +423,6 @@ mod tests {
         let (_trigger, pubsub_service) =
             PubSubService::new(PubSubConfig::default(), &subscriptions, pubsub_addr);
         let thread = pubsub_service.thread_hdl.thread();
-        assert_eq!(thread.name().unwrap(), "solana-pubsub");
+        assert_eq!(thread.name().unwrap(), "nexis-pubsub");
     }
 }

@@ -1,21 +1,24 @@
+/// This file contains the Cargo.toml configuration for the Nexis banks server package.
+/// It specifies the package name, version, description, authors, repository, license, homepage,
+/// documentation link, edition, dependencies, and crate type.
 [package]
-name = "solana-banks-server"
+name = "nexis-banks-server"
 version = "1.9.29"
-description = "Solana banks server"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "Nexis banks server"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-banks-server"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-banks-server"
 edition = "2021"
 
 [dependencies]
 bincode = "1.3.3"
 futures = "0.3"
-solana-banks-interface = { path = "../banks-interface", version = "=1.9.29" }
-solana-runtime = { path = "../runtime", version = "=1.9.29" }
-solana-sdk = { path = "../sdk", version = "=1.9.29" }
-solana-send-transaction-service = { path = "../send-transaction-service", version = "=1.9.29" }
+nexis-banks-interface = { path = "../banks-interface", version = "=1.9.29" }
+nexis-runtime = { path = "../runtime", version = "=1.9.29" }
+nexis-sdk = { path = "../sdk", version = "=1.9.29" }
+nexis-send-transaction-service = { path = "../send-transaction-service", version = "=1.9.29" }
 tarpc = { version = "0.27.2", features = ["full"] }
 tokio = { version = "~1.14.1", features = ["full"] }
 tokio-serde = { version = "0.8", features = ["bincode"] }
@@ -23,7 +26,7 @@ tokio-stream = "0.1"
 
 [lib]
 crate-type = ["lib"]
-name = "solana_banks_server"
+name = "nexis_banks_server"
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

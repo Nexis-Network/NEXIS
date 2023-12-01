@@ -1,4 +1,4 @@
-use solana_sdk::{
+use nexis_sdk::{
     account::{AccountSharedData, ReadableAccount, WritableAccount},
     keyed_account::KeyedAccount,
     pubkey::Pubkey,
@@ -7,8 +7,8 @@ use solana_sdk::{
 use crate::error::EvmError;
 use std::cell::RefMut;
 
-/// Helper structure that wrap all solana accounts, that is needed for evm loader.
-/// It will restrict and provide access to needed solana accounts in:
+/// Helper structure that wrap all nexisaccounts, that is needed for evm loader.
+/// It will restrict and provide access to needed nexisaccounts in:
 /// 1. Instruction handlers (ExecuteTx, SwapToEvm, FreeOwnership) - full access to evm state.
 /// 2. Builtin contracts (SwapToNative) - Full access to evm state.
 /// 3. User written evm2native callbacks (SwapERCToSol, CallSolMethod) - Full access to specific users account,
@@ -83,7 +83,7 @@ impl<'a> AccountStructure<'a> {
     where
         F: for<'r> Fn(AccountStructure<'r>) -> U,
     {
-        use solana_sdk::account::Account;
+        use nexis_sdk::account::Account;
         use std::cell::RefCell;
 
         let evm_key = Pubkey::new_unique();

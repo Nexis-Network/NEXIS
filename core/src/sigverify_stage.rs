@@ -10,16 +10,16 @@ use {
     core::time::Duration,
     crossbeam_channel::{SendError, Sender as CrossbeamSender},
     itertools::Itertools,
-    solana_measure::measure::Measure,
-    solana_perf::{
+    nexis_measure::measure::Measure,
+    nexis_perf::{
         packet::PacketBatch,
         sigverify::{
             count_discarded_packets, count_packets_in_batches, count_valid_packets, shrink_batches,
             Deduper,
         },
     },
-    solana_sdk::timing,
-    solana_streamer::streamer::{self, PacketBatchReceiver, StreamerError},
+    nexis_sdk::timing,
+    nexis_streamer::streamer::{self, PacketBatchReceiver, StreamerError},
     std::{
         sync::mpsc::{Receiver, RecvTimeoutError},
         thread::{self, Builder, JoinHandle},
@@ -290,7 +290,7 @@ impl SigVerifyStage {
         );
 
         let mut discard_random_time = Measure::start("sigverify_discard_random_time");
-        let non_discarded_packets = solana_perf::discard::discard_batches_randomly(
+        let non_discarded_packets = nexis_perf::discard::discard_batches_randomly(
             &mut batches,
             MAX_DEDUP_BATCH,
             num_packets,
@@ -380,7 +380,7 @@ impl SigVerifyStage {
         const MAX_DEDUPER_AGE: Duration = Duration::from_secs(2);
         const MAX_DEDUPER_ITEMS: u32 = 1_000_000;
         Builder::new()
-            .name("solana-verifier".to_string())
+            .name("nexis-verifier".to_string())
             .spawn(move || {
                 let mut deduper = Deduper::new(MAX_DEDUPER_ITEMS, MAX_DEDUPER_AGE);
                 loop {
@@ -434,10 +434,10 @@ mod tests {
     use crate::sigverify::TransactionSigVerifier;
     use crate::sigverify_stage::timing::duration_as_ms;
     use crossbeam_channel::unbounded;
-    use solana_perf::test_tx::test_tx;
-    use solana_perf::{packet::to_packet_batches, sigverify::count_packets_in_batches};
+    use nexis_perf::test_tx::test_tx;
+    use nexis_perf::{packet::to_packet_batches, sigverify::count_packets_in_batches};
     use std::sync::mpsc::channel;
-    use {super::*, solana_perf::packet::Packet};
+    use {super::*, nexis_perf::packet::Packet};
 
     fn count_non_discard(packet_batches: &[PacketBatch]) -> usize {
         packet_batches
@@ -454,7 +454,7 @@ mod tests {
 
     #[test]
     fn test_packet_discard() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let mut batch = PacketBatch::default();
         batch.packets.resize(10, Packet::default());
         batch.packets[3].meta.addr = std::net::IpAddr::from([1u16; 8]);
@@ -482,7 +482,7 @@ mod tests {
 
     #[test]
     fn test_sigverify_stage() {
-        solana_logger::setup();
+        nexis_logger::setup();
         trace!("start");
         let (packet_s, packet_r) = channel();
         let (verified_s, verified_r) = unbounded();

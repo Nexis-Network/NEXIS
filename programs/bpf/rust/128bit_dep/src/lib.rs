@@ -1,6 +1,6 @@
-//! Solana Rust-based BPF program utility functions and types
+//! Nexis Rust-based BPF program utility functions and types
 
-extern crate solana_program;
+extern crate nexis_program;
 
 pub fn uadd(x: u128, y: u128) -> u128 {
     x + y

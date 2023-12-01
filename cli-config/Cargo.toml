@@ -1,13 +1,13 @@
 [package]
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
 edition = "2021"
-name = "solana-cli-config"
+name = "nexis-cli-config"
 description = "Blockchain, Rebuilt for Scale"
 version = "1.9.29"
-repository = "https://github.com/solana-labs/solana"
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-cli-config"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-cli-config"
 
 [dependencies]
 dirs-next = "2.0.0"

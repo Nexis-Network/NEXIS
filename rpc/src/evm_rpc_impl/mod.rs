@@ -1,10 +1,10 @@
 use std::str::FromStr;
 
 use sha3::{Digest, Keccak256};
-use solana_sdk::account::{ReadableAccount, AccountSharedData};
-use solana_sdk::commitment_config::CommitmentConfig;
-use solana_sdk::keyed_account::KeyedAccount;
-use solana_sdk::pubkey::Pubkey;
+use nexis_sdk::account::{ReadableAccount, AccountSharedData};
+use nexis_sdk::commitment_config::CommitmentConfig;
+use nexis_sdk::keyed_account::KeyedAccount;
+use nexis_sdk::pubkey::Pubkey;
 
 use crate::rpc::JsonRpcRequestProcessor;
 use evm_rpc::error::EvmStateError;
@@ -24,7 +24,7 @@ use evm_state::{
 use jsonrpc_core::BoxFuture;
 use snafu::ensure;
 use snafu::ResultExt;
-use solana_runtime::bank::Bank;
+use nexis_runtime::bank::Bank;
 use std::{cell::RefCell, future::ready, sync::Arc};
 use crate::rpc_health::RpcHealthStatus;
 
@@ -190,7 +190,7 @@ impl GeneralERPC for GeneralErpcImpl {
     type Metadata = JsonRpcRequestProcessor;
 
     fn client_version(&self, _meta: Self::Metadata) -> Result<String, Error> {
-        Ok(String::from("exzo-chain/v0.5.0"))
+        Ok(String::from("nexis-chain/v0.5.0"))
     }
 
     fn sha3(&self, _meta: Self::Metadata, bytes: Bytes) -> Result<Hex<H256>, Error> {
@@ -219,7 +219,7 @@ impl GeneralERPC for GeneralErpcImpl {
     }
 
     fn protocol_version(&self, _meta: Self::Metadata) -> Result<String, Error> {
-        Ok(solana_version::semver!().into())
+        Ok(nexis_version::semver!().into())
     }
 
     fn is_syncing(&self, meta: Self::Metadata) -> Result<bool, Error> {
@@ -240,7 +240,7 @@ impl GeneralERPC for GeneralErpcImpl {
 
     fn gas_price(&self, _meta: Self::Metadata) -> Result<Hex<Gas>, Error> {
         Ok(Hex(
-            solana_evm_loader_program::scope::evm::lamports_to_gwei(GAS_PRICE),
+            nexis_evm_loader_program::scope::evm::lamports_to_gwei(GAS_PRICE),
         ))
     }
 }
@@ -496,7 +496,7 @@ impl ChainERPC for ChainErpcImpl {
         let meta_keys = match meta_keys
             .into_iter()
             .flatten()
-            .map(|s| solana_sdk::pubkey::Pubkey::from_str(&s))
+            .map(|s| nexis_sdk::pubkey::Pubkey::from_str(&s))
             .collect::<Result<Vec<_>, _>>()
             .map_err(|e| into_native_error(e, false))
         {
@@ -524,7 +524,7 @@ impl ChainERPC for ChainErpcImpl {
             let meta_keys = meta_keys
                 .into_iter()
                 .flatten()
-                .map(|s| solana_sdk::pubkey::Pubkey::from_str(&s))
+                .map(|s| nexis_sdk::pubkey::Pubkey::from_str(&s))
                 .collect::<Result<Vec<_>, _>>()
                 .map_err(|e| into_native_error(e, false))?;
             let saved_state = block_to_state_root(block, &meta).await;
@@ -760,9 +760,9 @@ impl TraceERPC for TraceErpcImpl {
         fn simulate_transaction(
             executor: &mut evm_state::Executor,
             tx: RPCTransaction,
-            meta_keys: Vec<solana_sdk::pubkey::Pubkey>,
+            meta_keys: Vec<nexis_sdk::pubkey::Pubkey>,
         ) -> Result<ExecutionResult, Error> {
-            use solana_evm_loader_program::precompiles::*;
+            use nexis_evm_loader_program::precompiles::*;
             let caller = tx.from.map(|a| a.0).unwrap_or_default();
 
             let value = tx.value.map(|a| a.0).unwrap_or_else(|| 0.into());
@@ -792,23 +792,23 @@ impl TraceERPC for TraceErpcImpl {
                         let user_account = RefCell::new(AccountSharedData::new(
                             u64::MAX,
                             0,
-                            &solana_sdk::system_program::id(),
+                            &nexis_sdk::system_program::id(),
                         ));
                         (user_account, pk)
                     })
                     .collect();
 
-                // Shortcut for swap tokens to native, will add solana account to transaction.
-                if address == *ETH_TO_XZO_ADDR {
+                // Shortcut for swap tokens to native, will add nexisaccount to transaction.
+                if address == *ETH_TO_NZT_ADDR {
                     debug!("Found transferToNative transaction");
-                    match ETH_TO_XZO_CODE.parse_abi(&input) {
+                    match ETH_TO_NZT_CODE.parse_abi(&input) {
                         Ok(pk) => {
                             info!("Adding account to meta = {}", pk);
 
                             let user_account = RefCell::new(AccountSharedData::new(
                                 u64::MAX,
                                 0,
-                                &solana_sdk::system_program::id(),
+                                &nexis_sdk::system_program::id(),
                             ));
                             meta_keys.push((user_account, pk))
                         }
@@ -827,7 +827,7 @@ impl TraceERPC for TraceErpcImpl {
             let mut is_native_swap = false;
             if Some(Hex(U256::from(0x1))) == tx.s {
                 // check if it native swap, then predeposit, amount, to pass transaction
-                if caller == *ETH_TO_XZO_ADDR {
+                if caller == *ETH_TO_NZT_ADDR {
                     is_native_swap = true;
                     let amount = value + gas_limit * gas_price;
                     executor.deposit(caller, amount)
@@ -838,8 +838,8 @@ impl TraceERPC for TraceErpcImpl {
                 .iter()
                 .map(|(user_account, pk)| KeyedAccount::new(pk, false, user_account))
                 .collect();
-            let evm_account = RefCell::new(solana_evm_loader_program::create_state_account(evm_state_balance));
-            let evm_keyed_account = KeyedAccount::new(&solana_sdk::evm_state::ID, false, &evm_account);
+            let evm_account = RefCell::new(nexis_evm_loader_program::create_state_account(evm_state_balance));
+            let evm_keyed_account = KeyedAccount::new(&nexis_sdk::evm_state::ID, false, &evm_account);
 
             let mut result = executor
                 .transaction_execute_raw(
@@ -891,7 +891,7 @@ impl TraceERPC for TraceErpcImpl {
                 result.used_gas = 0;
                 TransactionInReceipt::Unsigned(UnsignedTransactionWithCaller {
                     unsigned_tx: transaction.into(),
-                    caller: *ETH_TO_XZO_ADDR,
+                    caller: *ETH_TO_NZT_ADDR,
                     chain_id: tx_chain_id,
                     signed_compatible: true,
                 })
@@ -946,7 +946,7 @@ impl TraceERPC for TraceErpcImpl {
             for (tx, meta_keys) in txs {
                 let meta_keys = meta_keys
                     .iter()
-                    .map(|s| solana_sdk::pubkey::Pubkey::from_str(s))
+                    .map(|s| nexis_sdk::pubkey::Pubkey::from_str(s))
                     .collect::<Result<Vec<Pubkey>, _>>()
                     .map_err(|_| Error::InvalidParams {})?;
                 match simulate_transaction(&mut executor, tx.clone(), meta_keys) {
@@ -984,7 +984,7 @@ fn call(
     meta: JsonRpcRequestProcessor,
     tx: RPCTransaction,
     saved_state: StateRootWithBank,
-    meta_keys: Vec<solana_sdk::pubkey::Pubkey>,
+    meta_keys: Vec<nexis_sdk::pubkey::Pubkey>,
 ) -> Result<TxOutput, Error> {
     let outputs = call_many(meta, &[(tx, meta_keys)], saved_state, true)?;
 
@@ -1011,7 +1011,7 @@ fn call(
 #[instrument(skip(meta))]
 fn call_many(
     meta: JsonRpcRequestProcessor,
-    txs: &[(RPCTransaction, Vec<solana_sdk::pubkey::Pubkey>)],
+    txs: &[(RPCTransaction, Vec<nexis_sdk::pubkey::Pubkey>)],
     saved_state: StateRootWithBank,
     estimate: bool,
 ) -> Result<Vec<TxOutput>, Error> {
@@ -1053,13 +1053,13 @@ fn call_many(
         estimate_config,
         evm_state::executor::FeatureSet::new(
             bank.feature_set.is_active(
-                &solana_sdk::feature_set::exzo::unsigned_tx_fix::id(),
+                &nexis_sdk::feature_set::exzo::unsigned_tx_fix::id(),
             ),
             bank.feature_set.is_active(
-                &solana_sdk::feature_set::exzo::clear_logs_on_error::id(),
+                &nexis_sdk::feature_set::exzo::clear_logs_on_error::id(),
             ),
             bank.feature_set.is_active(
-                &solana_sdk::feature_set::exzo::accept_zero_gas_price_with_native_fee::id(),
+                &nexis_sdk::feature_set::exzo::accept_zero_gas_price_with_native_fee::id(),
             ),
         ),
     );
@@ -1081,10 +1081,10 @@ fn call_many(
 fn call_inner(
     executor: &mut evm_state::Executor,
     tx: RPCTransaction,
-    meta_keys: Vec<solana_sdk::pubkey::Pubkey>,
+    meta_keys: Vec<nexis_sdk::pubkey::Pubkey>,
     bank: &Bank,
 ) -> Result<TxOutput, Error> {
-    use solana_evm_loader_program::precompiles::*;
+    use nexis_evm_loader_program::precompiles::*;
     let caller = tx.from.map(|a| a.0).unwrap_or_default();
 
     let value = tx.value.map(|a| a.0).unwrap_or_else(|| 0.into());
@@ -1101,7 +1101,7 @@ fn call_inner(
     let tx_hash = tx.hash.map(|a| a.0).unwrap_or_else(H256::random);
 
     let evm_state_balance = bank
-        .get_account(&solana_sdk::evm_state::id())
+        .get_account(&nexis_sdk::evm_state::id())
         .unwrap_or_default()
         .lamports();
 
@@ -1120,10 +1120,10 @@ fn call_inner(
             })
             .collect();
 
-        // Shortcut for swap tokens to native, will add solana account to transaction.
-        if address == *ETH_TO_XZO_ADDR {
+        // Shortcut for swap tokens to native, will add nexisaccount to transaction.
+        if address == *ETH_TO_NZT_ADDR {
             debug!("Found transferToNative transaction");
-            match ETH_TO_XZO_CODE.parse_abi(&input) {
+            match ETH_TO_NZT_CODE.parse_abi(&input) {
                 Ok(pk) => {
                     info!("Adding account to meta = {}", pk);
 
@@ -1144,7 +1144,7 @@ fn call_inner(
     // system transfers always set s = 0x1
     if Some(Hex(U256::from(0x1))) == tx.s {
         // check if it native swap, then predeposit, amount, to pass transaction
-        if caller == *ETH_TO_XZO_ADDR {
+        if caller == *ETH_TO_NZT_ADDR {
             let amount = value + gas_limit * gas_price;
             executor.deposit(caller, amount)
         }
@@ -1156,11 +1156,11 @@ fn call_inner(
         .collect();
 
     // Simulation does not have access to real account structure, so only process immutable entrypoints
-    let evm_account = RefCell::new(solana_evm_loader_program::create_state_account(
+    let evm_account = RefCell::new(nexis_evm_loader_program::create_state_account(
         evm_state_balance,
     ));
     let evm_keyed_account = KeyedAccount::new(
-        &solana_sdk::evm_state::ID,
+        &nexis_sdk::evm_state::ID,
         false,
         &evm_account,
     );
@@ -1210,7 +1210,7 @@ async fn block_by_number(
         Some(block_num) => meta.get_evm_block_by_id(block_num).await,
         None => None,
     };
-    // TODO: Inline evm_state lookups, and request only solana headers.
+    // TODO: Inline evm_state lookups, and request only nexisheaders.
     let (block, confirmed) = match evm_block {
         None => {
             error!("Error requesting block:{:?} ({:?}) not found", block, num);
@@ -1290,7 +1290,7 @@ async fn trace_call_many(
             .meta_keys
             .iter()
             .flatten()
-            .map(|s| solana_sdk::pubkey::Pubkey::from_str(s))
+            .map(|s| nexis_sdk::pubkey::Pubkey::from_str(s))
             .collect::<Result<Vec<_>, _>>()
             .map_err(|e| into_native_error(e, false))?;
 

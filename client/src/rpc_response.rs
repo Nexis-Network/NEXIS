@@ -1,14 +1,14 @@
 use {
     crate::client_error,
-    solana_account_decoder::{parse_token::UiTokenAmount, UiAccount},
-    solana_sdk::{
+    nexis_account_decoder::{parse_token::UiTokenAmount, UiAccount},
+    nexis_sdk::{
         clock::{Epoch, Slot, UnixTimestamp},
         fee_calculator::{FeeCalculator, FeeRateGovernor},
         hash::Hash,
         inflation::Inflation,
         transaction::{Result, TransactionError},
     },
-    solana_transaction_status::{
+    nexis_transaction_status::{
         ConfirmedTransactionStatusWithSignature, TransactionConfirmationStatus, UiConfirmedBlock,
     },
     std::{collections::HashMap, fmt, net::SocketAddr},
@@ -257,25 +257,25 @@ pub struct RpcBlockProduction {
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "kebab-case")]
 pub struct RpcVersionInfo {
-    /// The current version of solana-core
-    pub solana_core: String,
+    /// The current version ofnexis-core
+    pub nexis_core: String,
     /// first 4 bytes of the FeatureSet identifier
     pub feature_set: Option<u32>,
 }
 
 impl fmt::Debug for RpcVersionInfo {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.solana_core)
+        write!(f, "{}", self.nexis_core)
     }
 }
 
 impl fmt::Display for RpcVersionInfo {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if let Some(version) = self.solana_core.split_whitespace().next() {
+        if let Some(version) = self.nexis_core.split_whitespace().next() {
             // Display just the semver if possible
             write!(f, "{}", version)
         } else {
-            write!(f, "{}", self.solana_core)
+            write!(f, "{}", self.nexis_core)
         }
     }
 }

@@ -4,7 +4,7 @@ use crate::account::{
 
 use crate::hash::Hash;
 
-use solana_program::sysvar::recent_evm_blockhashes::{RecentBlockhashes, MAX_ENTRIES};
+use nexis_program::sysvar::recent_evm_blockhashes::{RecentBlockhashes, MAX_ENTRIES};
 
 pub fn update_account(
     account: &mut AccountSharedData,
@@ -31,7 +31,7 @@ mod tests {
     use super::*;
     use crate::account::from_account;
     use crate::clock::INITIAL_RENT_EPOCH;
-    use solana_program::hash::{Hash, HASH_BYTES};
+    use nexis_program::hash::{Hash, HASH_BYTES};
 
     #[test]
     fn test_create_account() {

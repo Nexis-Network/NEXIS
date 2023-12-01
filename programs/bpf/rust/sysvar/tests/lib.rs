@@ -1,6 +1,6 @@
-use solana_bpf_rust_sysvar::process_instruction;
-use solana_program_test::*;
-use solana_sdk::{
+use nexis_bpf_rust_sysvar::process_instruction;
+use nexis_program_test::*;
+use nexis_sdk::{
     instruction::{AccountMeta, Instruction},
     pubkey::Pubkey,
     signature::Signer,
@@ -15,7 +15,7 @@ use solana_sdk::{
 async fn test_sysvars() {
     let program_id = Pubkey::new_unique();
     let program_test = ProgramTest::new(
-        "solana_bpf_rust_sysvar",
+        "nexis_bpf_rust_sysvar",
         program_id,
         processor!(process_instruction),
     );

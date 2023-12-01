@@ -8,21 +8,21 @@ use {
     },
     log::*,
     serial_test::serial,
-    solana_core::validator::ValidatorConfig,
-    solana_ledger::{
+    nexis_core::validator::ValidatorConfig,
+    nexis_ledger::{
         ancestor_iterator::AncestorIterator, blockstore::Blockstore, blockstore_db::AccessType,
         leader_schedule::FixedSchedule,
     },
-    solana_local_cluster::{
+    nexis_local_cluster::{
         cluster::Cluster,
         local_cluster::{ClusterConfig, LocalCluster},
         validator_configs::*,
     },
-    solana_sdk::{
+    nexis_sdk::{
         clock::Slot,
         signature::{Keypair, Signer},
     },
-    solana_streamer::socket::SocketAddrSpace,
+    nexis_streamer::socket::SocketAddrSpace,
     std::{
         sync::Arc,
         thread::sleep,
@@ -85,7 +85,7 @@ fn test_optimistic_confirmation_violation_without_tower() {
 //    `A` should not be able to generate a switching proof.
 //
 fn do_test_optimistic_confirmation_violation_with_or_without_tower(with_tower: bool) {
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    nexis_logger::setup_with_default(RUST_LOG_FILTER);
 
     // First set up the cluster with 4 nodes
     let slots_per_epoch = 2048;

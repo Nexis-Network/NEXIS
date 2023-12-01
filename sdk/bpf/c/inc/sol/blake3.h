@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @brief Solana Blake3 system call
+ * @brief Nexis Blake3 system call
  */
 
 #include <sol/types.h>
@@ -21,7 +21,7 @@ extern "C" {
  * @param bytes_len Number of byte arrays
  * @param result 32 byte array to hold the result
  */
-uint64_t sol_blake3(
+uint64_t nzt_blake3(
     const SolBytes *bytes,
     int bytes_len,
     const uint8_t *result

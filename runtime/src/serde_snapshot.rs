@@ -20,8 +20,8 @@ use {
     log::*,
     rayon::prelude::*,
     serde::{de::DeserializeOwned, de::Error as _, Deserialize, Serialize},
-    solana_measure::measure::Measure,
-    solana_sdk::{
+    nexis_measure::measure::Measure,
+    nexis_sdk::{
         clock::{Epoch, Slot, UnixTimestamp},
         deserialize_utils::default_on_eof,
         epoch_schedule::EpochSchedule,
@@ -340,7 +340,7 @@ impl<'a, C: TypeContext<'a>> Serialize for SerializableAccountsDb<'a, C> {
 }
 
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
-impl<'a, C> solana_frozen_abi::abi_example::IgnoreAsHelper for SerializableAccountsDb<'a, C> {}
+impl<'a, C> nexis_frozen_abi::abi_example::IgnoreAsHelper for SerializableAccountsDb<'a, C> {}
 
 #[allow(clippy::too_many_arguments)]
 fn reconstruct_bank_from_fields<E>(

@@ -1,29 +1,29 @@
 [package]
-name = "solana-bucket-map"
+name = "nexis-bucket-map"
 version = "1.9.29"
-description = "solana-bucket-map"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-bucket-map"
+description = "nexis-bucket-map"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-bucket-map"
 readme = "../README.md"
-repository = "https://github.com/solana-labs/solana"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
 license = "Apache-2.0"
 edition = "2021"
 
 [dependencies]
 rayon = "1.5.0"
-solana-logger = { path = "../logger", version = "=1.9.29" }
-solana-sdk = { path = "../sdk", version = "=1.9.29" }
+nexis-logger = { path = "../logger", version = "=1.9.29" }
+nexis-sdk = { path = "../sdk", version = "=1.9.29" }
 memmap2 = "0.5.0"
 log = { version = "0.4.11" }
-solana-measure = { path = "../measure", version = "=1.9.29" }
+nexis-measure = { path = "../measure", version = "=1.9.29" }
 rand = "0.7.0"
 fs_extra = "1.2.0"
 tempfile = "3.2.0"
 
 [lib]
 crate-type = ["lib"]
-name = "solana_bucket_map"
+name = "nexis_bucket_map"
 
 [[bench]]
 name = "bucket_map"

@@ -2,7 +2,7 @@
 
 #![cfg(feature = "program")]
 
-use solana_program::{
+use nexis_program::{
     account_info::AccountInfo,
     entrypoint,
     entrypoint::ProgramResult,

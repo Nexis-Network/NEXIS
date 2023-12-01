@@ -4,8 +4,8 @@ use {
         validator_info::*, vote::*, wallet::*,
     },
     clap::{App, AppSettings, Arg, ArgGroup, SubCommand},
-    solana_clap_utils::{self, nonce::NonceArgs, offline::OfflineArgs, fee_payer::fee_payer_arg, memo::memo_arg, input_validators::*, keypair::*},
-    solana_cli_config::CONFIG_FILE,
+    nexis_clap_utils::{self, nonce::NonceArgs, offline::OfflineArgs, fee_payer::fee_payer_arg, memo::memo_arg, input_validators::*, keypair::*},
+    nexis_cli_config::CONFIG_FILE,
 };
 
 pub fn get_clap_app<'ab, 'v>(name: &str, about: &'ab str, version: &'v str) -> App<'ab, 'v> {
@@ -45,7 +45,7 @@ pub fn get_clap_app<'ab, 'v>(name: &str, about: &'ab str, version: &'v str) -> A
                         .long("faucet-port")
                         .value_name("PORT_NUMBER")
                         .takes_value(true)
-                        .default_value(solana_faucet::faucet::FAUCET_PORT_STR)
+                        .default_value(nexis_faucet::faucet::FAUCET_PORT_STR)
                         .help("Faucet port to use"),
                 )
                 .arg(
@@ -55,7 +55,7 @@ pub fn get_clap_app<'ab, 'v>(name: &str, about: &'ab str, version: &'v str) -> A
                         .takes_value(true)
                         .validator(is_amount)
                         .required(true)
-                        .help("The airdrop amount to request, in XZO"),
+                        .help("The airdrop amount to request, in NZT"),
                 )
                 .arg(
                     pubkey!(Arg::with_name("to")
@@ -77,7 +77,7 @@ pub fn get_clap_app<'ab, 'v>(name: &str, about: &'ab str, version: &'v str) -> A
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of XZO"),
+                        .help("Display balance in lamports instead of NZT"),
                 ),
         )
         .subcommand(
@@ -186,7 +186,7 @@ pub fn get_clap_app<'ab, 'v>(name: &str, about: &'ab str, version: &'v str) -> A
                     Arg::with_name("allow_excessive_balance")
                         .long("allow-excessive-deploy-account-balance")
                         .takes_value(false)
-                        .help("Use the designated program id, even if the account already holds a large balance of XZO")
+                        .help("Use the designated program id, even if the account already holds a large balance of NZT")
                 ),
         )
         .subcommand(
@@ -285,7 +285,7 @@ pub fn get_clap_app<'ab, 'v>(name: &str, about: &'ab str, version: &'v str) -> A
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of XZO"),
+                        .help("Display balance in lamports instead of NZT"),
                 ),
         )
         .validator_info_subcommands()
@@ -313,7 +313,7 @@ pub fn get_clap_app<'ab, 'v>(name: &str, about: &'ab str, version: &'v str) -> A
                 .global(true)
                 .validator(is_url_or_moniker)
                 .help(
-                    "URL for Solana's JSON RPC or moniker (or their first letter): \
+                    "URL for Nexis's JSON RPC or moniker (or their first letter): \
                        [mainnet-beta, testnet, devnet, localhost]",
                 ),
         )
@@ -324,7 +324,7 @@ pub fn get_clap_app<'ab, 'v>(name: &str, about: &'ab str, version: &'v str) -> A
                 .takes_value(true)
                 .global(true)
                 .validator(is_url)
-                .help("WebSocket URL for the solana cluster"),
+                .help("WebSocket URL for the nexiscluster"),
         )
         .arg(
             Arg::with_name("keypair")
@@ -413,7 +413,7 @@ pub fn get_clap_app<'ab, 'v>(name: &str, about: &'ab str, version: &'v str) -> A
         .wallet_subcommands()
         .subcommand(
             SubCommand::with_name("config")
-                .about("Solana command-line tool configuration settings")
+                .about("Nexis command-line tool configuration settings")
                 .aliases(&["get", "set"])
                 .setting(AppSettings::SubcommandRequiredElseHelp)
                 .subcommand(

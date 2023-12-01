@@ -1,9 +1,9 @@
 //! Example Rust-based BPF program that tests sysvar use
 
-extern crate solana_program;
+extern crate nexis_program;
 #[allow(deprecated)]
-use solana_program::sysvar::recent_blockhashes::RecentBlockhashes;
-use solana_program::{
+use nexis_program::sysvar::recent_blockhashes::RecentBlockhashes;
+use nexis_program::{
     account_info::AccountInfo,
     entrypoint,
     entrypoint::ProgramResult,

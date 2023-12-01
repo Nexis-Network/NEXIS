@@ -103,8 +103,8 @@ jobs:
         with: 
           draft: true
           files: |
-            exzo-release-${{ matrix.target }}.tar.bz2
-            exzo-release-${{ matrix.target }}.yml
+            nexis-release-${{ matrix.target }}.tar.bz2
+            nexis-release-${{ matrix.target }}.yml
             exzo-install-init-${{ matrix.target }}${{matrix.exe_ext}}
           
       - name: Upload bpf

@@ -1,4 +1,4 @@
-//! Solana precompiled programs
+//! Nexis precompiled programs
 
 #![cfg(feature = "full")]
 

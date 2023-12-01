@@ -1,5 +1,5 @@
 use {
-    solana_sdk::{instruction::Instruction, pubkey::Pubkey},
+    nexis_sdk::{instruction::Instruction, pubkey::Pubkey},
     spl_memo::id,
 };
 

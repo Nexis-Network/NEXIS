@@ -1,11 +1,11 @@
 [package]
-name = "solana-transaction-status"
+name = "nexis-transaction-status"
 version = "1.9.29"
-description = "Solana transaction status types"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-transaction-status"
+description = "Nexis transaction status types"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-transaction-status"
 license = "Apache-2.0"
 edition = "2021"
 
@@ -19,18 +19,18 @@ log = "0.4.14"
 serde = "1.0.130"
 serde_derive = "1.0.103"
 serde_json = "1.0.72"
-solana-account-decoder = { path = "../account-decoder", version = "=1.9.29" }
-solana-measure = { path = "../measure", version = "=1.9.29" }
-solana-metrics = { path = "../metrics", version = "=1.9.29" }
-solana-runtime = { path = "../runtime", version = "=1.9.29" }
-solana-sdk = { path = "../sdk", version = "=1.9.29" }
-solana-vote-program = { path = "../programs/vote", version = "=1.9.29" }
+nexis-account-decompiler = { path = "../account-decompiler", version = "=1.9.29" }
+nexis-measure = { path = "../measure", version = "=1.9.29" }
+nexis-metrics = { path = "../metrics", version = "=1.9.29" }
+nexis-runtime = { path = "../runtime", version = "=1.9.29" }
+nexis-sdk = { path = "../sdk", version = "=1.9.29" }
+nexis-vote-program = { path = "../programs/vote", version = "=1.9.29" }
 spl-associated-token-account = { version = "=1.0.3", features = ["no-entrypoint"] }
 spl-memo = { version = "=3.0.1", features = ["no-entrypoint"] }
 spl-token = { version = "=3.2.0", features = ["no-entrypoint"] }
 evm-state = { path = "../evm-utils/evm-state" }
 evm-rpc = { path = "../evm-utils/evm-rpc" }
-solana-evm-loader-program = { path = "../evm-utils/programs/evm_loader" }
+nexis-evm-loader-program = { path = "../evm-utils/programs/evm_loader" }
 thiserror = "1.0"
 
 [package.metadata.docs.rs]

@@ -1,7 +1,7 @@
 use {
-    solana_cli_config::{Config, CONFIG_FILE},
-    solana_client::rpc_client::RpcClient,
-    solana_tokens::{arg_parser::parse_args, args::Command, commands, spl_token},
+    nexis_cli_config::{Config, CONFIG_FILE},
+    nexis_client::rpc_client::RpcClient,
+    nexis_tokens::{arg_parser::parse_args, args::Command, commands, spl_token},
     std::{
         env,
         error::Error,

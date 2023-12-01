@@ -11,12 +11,12 @@ mod builtins;
 mod compatibility;
 mod errors;
 pub use abi_parse::*;
-pub use builtins::{ETH_TO_XZO_ADDR, ETH_TO_XZO_CODE};
+pub use builtins::{ETH_TO_NZT_ADDR, ETH_TO_NZT_CODE};
 pub use compatibility::build_precompile_map;
 pub use errors::PrecompileErrors;
 
 use crate::account_structure::AccountStructure;
-use solana_sdk::keyed_account::KeyedAccount;
+use nexis_sdk::keyed_account::KeyedAccount;
 
 pub type Result<T, Err = PrecompileErrors> = std::result::Result<T, Err>;
 type CallResult = Result<(PrecompileOutput, u64, LogEntry)>;
@@ -78,13 +78,13 @@ pub static NATIVE_CONTRACTS: Lazy<HashMap<H160, (NativeBuiltinEval, NativePromis
         let mut native_contracts = HashMap::new();
 
         let eth_to_sol: NativeBuiltinEval =
-            &|function_abi_input, cx| (*ETH_TO_XZO_CODE).eval(function_abi_input, cx);
+            &|function_abi_input, cx| (*ETH_TO_NZT_CODE).eval(function_abi_input, cx);
 
         let handle_log: NativePromiseHandler = &|accounts, _topics: Vec<H256>, data| {
-            (*ETH_TO_XZO_CODE).process_promise(accounts, data)
+            (*ETH_TO_NZT_CODE).process_promise(accounts, data)
         };
         assert!(native_contracts
-            .insert(*ETH_TO_XZO_ADDR, (eth_to_sol, handle_log))
+            .insert(*ETH_TO_NZT_ADDR, (eth_to_sol, handle_log))
             .is_none());
         native_contracts
     });
@@ -213,7 +213,7 @@ pub fn filter_native_logs(accounts: AccountStructure<'_>, logs: &mut Vec<Log>) -
 mod test {
     use hex_literal::hex;
     use primitive_types::U256;
-    use solana_sdk::account::{ReadableAccount, WritableAccount};
+    use nexis_sdk::account::{ReadableAccount, WritableAccount};
 
     use crate::scope::evm::lamports_to_gwei;
 

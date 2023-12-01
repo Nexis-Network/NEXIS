@@ -1,8 +1,8 @@
 use {
     crate::rpc_subscriptions::RpcSubscriptions,
-    solana_client::rpc_response::SlotUpdate,
-    solana_ledger::blockstore::CompletedSlotsReceiver,
-    solana_sdk::timing::timestamp,
+    nexis_client::rpc_response::SlotUpdate,
+    nexis_ledger::blockstore::CompletedSlotsReceiver,
+    nexis_sdk::timing::timestamp,
     std::{
         sync::Arc,
         thread::{Builder, JoinHandle},
@@ -16,7 +16,7 @@ impl RpcCompletedSlotsService {
         rpc_subscriptions: Arc<RpcSubscriptions>,
     ) -> JoinHandle<()> {
         Builder::new()
-            .name("solana-rpc-completed-slots-service".to_string())
+            .name("nexis-rpc-completed-slots-service".to_string())
             .spawn(move || {
                 for slots in completed_slots_receiver.iter() {
                     for slot in slots {

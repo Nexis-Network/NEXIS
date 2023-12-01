@@ -1,12 +1,12 @@
 [package]
-name = "solana-bpf-rust-realloc-invoke"
+name = "nexis-bpf-rust-realloc-invoke"
 version = "1.9.29"
-description = "Solana BPF test program written in Rust"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "Nexis BPF test program written in Rust"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-bpf-rust-realloc-invoke"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-bpf-rust-realloc-invoke"
 edition = "2021"
 
 [features]
@@ -14,8 +14,8 @@ default = ["program"]
 program = []
 
 [dependencies]
-solana-program = { path = "../../../../sdk/program", version = "=1.9.29" }
-solana-bpf-rust-realloc = { path = "../realloc", version = "=1.9.29", default-features = false }
+nexis-program = { path = "../../../../sdk/program", version = "=1.9.29" }
+nexis-bpf-rust-realloc = { path = "../realloc", version = "=1.9.29", default-features = false }
 
 [lib]
 crate-type = ["lib", "cdylib"]

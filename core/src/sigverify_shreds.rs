@@ -1,12 +1,12 @@
 #![allow(clippy::implicit_hasher)]
 use {
     crate::{sigverify, sigverify_stage::SigVerifier},
-    solana_ledger::{
+    nexis_ledger::{
         leader_schedule_cache::LeaderScheduleCache, shred::Shred,
         sigverify_shreds::verify_shreds_gpu,
     },
-    solana_perf::{self, packet::PacketBatch, recycler_cache::RecyclerCache},
-    solana_runtime::bank_forks::BankForks,
+    nexis_perf::{self, packet::PacketBatch, recycler_cache::RecyclerCache},
+    nexis_runtime::bank_forks::BankForks,
     std::{
         collections::{HashMap, HashSet},
         sync::{Arc, RwLock},
@@ -60,7 +60,7 @@ impl SigVerifier for ShredSigVerifier {
         leader_slots.insert(std::u64::MAX, [0u8; 32]);
 
         let r = verify_shreds_gpu(&batches, &leader_slots, &self.recycler_cache);
-        solana_perf::sigverify::mark_disabled(&mut batches, &r);
+        nexis_perf::sigverify::mark_disabled(&mut batches, &r);
         batches
     }
 }
@@ -69,18 +69,18 @@ impl SigVerifier for ShredSigVerifier {
 pub mod tests {
     use {
         super::*,
-        solana_ledger::{
+        nexis_ledger::{
             genesis_utils::create_genesis_config_with_leader,
             shred::{Shred, Shredder},
         },
-        solana_perf::packet::Packet,
-        solana_runtime::bank::Bank,
-        solana_sdk::signature::{Keypair, Signer},
+        nexis_perf::packet::Packet,
+        nexis_runtime::bank::Bank,
+        nexis_sdk::signature::{Keypair, Signer},
     };
 
     #[test]
     fn test_sigverify_shreds_read_slots() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let mut shred = Shred::new_from_data(
             0xdead_c0de,
             0xc0de,
@@ -165,7 +165,7 @@ pub mod tests {
         batches[0].packets[1].data[0..shred.payload.len()].copy_from_slice(&shred.payload);
         batches[0].packets[1].meta.size = shred.payload.len();
 
-        let num_packets = solana_perf::sigverify::count_packets_in_batches(&batches);
+        let num_packets = nexis_perf::sigverify::count_packets_in_batches(&batches);
         let rv = verifier.verify_batches(batches, num_packets);
         assert!(!rv[0].packets[0].meta.discard());
         assert!(rv[0].packets[1].meta.discard());

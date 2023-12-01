@@ -1,4 +1,4 @@
-const DEFAULT_INSTANCE: &str = "solana-ledger";
+const DEFAULT_INSTANCE: &str = "nexis-ledger";
 const DEFAULT_BIGTABLE_LIMIT: &str = "150000";
 
 #[derive(clap::Parser)]

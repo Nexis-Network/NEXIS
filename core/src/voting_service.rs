@@ -1,10 +1,10 @@
 use {
     crate::tower_storage::{SavedTower, TowerStorage},
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_measure::measure::Measure,
-    solana_poh::poh_recorder::PohRecorder,
-    solana_runtime::bank_forks::BankForks,
-    solana_sdk::{clock::Slot, transaction::Transaction},
+    nexis_gossip::cluster_info::ClusterInfo,
+    nexis_measure::measure::Measure,
+    nexis_poh::poh_recorder::PohRecorder,
+    nexis_runtime::bank_forks::BankForks,
+    nexis_sdk::{clock::Slot, transaction::Transaction},
     std::{
         sync::{mpsc::Receiver, Arc, Mutex, RwLock},
         thread::{self, Builder, JoinHandle},

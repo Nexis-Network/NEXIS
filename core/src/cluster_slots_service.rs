@@ -1,11 +1,11 @@
 use {
     crate::cluster_slots::ClusterSlots,
     crossbeam_channel::{Receiver, RecvTimeoutError, Sender},
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::blockstore::Blockstore,
-    solana_measure::measure::Measure,
-    solana_runtime::bank_forks::BankForks,
-    solana_sdk::clock::Slot,
+    nexis_gossip::cluster_info::ClusterInfo,
+    nexis_ledger::blockstore::Blockstore,
+    nexis_measure::measure::Measure,
+    nexis_runtime::bank_forks::BankForks,
+    nexis_sdk::clock::Slot,
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},
@@ -48,7 +48,7 @@ impl ClusterSlotsService {
         Self::initialize_lowest_slot(&blockstore, &cluster_info);
         Self::initialize_epoch_slots(&bank_forks, &cluster_info);
         let t_cluster_slots_service = Builder::new()
-            .name("solana-cluster-slots-service".to_string())
+            .name("nexis-cluster-slots-service".to_string())
             .spawn(move || {
                 Self::run(
                     blockstore,
@@ -181,9 +181,9 @@ impl ClusterSlotsService {
 mod test {
     use {
         super::*,
-        solana_gossip::{cluster_info::Node, crds_value::LowestSlot},
-        solana_sdk::{pubkey::Pubkey, signature::Keypair},
-        solana_streamer::socket::SocketAddrSpace,
+        nexis_gossip::{cluster_info::Node, crds_value::LowestSlot},
+        nexis_sdk::{pubkey::Pubkey, signature::Keypair},
+        nexis_streamer::socket::SocketAddrSpace,
     };
 
     #[test]

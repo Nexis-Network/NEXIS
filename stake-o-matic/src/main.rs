@@ -6,20 +6,20 @@ use {
     },
     log::*,
     reqwest::StatusCode,
-    solana_clap_utils::{
+    nexis_clap_utils::{
         input_parsers::{keypair_of, pubkey_of},
         input_validators::{
             is_amount, is_keypair, is_pubkey_or_keypair, is_url, is_valid_percentage,
         },
     },
-    solana_cli_output::display::format_labeled_address,
-    solana_client::{
+    nexis_cli_output::display::format_labeled_address,
+    nexis_client::{
         client_error, rpc_client::RpcClient, rpc_config::RpcSimulateTransactionConfig,
         rpc_request::MAX_GET_SIGNATURE_STATUSES_QUERY_ITEMS, rpc_response::RpcVoteAccountInfo,
     },
-    solana_metrics::datapoint_info,
-    solana_notifier::Notifier,
-    solana_sdk::{
+    nexis_metrics::datapoint_info,
+    nexis_notifier::Notifier,
+    nexis_sdk::{
         account_utils::StateMut,
         clock::{Epoch, Slot},
         commitment_config::CommitmentConfig,
@@ -29,7 +29,7 @@ use {
         signature::{Keypair, Signature, Signer},
         transaction::Transaction,
     },
-    solana_stake_program::{stake_instruction, stake_state::StakeState},
+    nexis_stake_program::{stake_instruction, stake_state::StakeState},
     std::{
         collections::{HashMap, HashSet},
         error,
@@ -68,7 +68,7 @@ impl InfrastructureConcentrationAffects {
             validator_id,
             concentration,
             config.max_infrastructure_concentration,
-            lamports_to_sol(config.baseline_stake_amount),
+            lamports_to_nzt(config.baseline_stake_amount),
         )
     }
     fn warning_memo(validator_id: &Pubkey, concentration: f64, config: &Config) -> String {
@@ -258,7 +258,7 @@ impl Config {
 
 fn default_confirmed_block_cache_path() -> PathBuf {
     let home_dir = std::env::var("HOME").unwrap();
-    PathBuf::from(home_dir).join(".cache/solana/som/confirmed-block-cache/")
+    PathBuf::from(home_dir).join(".cache/nexis/som/confirmed-block-cache/")
 }
 
 fn get_config() -> Config {
@@ -277,7 +277,7 @@ fn get_config() -> Config {
                 .takes_value(true)
                 .global(true)
                 .help("Configuration file to use");
-            if let Some(ref config_file) = *solana_cli_config::CONFIG_FILE {
+            if let Some(ref config_file) = *nexis_cli_config::CONFIG_FILE {
                 arg.default_value(config_file)
             } else {
                 arg
@@ -362,7 +362,7 @@ fn get_config() -> Config {
         .arg(
             Arg::with_name("baseline_stake_amount")
                 .long("baseline-stake-amount")
-                .value_name("SOL")
+                .value_name("NZT")
                 .takes_value(true)
                 .default_value("5000")
                 .validator(is_amount)
@@ -370,7 +370,7 @@ fn get_config() -> Config {
         .arg(
             Arg::with_name("bonus_stake_amount")
                 .long("bonus-stake-amount")
-                .value_name("SOL")
+                .value_name("NZT")
                 .takes_value(true)
                 .default_value("50000")
                 .validator(is_amount)
@@ -451,9 +451,9 @@ fn get_config() -> Config {
         .get_matches();
 
     let config = if let Some(config_file) = matches.value_of("config_file") {
-        solana_cli_config::Config::load(config_file).unwrap_or_default()
+        nexis_cli_config::Config::load(config_file).unwrap_or_default()
     } else {
-        solana_cli_config::Config::default()
+        nexis_cli_config::Config::default()
     };
 
     let source_stake_address = pubkey_of(&matches, "source_stake_address").unwrap();
@@ -468,19 +468,19 @@ fn get_config() -> Config {
     let max_old_release_version_percentage =
         value_t_or_exit!(matches, "max_old_release_version_percentage", usize);
     let baseline_stake_amount =
-        sol_to_lamports(value_t_or_exit!(matches, "baseline_stake_amount", f64));
-    let bonus_stake_amount = sol_to_lamports(value_t_or_exit!(matches, "bonus_stake_amount", f64));
+        nzt_to_lamports(value_t_or_exit!(matches, "baseline_stake_amount", f64));
+    let bonus_stake_amount = nzt_to_lamports(value_t_or_exit!(matches, "bonus_stake_amount", f64));
     let min_release_version = release_version_of(&matches, "min_release_version");
 
     let (json_rpc_url, validator_list) = match cluster.as_str() {
         "mainnet" => (
             value_t!(matches, "json_rpc_url", String)
-                .unwrap_or_else(|_| "https://rpc-main-1.exzo.network".into()),
+                .unwrap_or_else(|_| "https://rpc-main-1.nexis.network".into()),
             validator_list::mainnet_beta_validators(),
         ),
         "testnet" => (
             value_t!(matches, "json_rpc_url", String)
-                .unwrap_or_else(|_| "https://rpc-test-1.exzo.network".into()),
+                .unwrap_or_else(|_| "https://rpc-test-1.nexis.network".into()),
             validator_list::testnet_validators(),
         ),
         "unknown" => {
@@ -569,7 +569,7 @@ fn get_stake_account(
         )
     })?;
 
-    if account.owner != solana_stake_program::id() {
+    if account.owner != nexis_stake_program::id() {
         return Err(format!(
             "not a stake account (owned by {}): {}",
             account.owner, address
@@ -757,8 +757,8 @@ fn validate_source_stake_account(
         get_stake_account(rpc_client, &config.source_stake_address)?;
 
     info!(
-        "stake account balance: {} SOL",
-        lamports_to_sol(source_stake_balance)
+        "stake account balance: {} NZT",
+        lamports_to_nzt(source_stake_balance)
     );
     match &source_stake_state {
         StakeState::Initialized(_) | StakeState::Stake(_, _) => source_stake_state
@@ -831,8 +831,8 @@ fn transact(
 ) -> Result<Vec<ConfirmedTransaction>, Box<dyn error::Error>> {
     let authorized_staker_balance = rpc_client.get_balance(&authorized_staker.pubkey())?;
     info!(
-        "Authorized staker balance: {} SOL",
-        lamports_to_sol(authorized_staker_balance)
+        "Authorized staker balance: {} NZT",
+        lamports_to_nzt(authorized_staker_balance)
     );
 
     let (blockhash, fee_calculator, last_valid_slot) = rpc_client
@@ -843,7 +843,7 @@ fn transact(
     let required_fee = transactions.iter().fold(0, |fee, (transaction, _)| {
         fee + fee_calculator.calculate_fee(&transaction.message)
     });
-    info!("Required fee: {} SOL", lamports_to_sol(required_fee));
+    info!("Required fee: {} NZT", lamports_to_nzt(required_fee));
     if required_fee > authorized_staker_balance {
         return Err("Authorized staker has insufficient funds".into());
     }
@@ -1090,7 +1090,7 @@ fn get_data_center_info() -> Result<Vec<DatacenterInfo>, Box<dyn error::Error>> 
 
 #[allow(clippy::cognitive_complexity)] // Yeah I know...
 fn main() -> Result<(), Box<dyn error::Error>> {
-    solana_logger::setup_with_default("solana=info");
+    nexis_logger::setup_with_default("nexis=info");
     let config = get_config();
 
     let notifier = Notifier::default();
@@ -1211,13 +1211,13 @@ fn main() -> Result<(), Box<dyn error::Error>> {
         let baseline_stake_address = Pubkey::create_with_seed(
             &config.authorized_staker.pubkey(),
             baseline_seed,
-            &solana_stake_program::id(),
+            &nexis_stake_program::id(),
         )
         .unwrap();
         let bonus_stake_address = Pubkey::create_with_seed(
             &config.authorized_staker.pubkey(),
             bonus_seed,
-            &solana_stake_program::id(),
+            &nexis_stake_program::id(),
         )
         .unwrap();
 
@@ -1358,7 +1358,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
                     formatted_node_pubkey,
                     commission,
                     config.max_commission,
-                    lamports_to_sol(config.baseline_stake_amount),
+                    lamports_to_nzt(config.baseline_stake_amount),
                 ),
             ));
 
@@ -1376,7 +1376,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
                     formatted_node_pubkey,
                     commission,
                     config.max_commission,
-                    lamports_to_sol(config.bonus_stake_amount),
+                    lamports_to_nzt(config.bonus_stake_amount),
                 ),
             ));
         } else if !too_many_old_validators
@@ -1394,7 +1394,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
                 format!(
                     "🧮 `{}` is running an old software release. Removed ◎{} baseline stake",
                     formatted_node_pubkey,
-                    lamports_to_sol(config.baseline_stake_amount),
+                    lamports_to_nzt(config.baseline_stake_amount),
                 ),
             ));
 
@@ -1410,7 +1410,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
                 format!(
                     "🧮 `{}` is running an old software release. Removed ◎{} bonus stake",
                     formatted_node_pubkey,
-                    lamports_to_sol(config.bonus_stake_amount),
+                    lamports_to_nzt(config.bonus_stake_amount),
                 ),
             ));
 
@@ -1440,7 +1440,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
                     format!(
                         "🥩 `{}` is current. Added ◎{} baseline stake",
                         formatted_node_pubkey,
-                        lamports_to_sol(config.baseline_stake_amount),
+                        lamports_to_nzt(config.baseline_stake_amount),
                     ),
                 ));
             }
@@ -1463,7 +1463,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
                             "🏅 `{}` was a quality block producer during epoch {}. Added ◎{} bonus stake",
                             formatted_node_pubkey,
                             last_epoch,
-                            lamports_to_sol(config.bonus_stake_amount),
+                            lamports_to_nzt(config.bonus_stake_amount),
                         ),
                     ));
                     }
@@ -1482,7 +1482,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
                         "💔 `{}` was a poor block producer during epoch {}. Removed ◎{} bonus stake",
                         formatted_node_pubkey,
                         last_epoch,
-                        lamports_to_sol(config.bonus_stake_amount),
+                        lamports_to_nzt(config.bonus_stake_amount),
                     ),
                 ));
                 }
@@ -1506,7 +1506,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
                     format!(
                         "🏖️ `{}` is delinquent. Removed ◎{} baseline stake",
                         formatted_node_pubkey,
-                        lamports_to_sol(config.baseline_stake_amount),
+                        lamports_to_nzt(config.baseline_stake_amount),
                     ),
                 ));
 
@@ -1522,7 +1522,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
                     format!(
                         "🏖️ `{}` is delinquent. Removed ◎{} bonus stake",
                         formatted_node_pubkey,
-                        lamports_to_sol(config.bonus_stake_amount),
+                        lamports_to_nzt(config.bonus_stake_amount),
                     ),
                 ));
 
@@ -1552,15 +1552,15 @@ fn main() -> Result<(), Box<dyn error::Error>> {
         info!("All stake accounts exist");
     } else {
         info!(
-            "{} SOL is required to create {} stake accounts",
-            lamports_to_sol(source_stake_lamports_required),
+            "{} NZT is required to create {} stake accounts",
+            lamports_to_nzt(source_stake_lamports_required),
             create_stake_transactions.len()
         );
         if source_stake_balance < source_stake_lamports_required {
             error!(
-                "Source stake account has insufficient balance: {} SOL, but {} SOL is required",
-                lamports_to_sol(source_stake_balance),
-                lamports_to_sol(source_stake_lamports_required)
+                "Source stake account has insufficient balance: {} NZT, but {} NZT is required",
+                lamports_to_nzt(source_stake_balance),
+                lamports_to_nzt(source_stake_lamports_required)
             );
             process::exit(1);
         }
@@ -1652,7 +1652,7 @@ mod test {
 
     #[test]
     fn test_quality_producer_with_average_skip_rate() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let config = Config {
             quality_block_producer_percentage: 10,
             max_poor_block_producer_percentage: 40,
@@ -1689,7 +1689,7 @@ mod test {
 
     #[test]
     fn test_quality_producer_when_all_poor() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let config = Config {
             quality_block_producer_percentage: 10,
             use_cluster_average_skip_rate: false,

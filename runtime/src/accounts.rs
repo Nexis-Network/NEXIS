@@ -25,8 +25,8 @@ use {
     },
     log::*,
     rand::{thread_rng, Rng},
-    solana_address_lookup_table_program::state::AddressLookupTable,
-    solana_sdk::{
+    nexis_address_lookup_table_program::state::AddressLookupTable,
+    nexis_sdk::{
         account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
         account_utils::StateMut,
         bpf_loader_upgradeable::{self, UpgradeableLoaderState},
@@ -249,7 +249,7 @@ impl Accounts {
             .map(|(account, _rent)| account)
             .ok_or(AddressLookupError::LookupTableAccountNotFound)?;
 
-        if table_account.owner() == &solana_address_lookup_table_program::id() {
+        if table_account.owner() == &nexis_address_lookup_table_program::id() {
             let current_slot = ancestors.max_slot();
             let lookup_table = AddressLookupTable::deserialize(table_account.data())
                 .map_err(|_ix_err| AddressLookupError::InvalidAccountData)?;
@@ -304,7 +304,7 @@ impl Accounts {
                         payer_index = Some(i);
                     }
 
-                    if solana_sdk::sysvar::instructions::check_id(key) {
+                    if nexis_sdk::sysvar::instructions::check_id(key) {
                         Self::construct_instructions_account(
                             message,
                             feature_set
@@ -1296,7 +1296,7 @@ pub fn create_test_accounts(
     slot: Slot,
 ) {
     for t in 0..num {
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
         let account =
             AccountSharedData::new((t + 1) as u64, 0, AccountSharedData::default().owner());
         accounts.store_slow_uncached(slot, &pubkey, &account);
@@ -1323,9 +1323,9 @@ mod tests {
             rent_collector::RentCollector,
         },
         assert_matches::assert_matches,
-        solana_address_lookup_table_program::state::LookupTableMeta,
-        solana_program_runtime::invoke_context::Executors,
-        solana_sdk::{
+        nexis_address_lookup_table_program::state::LookupTableMeta,
+        nexis_program_runtime::invoke_context::Executors,
+        nexis_sdk::{
             account::{AccountSharedData, WritableAccount},
             epoch_schedule::EpochSchedule,
             genesis_config::ClusterType,
@@ -1597,7 +1597,7 @@ mod tests {
         let keypair = Keypair::new();
         let key0 = keypair.pubkey();
 
-        let account = AccountSharedData::new(1, 1, &solana_sdk::pubkey::new_rand()); // <-- owner is not the system program
+        let account = AccountSharedData::new(1, 1, &nexis_sdk::pubkey::new_rand()); // <-- owner is not the system program
         accounts.push((key0, account));
 
         let instructions = vec![CompiledInstruction::new(1, &(), vec![0])];
@@ -2017,7 +2017,7 @@ mod tests {
 
         let invalid_table_key = Pubkey::new_unique();
         let invalid_table_account =
-            AccountSharedData::new(1, 0, &solana_address_lookup_table_program::id());
+            AccountSharedData::new(1, 0, &nexis_address_lookup_table_program::id());
         accounts.store_slow_uncached(0, &invalid_table_key, &invalid_table_account);
 
         let address_table_lookup = MessageAddressTableLookup {
@@ -2062,7 +2062,7 @@ mod tests {
             AccountSharedData::create(
                 1,
                 table_data,
-                solana_address_lookup_table_program::id(),
+                nexis_address_lookup_table_program::id(),
                 false,
                 0,
             )
@@ -2099,13 +2099,13 @@ mod tests {
         );
 
         // Load accounts owned by various programs into AccountsDb
-        let pubkey0 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = nexis_sdk::pubkey::new_rand();
         let account0 = AccountSharedData::new(1, 0, &Pubkey::new(&[2; 32]));
         accounts.store_slow_uncached(0, &pubkey0, &account0);
-        let pubkey1 = solana_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
         let account1 = AccountSharedData::new(1, 0, &Pubkey::new(&[2; 32]));
         accounts.store_slow_uncached(0, &pubkey1, &account1);
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey2 = nexis_sdk::pubkey::new_rand();
         let account2 = AccountSharedData::new(1, 0, &Pubkey::new(&[3; 32]));
         accounts.store_slow_uncached(0, &pubkey2, &account2);
 
@@ -2870,7 +2870,7 @@ mod tests {
     fn test_collect_accounts_to_store() {
         let keypair0 = Keypair::new();
         let keypair1 = Keypair::new();
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
         let account0 = AccountSharedData::new(1, 0, &Pubkey::default());
         let account1 = AccountSharedData::new(2, 0, &Pubkey::default());
         let account2 = AccountSharedData::new(3, 0, &Pubkey::default());
@@ -2978,7 +2978,7 @@ mod tests {
 
     #[test]
     fn huge_clean() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let accounts = Accounts::new_with_config_for_tests(
             Vec::new(),
             &ClusterType::Development,
@@ -2990,7 +2990,7 @@ mod tests {
         let zero_account = AccountSharedData::new(0, 0, AccountSharedData::default().owner());
         info!("storing..");
         for i in 0..2_000 {
-            let pubkey = solana_sdk::pubkey::new_rand();
+            let pubkey = nexis_sdk::pubkey::new_rand();
             let account =
                 AccountSharedData::new((i + 1) as u64, 0, AccountSharedData::default().owner());
             accounts.store_slow_uncached(i, &pubkey, &account);
@@ -3032,7 +3032,7 @@ mod tests {
 
     #[test]
     fn test_instructions() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let accounts = Accounts::new_with_config_for_tests(
             Vec::new(),
             &ClusterType::Development,
@@ -3041,12 +3041,12 @@ mod tests {
             AccountShrinkThreshold::default(),
         );
 
-        let instructions_key = solana_sdk::sysvar::instructions::id();
+        let instructions_key = nexis_sdk::sysvar::instructions::id();
         let keypair = Keypair::new();
         let instructions = vec![CompiledInstruction::new(1, &(), vec![0, 1])];
         let tx = Transaction::new_with_compiled_instructions(
             &[&keypair],
-            &[solana_sdk::pubkey::new_rand(), instructions_key],
+            &[nexis_sdk::pubkey::new_rand(), instructions_key],
             Hash::default(),
             vec![native_loader::id()],
             instructions,
@@ -3059,7 +3059,7 @@ mod tests {
 
     #[test]
     fn test_overrides() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let accounts = Accounts::new_with_config_for_tests(
             Vec::new(),
             &ClusterType::Development,

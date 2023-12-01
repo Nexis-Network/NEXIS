@@ -1,12 +1,12 @@
 [package]
-authors = ["Solana Maintainers <maintainers@solana.com>"]
+authors = ["Nexis Maintainers <maintainers@nexis.network>"]
 description = "Blockchain, Rebuilt for Scale"
 edition = "2021"
-homepage = "https://solana.com/"
+homepage = "https://nexis.network/"
 license = "Apache-2.0"
 name = "proto"
 publish = false
-repository = "https://github.com/solana-labs/solana"
+repository = "https://github.com/nexis-network/nexis"
 version = "1.9.29"
 
 [workspace]

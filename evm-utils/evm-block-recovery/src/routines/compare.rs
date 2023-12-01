@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use anyhow::*;
-use solana_storage_bigtable::LedgerStorage;
+use nexis_storage_bigtable::LedgerStorage;
 
 pub async fn compare_native(
     start_slot: u64,

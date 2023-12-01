@@ -1,7 +1,7 @@
 /**
  * @brief Secp256k1Recover Syscall test
  */
-#include <solana_sdk.h>
+#include <nexis_sdk.h>
 
 extern uint64_t entrypoint(const uint8_t *input) {
 
@@ -29,10 +29,10 @@ extern uint64_t entrypoint(const uint8_t *input) {
                           0x23, 0x5f, 0x96, 0xd8, 0xf0, 0x72, 0x01, 0x2d};
   uint64_t recovery_id = 1;
 
-  uint64_t result_code = sol_secp256k1_recover(hash, recovery_id, signature, result);
+  uint64_t result_code = nzt_secp256k1_recover(hash, recovery_id, signature, result);
 
-  sol_assert(0 == result_code);
-  sol_assert(0 == sol_memcmp(result, expected, SHA256_RESULT_LENGTH));
+  nzt_assert(0 == result_code);
+  nzt_assert(0 == nzt_memcmp(result, expected, SHA256_RESULT_LENGTH));
 
   return SUCCESS;
 }

@@ -1,16 +1,16 @@
 [package]
-name = "solana-merkle-tree"
+name = "nexis-merkle-tree"
 version = "1.9.29"
-description = "Solana Merkle Tree"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "Nexis Merkle Tree"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-merkle-tree"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-merkle-tree"
 edition = "2021"
 
 [dependencies]
-solana-program = { path = "../sdk/program", version = "=1.9.29" }
+nexis-program = { path = "../sdk/program", version = "=1.9.29" }
 fast-math = "0.1"
 
 # This can go once the BPF toolchain target Rust 1.42.0+
@@ -22,7 +22,7 @@ hex = "0.4.3"
 
 [lib]
 crate-type = ["lib"]
-name = "solana_merkle_tree"
+name = "nexis_merkle_tree"
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

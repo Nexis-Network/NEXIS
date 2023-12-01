@@ -1,6 +1,6 @@
-use solana_bpf_rust_mem::entrypoint::process_instruction;
-use solana_program_test::*;
-use solana_sdk::{
+use nexis_bpf_rust_mem::entrypoint::process_instruction;
+use nexis_program_test::*;
+use nexis_sdk::{
     instruction::Instruction, pubkey::Pubkey, signature::Signer, transaction::Transaction,
 };
 
@@ -8,7 +8,7 @@ use solana_sdk::{
 async fn test_mem() {
     let program_id = Pubkey::new_unique();
     let program_test = ProgramTest::new(
-        "solana_bpf_rust_mem",
+        "nexis_bpf_rust_mem",
         program_id,
         processor!(process_instruction),
     );

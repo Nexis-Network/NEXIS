@@ -1,6 +1,6 @@
 use {
-    solana_program_runtime::{ic_msg, invoke_context::InvokeContext},
-    solana_sdk::{
+    nexis_program_runtime::{ic_msg, invoke_context::InvokeContext},
+    nexis_sdk::{
         account::{ReadableAccount, WritableAccount},
         account_utils::State as AccountUtilsState,
         feature_set::{self, nonce_must_be_writable},
@@ -342,8 +342,8 @@ mod test {
     use {
         super::*,
         assert_matches::assert_matches,
-        solana_program_runtime::invoke_context::InvokeContext,
-        solana_sdk::{
+        nexis_program_runtime::invoke_context::InvokeContext,
+        nexis_sdk::{
             account::ReadableAccount,
             account_utils::State as AccountUtilsState,
             hash::{hash, Hash},

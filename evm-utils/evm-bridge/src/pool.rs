@@ -15,12 +15,12 @@ use listener::PoolListener;
 use log::*;
 use once_cell::sync::Lazy;
 use serde_json::json;
-use solana_client::{rpc_config::RpcSendTransactionConfig, rpc_request::RpcRequest};
-use solana_evm_loader_program::{
-    scope::{evm, solana},
+use nexis_client::{rpc_config::RpcSendTransactionConfig, rpc_request::RpcRequest};
+use nexis_evm_loader_program::{
+    scope::{evm, nexis},
     tx_chunks::TxChunks,
 };
-use solana_sdk::{
+use nexis_sdk::{
     commitment_config::{CommitmentConfig, CommitmentLevel},
     message::Message,
     pubkey::Pubkey,
@@ -199,7 +199,7 @@ impl<C: Clock> EthPool<C> {
     /// Adds signature for later tracking of transaction status
     ///
     /// * `hash` - EVM transaction hash
-    /// * `signature` - signature of Solana transaction to be checked for status
+    /// * `signature` - signature of Nexis transaction to be checked for status
     /// * `meta_keys` -
     /// * `evm_tx` - ethereum tx to be redeployed in case of status error
     pub fn schedule_after_deploy_check(
@@ -576,13 +576,13 @@ async fn process_tx(
         tx.signature.chain_id()
     );
 
-    // Shortcut for swap tokens to native, will add solana account to transaction.
+    // Shortcut for swap tokens to native, will add nexisaccount to transaction.
     if let TransactionAction::Call(addr) = tx.action {
-        use solana_evm_loader_program::precompiles::*;
+        use nexis_evm_loader_program::precompiles::*;
 
-        if addr == *ETH_TO_XZO_ADDR {
+        if addr == *ETH_TO_NZT_ADDR {
             debug!("Found transferToNative transaction");
-            match ETH_TO_XZO_CODE.parse_abi(&tx.input) {
+            match ETH_TO_NZT_CODE.parse_abi(&tx.input) {
                 Ok(pk) => {
                     info!("Adding account to meta = {}", pk);
                     meta_keys.insert(pk);
@@ -596,7 +596,7 @@ async fn process_tx(
 
     let instructions = bridge.make_send_tx_instructions(&tx, &meta_keys);
     let message = Message::new(&instructions, Some(&bridge.key.pubkey()));
-    let mut send_raw_tx: solana::Transaction = solana::Transaction::new_unsigned(message);
+    let mut send_raw_tx: nexis::Transaction = nexis::Transaction::new_unsigned(message);
 
     debug!("Getting block hash");
     let (blockhash, _height) = bridge
@@ -642,12 +642,12 @@ async fn process_tx(
 #[instrument]
 async fn deploy_big_tx(
     bridge: &EvmBridge,
-    payer: &solana_sdk::signature::Keypair,
+    payer: &nexis_sdk::signature::Keypair,
     tx: &evm::Transaction,
 ) -> EvmResult<()> {
     let payer_pubkey = payer.pubkey();
 
-    let storage = solana_sdk::signature::Keypair::new();
+    let storage = nexis_sdk::signature::Keypair::new();
     let storage_pubkey = storage.pubkey();
 
     let signers = [payer, &storage];
@@ -688,16 +688,16 @@ async fn deploy_big_tx(
         &storage_pubkey,
         balance,
         tx_bytes.len() as u64,
-        &solana_evm_loader_program::ID,
+        &nexis_evm_loader_program::ID,
     );
 
     let allocate_storage_ix = if bridge.borsh_encoding {
-        solana_evm_loader_program::big_tx_allocate(storage_pubkey, tx_bytes.len())
+        nexis_evm_loader_program::big_tx_allocate(storage_pubkey, tx_bytes.len())
     } else {
-        solana_evm_loader_program::big_tx_allocate_old(storage_pubkey, tx_bytes.len())
+        nexis_evm_loader_program::big_tx_allocate_old(storage_pubkey, tx_bytes.len())
     };
 
-    let create_and_allocate_tx = solana::Transaction::new_signed_with_payer(
+    let create_and_allocate_tx = nexis::Transaction::new_signed_with_payer(
         &[create_storage_ix, allocate_storage_ix],
         Some(&payer_pubkey),
         &signers,
@@ -742,19 +742,19 @@ async fn deploy_big_tx(
         .await
         .map_err(|e| into_native_error(e, bridge.verbose_errors))?;
 
-    let write_data_txs: Vec<solana::Transaction> = tx_bytes
+    let write_data_txs: Vec<nexis::Transaction> = tx_bytes
         // TODO: encapsulate
         .chunks(evm_state::TX_MTU)
         .enumerate()
         .map(|(i, chunk)| {
             if bridge.borsh_encoding {
-                solana_evm_loader_program::big_tx_write(
+                nexis_evm_loader_program::big_tx_write(
                     storage_pubkey,
                     (i * evm_state::TX_MTU) as u64,
                     chunk.to_vec(),
                 )
             } else {
-                solana_evm_loader_program::big_tx_write_old(
+                nexis_evm_loader_program::big_tx_write_old(
                     storage_pubkey,
                     (i * evm_state::TX_MTU) as u64,
                     chunk.to_vec(),
@@ -762,7 +762,7 @@ async fn deploy_big_tx(
             }
         })
         .map(|instruction| {
-            solana::Transaction::new_signed_with_payer(
+            nexis::Transaction::new_signed_with_payer(
                 &[instruction],
                 Some(&payer_pubkey),
                 &signers,
@@ -789,7 +789,7 @@ async fn deploy_big_tx(
         .value;
 
     let instructions = bridge.make_send_big_tx_instructions(tx, storage_pubkey, payer_pubkey);
-    let execute_tx = solana::Transaction::new_signed_with_payer(
+    let execute_tx = nexis::Transaction::new_signed_with_payer(
         &instructions,
         Some(&payer_pubkey),
         &signers,

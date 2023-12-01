@@ -16,13 +16,13 @@ use {
     },
 
     serde::{de::DeserializeOwned, Serialize},
-    solana_runtime::hardened_unpack::UnpackError,
-    solana_sdk::{
+    nexis_runtime::hardened_unpack::UnpackError,
+    nexis_sdk::{
         clock::{Slot, UnixTimestamp},
         pubkey::Pubkey,
         signature::Signature,
     },
-    solana_storage_proto::convert::{generated, generated_evm},
+    nexis_storage_proto::convert::{generated, generated_evm},
     std::{
         collections::{HashMap, HashSet},
         ffi::{CStr, CString},
@@ -488,7 +488,7 @@ impl Rocks {
                 match DB::open_cf_descriptors(&db_options, path, cfs.into_iter().map(|c| c.1)) {
                     Ok(db) => Rocks(db, ActualAccessType::Primary, oldest_slot, oldest_block_num),
                     Err(err) => {
-                        let secondary_path = path.join("solana-secondary");
+                        let secondary_path = path.join("nexis-secondary");
 
                         warn!("Error when opening as primary: {}", err);
                         warn!("Trying as secondary at : {:?}", secondary_path);

@@ -1,7 +1,7 @@
 //! Example Rust-based BPF program that tests duplicate accounts passed via accounts
 
-extern crate solana_program;
-use solana_program::{
+extern crate nexis_program;
+use nexis_program::{
     account_info::AccountInfo,
     entrypoint,
     entrypoint::ProgramResult,

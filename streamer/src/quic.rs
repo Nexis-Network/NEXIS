@@ -4,8 +4,8 @@ use {
     pkcs8::{der::Document, AlgorithmIdentifier, ObjectIdentifier},
     quinn::{Endpoint, EndpointConfig, ServerConfig},
     rcgen::{CertificateParams, DistinguishedName, DnType, SanType},
-    solana_perf::packet::PacketBatch,
-    solana_sdk::{
+    nexis_perf::packet::PacketBatch,
+    nexis_sdk::{
         packet::{Packet, PACKET_DATA_SIZE},
         signature::Keypair,
     },
@@ -116,7 +116,7 @@ fn new_cert_params(identity_keypair: &Keypair, san: IpAddr) -> CertificateParams
     cert_params.distinguished_name = DistinguishedName::new();
     cert_params
         .distinguished_name
-        .push(DnType::CommonName, "Solana node");
+        .push(DnType::CommonName, "Nexis node");
     cert_params
 }
 
@@ -315,7 +315,7 @@ mod test {
 
     #[test]
     fn test_quic_server_multiple_streams() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let s = UdpSocket::bind("127.0.0.1:0").unwrap();
         let exit = Arc::new(AtomicBool::new(false));
         let (sender, receiver) = channel();
@@ -370,7 +370,7 @@ mod test {
 
     #[test]
     fn test_quic_server_multiple_writes() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let s = UdpSocket::bind("127.0.0.1:0").unwrap();
         let exit = Arc::new(AtomicBool::new(false));
         let (sender, receiver) = channel();

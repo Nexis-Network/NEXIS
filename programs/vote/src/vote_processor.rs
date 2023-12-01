@@ -3,11 +3,11 @@
 use {
     crate::{id, vote_instruction::VoteInstruction, vote_state},
     log::*,
-    solana_metrics::inc_new_counter_info,
-    solana_program_runtime::{
+    nexis_metrics::inc_new_counter_info,
+    nexis_program_runtime::{
         invoke_context::InvokeContext, sysvar_cache::get_sysvar_with_account_check,
     },
-    solana_sdk::{
+    nexis_sdk::{
         feature_set,
         instruction::InstructionError,
         keyed_account::{get_signers, keyed_account_at_index, KeyedAccount},
@@ -190,8 +190,8 @@ mod tests {
             vote_state::{Vote, VoteAuthorize, VoteInit, VoteState, VoteStateUpdate},
         },
         bincode::serialize,
-        solana_program_runtime::invoke_context::mock_process_instruction,
-        solana_sdk::{
+        nexis_program_runtime::invoke_context::mock_process_instruction,
+        nexis_sdk::{
             account::{self, Account, AccountSharedData},
             hash::Hash,
             instruction::{AccountMeta, Instruction},
@@ -303,7 +303,7 @@ mod tests {
 
     #[test]
     fn test_vote_process_instruction() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let instructions = create_account(
             &Pubkey::new_unique(),
             &Pubkey::new_unique(),

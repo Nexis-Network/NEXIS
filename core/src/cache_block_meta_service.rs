@@ -1,9 +1,9 @@
-pub use solana_ledger::blockstore_processor::CacheBlockMetaSender;
+pub use nexis_ledger::blockstore_processor::CacheBlockMetaSender;
 use {
     crossbeam_channel::{Receiver, RecvTimeoutError},
-    solana_ledger::blockstore::Blockstore,
-    solana_measure::measure::Measure,
-    solana_runtime::bank::Bank,
+    nexis_ledger::blockstore::Blockstore,
+    nexis_measure::measure::Measure,
+    nexis_runtime::bank::Bank,
     std::{
         sync::{
             atomic::{AtomicBool, Ordering},
@@ -31,7 +31,7 @@ impl CacheBlockMetaService {
     ) -> Self {
         let exit = exit.clone();
         let thread_hdl = Builder::new()
-            .name("solana-cache-block-time".to_string())
+            .name("nexis-cache-block-time".to_string())
             .spawn(move || loop {
                 if exit.load(Ordering::Relaxed) {
                     break;

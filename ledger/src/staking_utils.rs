@@ -2,11 +2,11 @@
 pub(crate) mod tests {
     use {
         rand::Rng,
-        solana_runtime::{
+        nexis_runtime::{
             bank::Bank,
             vote_account::{VoteAccount, VoteAccounts},
         },
-        solana_sdk::{
+        nexis_sdk::{
             account::AccountSharedData,
             clock::Clock,
             instruction::Instruction,
@@ -19,7 +19,7 @@ pub(crate) mod tests {
             },
             transaction::Transaction,
         },
-        solana_vote_program::{
+        nexis_vote_program::{
             vote_instruction,
             vote_state::{VoteInit, VoteState, VoteStateVersions},
         },
@@ -79,7 +79,7 @@ pub(crate) mod tests {
     #[test]
     fn test_to_staked_nodes() {
         let mut stakes = Vec::new();
-        let node1 = solana_sdk::pubkey::new_rand();
+        let node1 = nexis_sdk::pubkey::new_rand();
 
         // Node 1 has stake of 3
         for i in 0..3 {
@@ -96,7 +96,7 @@ pub(crate) mod tests {
         }
 
         // Node 1 has stake of 5
-        let node2 = solana_sdk::pubkey::new_rand();
+        let node2 = nexis_sdk::pubkey::new_rand();
 
         stakes.push((
             5,

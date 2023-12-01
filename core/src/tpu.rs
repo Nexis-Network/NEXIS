@@ -14,19 +14,19 @@ use {
         sigverify_stage::SigVerifyStage,
     },
     crossbeam_channel::{self, bounded, unbounded, RecvTimeoutError},
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::{blockstore::Blockstore, blockstore_processor::TransactionStatusSender},
-    solana_poh::poh_recorder::{PohRecorder, WorkingBankEntry},
-    solana_rpc::{
+    nexis_gossip::cluster_info::ClusterInfo,
+    nexis_ledger::{blockstore::Blockstore, blockstore_processor::TransactionStatusSender},
+    nexis_poh::poh_recorder::{PohRecorder, WorkingBankEntry},
+    nexis_rpc::{
         optimistically_confirmed_bank_tracker::BankNotificationSender,
         rpc_subscriptions::RpcSubscriptions,
     },
-    solana_runtime::{
+    nexis_runtime::{
         bank_forks::BankForks,
         cost_model::CostModel,
         vote_sender_types::{ReplayVoteReceiver, ReplayVoteSender},
     },
-    solana_sdk::signature::Keypair,
+    nexis_sdk::signature::Keypair,
     std::{
         net::UdpSocket,
         sync::{
@@ -99,7 +99,7 @@ impl Tpu {
         );
         let (verified_sender, verified_receiver) = unbounded();
 
-        let tpu_quic_t = solana_streamer::quic::spawn_server(
+        let tpu_quic_t = nexis_streamer::quic::spawn_server(
             transactions_quic_socket,
             keypair,
             cluster_info.my_contact_info().tpu.ip(),

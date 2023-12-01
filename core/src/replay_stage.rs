@@ -27,25 +27,25 @@ use {
         voting_service::VoteOp,
         window_service::DuplicateSlotReceiver,
     },
-    solana_client::rpc_response::SlotUpdate,
-    solana_entry::entry::VerifyRecyclers,
-    solana_geyser_plugin_manager::block_metadata_notifier_interface::BlockMetadataNotifierLock,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::{
+    nexis_client::rpc_response::SlotUpdate,
+    nexis_entry::entry::VerifyRecyclers,
+    nexis_geyser_plugin_manager::block_metadata_notifier_interface::BlockMetadataNotifierLock,
+    nexis_gossip::cluster_info::ClusterInfo,
+    nexis_ledger::{
         block_error::BlockError,
         blockstore::Blockstore,
         blockstore_processor::{self, BlockstoreProcessorError, TransactionStatusSender},
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_measure::measure::Measure,
-    solana_metrics::inc_new_counter_info,
-    solana_poh::poh_recorder::{PohLeaderStatus, PohRecorder, GRACE_TICKS_FACTOR, MAX_GRACE_SLOTS},
-    solana_program_runtime::timings::ExecuteTimings,
-    solana_rpc::{
+    nexis_measure::measure::Measure,
+    nexis_metrics::inc_new_counter_info,
+    nexis_poh::poh_recorder::{PohLeaderStatus, PohRecorder, GRACE_TICKS_FACTOR, MAX_GRACE_SLOTS},
+    nexis_program_runtime::timings::ExecuteTimings,
+    nexis_rpc::{
         optimistically_confirmed_bank_tracker::{BankNotification, BankNotificationSender},
         rpc_subscriptions::RpcSubscriptions,
     },
-    solana_runtime::{
+    nexis_runtime::{
         accounts_background_service::AbsRequestSender,
         bank::{Bank, NewBankOptions},
         bank_forks::{BankForks, MAX_ROOT_DISTANCE_FOR_VOTE_ONLY},
@@ -53,7 +53,7 @@ use {
         transaction_cost_metrics_sender::TransactionCostMetricsSender,
         vote_sender_types::ReplayVoteSender,
     },
-    solana_sdk::{
+    nexis_sdk::{
         clock::{BankId, Slot, MAX_PROCESSING_AGE, NUM_CONSECUTIVE_LEADER_SLOTS},
         genesis_config::ClusterType,
         hash::Hash,
@@ -63,7 +63,7 @@ use {
         timing::timestamp,
         transaction::Transaction,
     },
-    solana_vote_program::vote_state::Vote,
+    nexis_vote_program::vote_state::Vote,
     std::{
         collections::{HashMap, HashSet},
         result,
@@ -395,7 +395,7 @@ impl ReplayStage {
 
         #[allow(clippy::cognitive_complexity)]
         let t_replay = Builder::new()
-            .name("solana-replay-stage".to_string())
+            .name("nexis-replay-stage".to_string())
             .spawn(move || {
                 let verify_recyclers = VerifyRecyclers::default();
                 let _exit = Finalizer::new(exit.clone());
@@ -3021,7 +3021,7 @@ impl ReplayStage {
         evm_block_recorder_sender: Option<&EvmRecorderSender>,
         evm_state_recorder_sender: Option<&EvmStateRecorderSender>,
     ) {
-        solana_ledger::blockstore_processor::record_evm_block(
+        nexis_ledger::blockstore_processor::record_evm_block(
             bank,
             evm_block_recorder_sender,
             evm_state_recorder_sender,
@@ -3058,9 +3058,9 @@ pub mod tests {
             vote_simulator::{self, VoteSimulator},
         },
         crossbeam_channel::unbounded,
-        solana_entry::entry::{self, Entry},
-        solana_gossip::{cluster_info::Node, crds::Cursor},
-        solana_ledger::{
+        nexis_entry::entry::{self, Entry},
+        nexis_gossip::{cluster_info::Node, crds::Cursor},
+        nexis_ledger::{
             blockstore::{entries_to_test_shreds, make_slot_entries, BlockstoreError},
             create_new_tmp_ledger,
             genesis_utils::{create_genesis_config, create_genesis_config_with_leader},
@@ -3070,16 +3070,16 @@ pub mod tests {
                 SIZE_OF_COMMON_SHRED_HEADER, SIZE_OF_DATA_SHRED_HEADER, SIZE_OF_DATA_SHRED_PAYLOAD,
             },
         },
-        solana_rpc::{
+        nexis_rpc::{
             optimistically_confirmed_bank_tracker::OptimisticallyConfirmedBank,
             rpc::create_test_transactions_and_populate_blockstore,
         },
-        solana_runtime::{
+        nexis_runtime::{
             accounts_background_service::AbsRequestSender,
             commitment::BlockCommitment,
             genesis_utils::{GenesisConfigInfo, ValidatorVoteKeypairs},
         },
-        solana_sdk::{
+        nexis_sdk::{
             clock::NUM_CONSECUTIVE_LEADER_SLOTS,
             genesis_config,
             hash::{hash, Hash},
@@ -3090,9 +3090,9 @@ pub mod tests {
             system_transaction,
             transaction::TransactionError,
         },
-        solana_streamer::socket::SocketAddrSpace,
-        solana_transaction_status::TransactionWithMetadata,
-        solana_vote_program::{
+        nexis_streamer::socket::SocketAddrSpace,
+        nexis_transaction_status::TransactionWithMetadata,
+        nexis_vote_program::{
             vote_state::{VoteState, VoteStateVersions},
             vote_transaction,
         },
@@ -3577,7 +3577,7 @@ pub mod tests {
 
     #[test]
     fn test_dead_fork_invalid_slot_tick_count() {
-        solana_logger::setup();
+        nexis_logger::setup();
         // Too many ticks per slot
         let res = check_dead_fork(|_keypair, bank| {
             let blockhash = bank.last_blockhash();
@@ -3798,7 +3798,7 @@ pub mod tests {
             bank.store_account(pubkey, &leader_vote_account);
         }
 
-        let leader_pubkey = solana_sdk::pubkey::new_rand();
+        let leader_pubkey = nexis_sdk::pubkey::new_rand();
         let leader_lamports = 3;
         let genesis_config_info =
             create_genesis_config_with_leader(50, &leader_pubkey, leader_lamports);
@@ -3847,7 +3847,7 @@ pub mod tests {
             let _res = bank.transfer(
                 10,
                 &genesis_config_info.mint_keypair,
-                &solana_sdk::pubkey::new_rand(),
+                &nexis_sdk::pubkey::new_rand(),
             );
             for _ in 0..genesis_config.ticks_per_slot {
                 bank.register_tick(&Hash::default());
@@ -3916,7 +3916,7 @@ pub mod tests {
             mut genesis_config,
             mint_keypair,
             ..
-        } = create_genesis_config(solana_sdk::native_token::sol_to_lamports(1000.0));
+        } = create_genesis_config(nexis_sdk::native_token::nzt_to_lamports(1000.0));
         genesis_config.rent.lamports_per_byte_year = 50;
         genesis_config.rent.exemption_threshold = 2.0;
         let (ledger_path, _) = create_new_tmp_ledger!(&genesis_config);

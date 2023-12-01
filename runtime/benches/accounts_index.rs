@@ -4,13 +4,13 @@ extern crate test;
 
 use {
     rand::{thread_rng, Rng},
-    solana_runtime::{
+    nexis_runtime::{
         accounts_db::AccountInfo,
         accounts_index::{
             AccountSecondaryIndexes, AccountsIndex, ACCOUNTS_INDEX_CONFIG_FOR_BENCHMARKS,
         },
     },
-    solana_sdk::pubkey::{self, Pubkey},
+    nexis_sdk::pubkey::{self, Pubkey},
     test::Bencher,
 };
 

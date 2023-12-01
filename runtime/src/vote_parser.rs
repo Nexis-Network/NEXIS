@@ -1,11 +1,11 @@
 use {
-    solana_sdk::{
+    nexis_sdk::{
         hash::Hash,
         program_utils::limited_deserialize,
         pubkey::Pubkey,
         transaction::{SanitizedTransaction, Transaction},
     },
-    solana_vote_program::{vote_instruction::VoteInstruction, vote_state::Vote},
+    nexis_vote_program::{vote_instruction::VoteInstruction, vote_state::Vote},
 };
 
 pub type ParsedVote = (Pubkey, Vote, Option<Hash>);
@@ -18,7 +18,7 @@ pub(crate) fn is_simple_vote_transaction(transaction: &SanitizedTransaction) -> 
             .program_instructions_iter()
             .next()
             .unwrap();
-        if program_pubkey == &solana_vote_program::id() {
+        if program_pubkey == &nexis_vote_program::id() {
             if let Ok(vote_instruction) = limited_deserialize::<VoteInstruction>(&instruction.data)
             {
                 return matches!(
@@ -36,7 +36,7 @@ pub fn parse_sanitized_vote_transaction(tx: &SanitizedTransaction) -> Option<Par
     // Check first instruction for a vote
     let message = tx.message();
     let (program_id, first_instruction) = message.program_instructions_iter().next()?;
-    if !solana_vote_program::check_id(program_id) {
+    if !nexis_vote_program::check_id(program_id) {
         return None;
     }
     let first_account = usize::from(*first_instruction.accounts.first()?);
@@ -52,7 +52,7 @@ pub fn parse_vote_transaction(tx: &Transaction) -> Option<ParsedVote> {
     let first_instruction = message.instructions.first()?;
     let program_id_index = usize::from(first_instruction.program_id_index);
     let program_id = message.account_keys.get(program_id_index)?;
-    if !solana_vote_program::check_id(program_id) {
+    if !nexis_vote_program::check_id(program_id) {
         return None;
     }
     let first_account = usize::from(*first_instruction.accounts.first()?);
@@ -71,12 +71,12 @@ fn parse_vote_instruction_data(vote_instruction_data: &[u8]) -> Option<(Vote, Op
 
 #[cfg(test)]
 mod test {
-    use solana_sdk::signature::{Keypair, Signer};
-    use solana_vote_program::{
+    use nexis_sdk::signature::{Keypair, Signer};
+    use nexis_vote_program::{
         vote_instruction, vote_state::Vote, vote_transaction::new_vote_transaction,
     };
 
-    use {super::*, solana_sdk::hash::hash};
+    use {super::*, nexis_sdk::hash::hash};
 
     fn run_test_parse_vote_transaction(input_hash: Option<Hash>) {
         let node_keypair = Keypair::new();

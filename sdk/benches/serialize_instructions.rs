@@ -3,7 +3,7 @@
 extern crate test;
 use {
     bincode::{deserialize, serialize},
-    solana_sdk::{
+    nexis_sdk::{
         instruction::{AccountMeta, Instruction},
         message::{Message, SanitizedMessage},
         pubkey::{self, Pubkey},

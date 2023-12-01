@@ -1,15 +1,15 @@
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
-use solana_frozen_abi::abi_example::AbiExample;
+use nexis_frozen_abi::abi_example::AbiExample;
 #[cfg(debug_assertions)]
 #[allow(deprecated)]
-use solana_sdk::AutoTraitBreakSendSync;
+use nexis_sdk::AutoTraitBreakSendSync;
 use {
     crate::system_instruction_processor,
-    solana_program_runtime::{
+    nexis_program_runtime::{
         invoke_context::{InvokeContext, ProcessInstructionWithContext},
         stable_log,
     },
-    solana_sdk::{
+    nexis_sdk::{
         feature_set, instruction::InstructionError, pubkey::Pubkey, stake, system_program,
     },
     std::fmt,
@@ -129,7 +129,7 @@ impl AutoTraitBreakSendSync for InnerBuiltinFeatureTransition {}
 #[derive(AbiExample, Clone, Debug)]
 pub struct BuiltinFeatureTransition(InnerBuiltinFeatureTransition);
 
-// https://github.com/solana-labs/solana/pull/23233 added `BuiltinFeatureTransition`
+// https://github.com/nexis-labs/nexis/pull/23233 added `BuiltinFeatureTransition`
 // to `Bank` which triggers https://github.com/rust-lang/rust/issues/92987 while
 // attempting to resolve `Sync` on `BankRc` in `AccountsBackgroundService::new` ala,
 //
@@ -191,18 +191,18 @@ fn genesis_builtins() -> Vec<Builtin> {
         ),
         Builtin::new(
             "vote_program",
-            solana_vote_program::id(),
-            with_program_logging!(solana_vote_program::vote_instruction::process_instruction),
+            nexis_vote_program::id(),
+            with_program_logging!(nexis_vote_program::vote_instruction::process_instruction),
         ),
         Builtin::new(
             "stake_program",
             stake::program::id(),
-            with_program_logging!(solana_stake_program::stake_instruction::process_instruction),
+            with_program_logging!(nexis_stake_program::stake_instruction::process_instruction),
         ),
         Builtin::new(
             "config_program",
-            solana_config_program::id(),
-            with_program_logging!(solana_config_program::config_processor::process_instruction),
+            nexis_config_program::id(),
+            with_program_logging!(nexis_config_program::config_processor::process_instruction),
         ),
     ]
 }
@@ -222,15 +222,15 @@ fn builtin_feature_transitions() -> Vec<BuiltinFeatureTransition> {
         BuiltinFeatureTransition(InnerBuiltinFeatureTransition::Add {
             builtin: Builtin::new(
                 "compute_budget_program",
-                solana_sdk::compute_budget::id(),
-                solana_compute_budget_program::process_instruction,
+                nexis_sdk::compute_budget::id(),
+                nexis_compute_budget_program::process_instruction,
             ),
             feature_id: feature_set::add_compute_budget_program::id(),
         }),
         BuiltinFeatureTransition(InnerBuiltinFeatureTransition::RemoveOrRetain {
             previously_added_builtin: Builtin::new(
                 "secp256k1_program",
-                solana_sdk::secp256k1_program::id(),
+                nexis_sdk::secp256k1_program::id(),
                 dummy_process_instruction,
             ),
             addition_feature_id: feature_set::secp256k1_program_enabled::id(),
@@ -239,7 +239,7 @@ fn builtin_feature_transitions() -> Vec<BuiltinFeatureTransition> {
         BuiltinFeatureTransition(InnerBuiltinFeatureTransition::RemoveOrRetain {
             previously_added_builtin: Builtin::new(
                 "ed25519_program",
-                solana_sdk::ed25519_program::id(),
+                nexis_sdk::ed25519_program::id(),
                 dummy_process_instruction,
             ),
             addition_feature_id: feature_set::ed25519_program_enabled::id(),
@@ -248,8 +248,8 @@ fn builtin_feature_transitions() -> Vec<BuiltinFeatureTransition> {
         BuiltinFeatureTransition(InnerBuiltinFeatureTransition::Add {
             builtin: Builtin::new(
                 "address_lookup_table_program",
-                solana_address_lookup_table_program::id(),
-                solana_address_lookup_table_program::processor::process_instruction,
+                nexis_address_lookup_table_program::id(),
+                nexis_address_lookup_table_program::processor::process_instruction,
             ),
             feature_id: feature_set::versioned_tx_message_enabled::id(),
         }),

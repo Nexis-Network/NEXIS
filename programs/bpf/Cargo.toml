@@ -1,12 +1,12 @@
 [package]
-name = "solana-bpf-programs"
+name = "nexis-bpf-programs"
 description = "Blockchain, Rebuilt for Scale"
 version = "1.9.29"
-documentation = "https://docs.rs/solana"
-homepage = "https://solana.com/"
+documentation = "https://docs.rsnexis"
+homepage = "https://nexis.network/"
 readme = "README.md"
-repository = "https://github.com/solana-labs/solana"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
 license = "Apache-2.0"
 edition = "2021"
 publish = false
@@ -26,19 +26,19 @@ itertools = "0.10.1"
 log = "0.4.11"
 miow = "0.3.6"
 net2 = "0.2.37"
-solana-bpf-rust-invoke = { path = "rust/invoke", version = "=1.9.29"}
-solana-bpf-loader-program = { path = "../bpf_loader", version = "=1.9.29"}
-solana-bpf-rust-realloc = { path = "rust/realloc", version = "=1.9.29"}
-solana-bpf-rust-realloc-invoke = { path = "rust/realloc_invoke", version = "=1.9.29"}
-solana-cli-output = { path = "../../cli-output", version = "=1.9.29" }
-solana-logger = { path = "../../logger", version = "=1.9.29" }
-solana-measure = { path = "../../measure", version = "=1.9.29" }
-solana_rbpf = "=0.2.24"
-solana-runtime = { path = "../../runtime", version = "=1.9.29" }
-solana-program-runtime = { path = "../../program-runtime", version = "=1.9.29" }
-solana-sdk = { path = "../../sdk", version = "=1.9.29" }
-solana-transaction-status = { path = "../../transaction-status", version = "=1.9.29" }
-solana-account-decoder = { path = "../../account-decoder", version = "=1.9.29" }
+nexis-bpf-rust-invoke = { path = "rust/invoke", version = "=1.9.29"}
+nexis-bpf-loader-program = { path = "../bpf_loader", version = "=1.9.29"}
+nexis-bpf-rust-realloc = { path = "rust/realloc", version = "=1.9.29"}
+nexis-bpf-rust-realloc-invoke = { path = "rust/realloc_invoke", version = "=1.9.29"}
+nexis-cli-output = { path = "../../cli-output", version = "=1.9.29" }
+nexis-logger = { path = "../../logger", version = "=1.9.29" }
+nexis-measure = { path = "../../measure", version = "=1.9.29" }
+nexis_rbpf = "=0.2.24"
+nexis-runtime = { path = "../../runtime", version = "=1.9.29" }
+nexis-program-runtime = { path = "../../program-runtime", version = "=1.9.29" }
+nexis-sdk = { path = "../../sdk", version = "=1.9.29" }
+nexis-transaction-status = { path = "../../transaction-status", version = "=1.9.29" }
+nexis-account-decompiler = { path = "../../account-decompiler", version = "=1.9.29" }
 
 [[bench]]
 name = "bpf_loader"

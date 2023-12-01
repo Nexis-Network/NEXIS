@@ -3,16 +3,16 @@
 # Use this script after `git merge` before resolving conflicts.
 
 current_folder="$(dirname "$0")"
-# echo "Reading version from $current_folder/solana-base"
-BASE=$(cat $current_folder/solana-base)
-echo "Solana base version is $BASE"
+# echo "Reading version from $current_folder/nexis-base"
+BASE=$(cat $current_folder/nexis-base)
+echo "Nexis base version is $BASE"
 
 LOCAL=$(cat $current_folder/../.git/ORIG_HEAD)
 
 echo "Exzo commit is $LOCAL"
 REMOTE=$(cat $current_folder/../.git/MERGE_HEAD)
 
-echo "Solana merging commit is $REMOTE"
+echo "Nexis merging commit is $REMOTE"
 
 # LOCAL=$(git rev-parse HEAD)
 

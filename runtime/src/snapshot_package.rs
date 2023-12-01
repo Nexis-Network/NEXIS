@@ -9,7 +9,7 @@ use {
         },
     },
     log::*,
-    solana_sdk::{clock::Slot, genesis_config::ClusterType, hash::Hash},
+    nexis_sdk::{clock::Slot, genesis_config::ClusterType, hash::Hash},
     std::{
         fs,
         path::{Path, PathBuf},

@@ -1,17 +1,17 @@
 [package]
-name = "solana-bpf-rust-dep-crate"
+name = "nexis-bpf-rust-dep-crate"
 version = "1.9.29"
-description = "Solana BPF test program written in Rust"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "Nexis BPF test program written in Rust"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-bpf-rust-dep-crate"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-bpf-rust-dep-crate"
 edition = "2021"
 
 [dependencies]
 byteorder = { version = "1", default-features = false }
-solana-program = { path = "../../../../sdk/program", version = "=1.9.29" }
+nexis-program = { path = "../../../../sdk/program", version = "=1.9.29" }
 
 [lib]
 crate-type = ["cdylib"]

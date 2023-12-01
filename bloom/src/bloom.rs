@@ -1,10 +1,69 @@
 //! Simple Bloom Filter
+//!
+//! This module provides a simple implementation of a Bloom filter, which is a probabilistic data structure used for efficient membership testing. It uses a fixed-size bit vector and multiple hash functions to represent a set of elements. The Bloom filter can efficiently determine whether an element is "possibly" in the set or "definitely" not in the set, with a certain probability of false positives.
+//!
+//! # Usage
+//!
+//! To use the Bloom filter, create an instance of the `Bloom` struct with the desired number of bits and a set of keys. The keys are used to generate stable hashes for each hash index. The `Bloom` struct provides methods for adding elements to the filter and checking for membership.
+//!
+//! ```
+//! use bloom::Bloom;
+//!
+//! // Create a Bloom filter with 100 bits and a set of keys
+//! let bloom = Bloom::new(100, vec![1, 2, 3]);
+//!
+//! // Add an element to the filter
+//! bloom.add(&4);
+//!
+//! // Check if an element is in the filter
+//! assert!(bloom.contains(&2));
+//! assert!(!bloom.contains(&5));
+//! ```
+//!
+//! The module also provides an `AtomicBloom` struct, which is a thread-safe version of the Bloom filter implemented using atomic operations. It can be useful in concurrent environments where multiple threads may access the filter simultaneously.
+//!
+//! # Examples
+//!
+//! ```
+//! use bloom::Bloom;
+//!
+//! // Create a Bloom filter with 100 bits and a set of keys
+//! let bloom = Bloom::new(100, vec![1, 2, 3]);
+//!
+//! // Add an element to the filter
+//! bloom.add(&4);
+//!
+//! // Check if an element is in the filter
+//! assert!(bloom.contains(&2));
+//! assert!(!bloom.contains(&5));
+//! ```
+//!
+//! ```
+//! use bloom::AtomicBloom;
+//!
+//! // Create an AtomicBloom filter with 100 bits and a set of keys
+//! let atomic_bloom = AtomicBloom::new(100, vec![1, 2, 3]);
+//!
+//! // Add an element to the filter
+//! atomic_bloom.add(&4);
+//!
+//! // Check if an element is in the filter
+//! assert!(atomic_bloom.contains(&2));
+//! assert!(!atomic_bloom.contains(&5));
+//! ```
+//!
+//! # References
+//!
+//! - [Bloom filter - Wikipedia](https://en.wikipedia.org/wiki/Bloom_filter)
+//! - [Bloom Filters by Example](https://hur.st/bloomfilter/)
+//!
+//! Simple Bloom Filter
 use {
     bv::BitVec,
     fnv::FnvHasher,
     rand::{self, Rng},
     serde::{Deserialize, Serialize},
-    solana_sdk::sanitize::{Sanitize, SanitizeError},
+    nexis_sdk::sanitize::{Sanitize, SanitizeError},
     std::{
         cmp, fmt,
         hash::Hasher,
@@ -238,7 +297,7 @@ mod test {
     use {
         super::*,
         rayon::prelude::*,
-        solana_sdk::hash::{hash, Hash},
+        nexis_sdk::hash::{hash, Hash},
     };
 
     #[test]
@@ -324,7 +383,7 @@ mod test {
     #[test]
     fn test_atomic_bloom() {
         let mut rng = rand::thread_rng();
-        let hash_values: Vec<_> = std::iter::repeat_with(|| solana_sdk::hash::new_rand(&mut rng))
+        let hash_values: Vec<_> = std::iter::repeat_with(|| nexis_sdk::hash::new_rand(&mut rng))
             .take(1200)
             .collect();
         let bloom: AtomicBloom<_> = Bloom::<Hash>::random(1287, 0.1, 7424).into();
@@ -341,7 +400,7 @@ mod test {
         for hash_value in hash_values {
             assert!(bloom.contains(&hash_value));
         }
-        let false_positive = std::iter::repeat_with(|| solana_sdk::hash::new_rand(&mut rng))
+        let false_positive = std::iter::repeat_with(|| nexis_sdk::hash::new_rand(&mut rng))
             .take(10_000)
             .filter(|hash_value| bloom.contains(hash_value))
             .count();
@@ -353,7 +412,7 @@ mod test {
         let mut rng = rand::thread_rng();
         let keys: Vec<_> = std::iter::repeat_with(|| rng.gen()).take(5).collect();
         let mut bloom = Bloom::<Hash>::new(9731, keys.clone());
-        let hash_values: Vec<_> = std::iter::repeat_with(|| solana_sdk::hash::new_rand(&mut rng))
+        let hash_values: Vec<_> = std::iter::repeat_with(|| nexis_sdk::hash::new_rand(&mut rng))
             .take(1000)
             .collect();
         for hash_value in &hash_values {
@@ -389,7 +448,7 @@ mod test {
         }
         // Round trip, inserting new hash values.
         let more_hash_values: Vec<_> =
-            std::iter::repeat_with(|| solana_sdk::hash::new_rand(&mut rng))
+            std::iter::repeat_with(|| nexis_sdk::hash::new_rand(&mut rng))
                 .take(1000)
                 .collect();
         let bloom: AtomicBloom<_> = bloom.into();
@@ -404,7 +463,7 @@ mod test {
         for hash_value in &more_hash_values {
             assert!(bloom.contains(hash_value));
         }
-        let false_positive = std::iter::repeat_with(|| solana_sdk::hash::new_rand(&mut rng))
+        let false_positive = std::iter::repeat_with(|| nexis_sdk::hash::new_rand(&mut rng))
             .take(10_000)
             .filter(|hash_value| bloom.contains(hash_value))
             .count();
@@ -423,7 +482,7 @@ mod test {
         for hash_value in &more_hash_values {
             assert!(bloom.contains(hash_value));
         }
-        let false_positive = std::iter::repeat_with(|| solana_sdk::hash::new_rand(&mut rng))
+        let false_positive = std::iter::repeat_with(|| nexis_sdk::hash::new_rand(&mut rng))
             .take(10_000)
             .filter(|hash_value| bloom.contains(hash_value))
             .count();

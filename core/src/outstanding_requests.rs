@@ -2,7 +2,7 @@ use {
     crate::request_response::RequestResponse,
     lru::LruCache,
     rand::{thread_rng, Rng},
-    solana_ledger::shred::Nonce,
+    nexis_ledger::shred::Nonce,
 };
 
 pub const DEFAULT_REQUEST_EXPIRATION_MS: u64 = 60_000;
@@ -85,8 +85,8 @@ pub struct RequestStatus<T> {
 #[cfg(test)]
 pub(crate) mod tests {
     use {
-        super::*, crate::serve_repair::ShredRepairType, solana_ledger::shred::Shred,
-        solana_sdk::timing::timestamp,
+        super::*, crate::serve_repair::ShredRepairType, nexis_ledger::shred::Shred,
+        nexis_sdk::timing::timestamp,
     };
 
     #[test]

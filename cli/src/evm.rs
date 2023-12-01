@@ -8,11 +8,11 @@ use std::{
 use anyhow::anyhow;
 use clap::{value_t_or_exit, App, AppSettings, Arg, ArgGroup, ArgMatches, SubCommand};
 use log::*;
-use solana_client::rpc_client::RpcClient;
-use solana_sdk::{
+use nexis_client::rpc_client::RpcClient;
+use nexis_sdk::{
     commitment_config::CommitmentConfig,
     message::Message,
-    native_token::{lamports_to_sol, LAMPORTS_PER_XZO},
+    native_token::{lamports_to_sol, LAMPORTS_PER_NZT},
     transaction::Transaction,
 };
 
@@ -20,7 +20,7 @@ use crate::cli::{CliCommand, CliCommandInfo, CliConfig, CliError};
 
 use evm_rpc::Hex;
 use evm_state::{self as evm, FromKey};
-use solana_evm_loader_program::{instructions::FeePayerType, scope::evm::gweis_to_lamports};
+use nexis_evm_loader_program::{instructions::FeePayerType, scope::evm::gweis_to_lamports};
 
 const SECRET_KEY_DUMMY: [u8; 32] = [1; 32];
 
@@ -63,7 +63,7 @@ impl EvmSubCommands for App<'_, '_> {
                              .index(2)
                              .takes_value(true)
                              .value_name("AMOUNT")
-                             .help("Amount in XZO"))
+                             .help("Amount in NZT"))
                         .arg(Arg::with_name("lamports")
                              .long("lamports")
                              .help("Amount in lamports")))
@@ -233,7 +233,7 @@ impl EvmCliCommand {
 fn get_evm_balance(rpc_client: &RpcClient, address: evm::H160) -> anyhow::Result<()> {
     let balance = rpc_client.get_evm_balance(&address)?;
     let (lamports, _dust) = gweis_to_lamports(balance);
-    let xzo = lamports_to_sol(lamports);
+    let xzo = lamports_to_nzt(lamports);
 
     println!(
         "EVM address: {:?}, balance {} ({} in hex)",
@@ -257,7 +257,7 @@ fn transfer(
         .ok_or_else(|| anyhow!("No signers found"))?;
 
     let ixs =
-        solana_evm_loader_program::transfer_native_to_evm_ixs(from.pubkey(), amount, evm_address);
+        nexis_evm_loader_program::transfer_native_to_evm_ixs(from.pubkey(), amount, evm_address);
 
     let message = Message::new(&ixs, Some(&from.pubkey()));
     let mut create_account_tx = Transaction::new_unsigned(message);
@@ -298,7 +298,7 @@ fn find_block_header(
             }
         };
 
-        let hash = solana_sdk::hash::Hash::from_str(&native_block.blockhash)?;
+        let hash = nexis_sdk::hash::Hash::from_str(&native_block.blockhash)?;
         let hash = evm::H256::from_slice(&hash.to_bytes());
         block.native_chain_hash = hash;
         block.native_chain_slot = slot;
@@ -325,10 +325,10 @@ fn send_raw_tx<P: AsRef<Path>>(
         .ok_or_else(|| anyhow!("No signers found"))?;
 
     let bytes = fs::read(raw_tx)?;
-    let tx: evm::Transaction = solana_sdk::program_utils::limited_deserialize(&bytes)?;
+    let tx: evm::Transaction = nexis_sdk::program_utils::limited_deserialize(&bytes)?;
     debug!("loaded tx: {:?}", tx);
 
-    let ix = solana_evm_loader_program::send_raw_tx(signer.pubkey(), tx, None, FeePayerType::Evm);
+    let ix = nexis_evm_loader_program::send_raw_tx(signer.pubkey(), tx, None, FeePayerType::Evm);
     let msg = Message::new(&[ix], Some(&signer.pubkey()));
     let mut tx = Transaction::new_unsigned(msg);
 
@@ -375,7 +375,7 @@ fn call_dummy(
     abi: Option<&[u8]>,
 ) -> anyhow::Result<()> {
     let create_tx = fs::read(create_tx)?;
-    let evm_tx: evm::Transaction = solana_sdk::program_utils::limited_deserialize(&create_tx)?;
+    let evm_tx: evm::Transaction = nexis_sdk::program_utils::limited_deserialize(&create_tx)?;
     let tx_address = evm_tx.address()?;
     let abi = hex::decode(abi.unwrap_or_else(|| evm_state::HELLO_WORLD_ABI.as_bytes()))?.to_vec();
 
@@ -426,7 +426,7 @@ pub fn parse_evm_subcommand(matches: &ArgMatches<'_>) -> Result<CliCommandInfo, 
             let address = value_t_or_exit!(matches, "evm_address", evm::Address);
             let mut amount = value_t_or_exit!(matches, "amount", u64);
             if !matches.is_present("lamports") {
-                amount *= LAMPORTS_PER_XZO;
+                amount *= LAMPORTS_PER_NZT;
             }
 
             EvmCliCommand::TransferToEvm { address, amount }

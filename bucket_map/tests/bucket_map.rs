@@ -1,8 +1,8 @@
 use {
     rayon::prelude::*,
-    solana_bucket_map::bucket_map::{BucketMap, BucketMapConfig},
-    solana_measure::measure::Measure,
-    solana_sdk::pubkey::Pubkey,
+    nexis_bucket_map::bucket_map::{BucketMap, BucketMapConfig},
+    nexis_measure::measure::Measure,
+    nexis_sdk::pubkey::Pubkey,
     std::path::PathBuf,
 };
 #[test]

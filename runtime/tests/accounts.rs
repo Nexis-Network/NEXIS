@@ -2,11 +2,11 @@ use {
     log::*,
     rand::{thread_rng, Rng},
     rayon::prelude::*,
-    solana_runtime::{
+    nexis_runtime::{
         accounts_db::{AccountsDb, LoadHint},
         ancestors::Ancestors,
     },
-    solana_sdk::{
+    nexis_sdk::{
         account::{AccountSharedData, ReadableAccount, WritableAccount},
         clock::Slot,
         genesis_config::ClusterType,
@@ -24,7 +24,7 @@ use {
 
 #[test]
 fn test_shrink_and_clean() {
-    solana_logger::setup();
+    nexis_logger::setup();
 
     // repeat the whole test scenario
     for _ in 0..5 {
@@ -49,7 +49,7 @@ fn test_shrink_and_clean() {
         for current_slot in 0..100 {
             while alive_accounts.len() <= 10 {
                 alive_accounts.push((
-                    solana_sdk::pubkey::new_rand(),
+                    nexis_sdk::pubkey::new_rand(),
                     AccountSharedData::new(thread_rng().gen_range(0, 50), 0, &owner),
                 ));
             }
@@ -77,8 +77,8 @@ fn test_shrink_and_clean() {
 
 #[test]
 fn test_bad_bank_hash() {
-    solana_logger::setup();
-    use solana_sdk::signature::{Keypair, Signer};
+    nexis_logger::setup();
+    use nexis_sdk::signature::{Keypair, Signer};
     let db = AccountsDb::new_for_tests(Vec::new(), &ClusterType::Development);
 
     let some_slot: Slot = 0;

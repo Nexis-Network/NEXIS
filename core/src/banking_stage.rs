@@ -12,20 +12,20 @@ use {
     crossbeam_channel::{Receiver as CrossbeamReceiver, RecvTimeoutError},
     histogram::Histogram,
     itertools::Itertools,
-    solana_entry::entry::hash_transactions,
-    solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
-    solana_ledger::blockstore_processor::TransactionStatusSender,
-    solana_measure::measure::Measure,
-    solana_metrics::{inc_new_counter_debug, inc_new_counter_info},
-    solana_perf::{
+    nexis_entry::entry::hash_transactions,
+    nexis_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
+    nexis_ledger::blockstore_processor::TransactionStatusSender,
+    nexis_measure::measure::Measure,
+    nexis_metrics::{inc_new_counter_debug, inc_new_counter_info},
+    nexis_perf::{
         cuda_runtime::PinnedVec,
         data_budget::DataBudget,
         packet::{Packet, PacketBatch, PACKETS_PER_BATCH},
         perf_libs,
     },
-    solana_poh::poh_recorder::{BankStart, PohRecorder, PohRecorderError, TransactionRecorder},
-    solana_program_runtime::timings::ExecuteTimings,
-    solana_runtime::{
+    nexis_poh::poh_recorder::{BankStart, PohRecorder, PohRecorderError, TransactionRecorder},
+    nexis_program_runtime::timings::ExecuteTimings,
+    nexis_runtime::{
         bank::{
             Bank, CommitTransactionCounts, LoadAndExecuteTransactionsOutput,
             TransactionBalancesSet, TransactionCheckResult, TransactionExecutionResult,
@@ -36,7 +36,7 @@ use {
         transaction_error_metrics::TransactionErrorMetrics,
         vote_sender_types::ReplayVoteSender,
     },
-    solana_sdk::{
+    nexis_sdk::{
         clock::{
             Slot, DEFAULT_TICKS_PER_SLOT, MAX_PROCESSING_AGE, MAX_TRANSACTION_FORWARDING_DELAY,
             MAX_TRANSACTION_FORWARDING_DELAY_GPU,
@@ -53,8 +53,8 @@ use {
         timing::{duration_as_ms, timestamp, AtomicInterval},
         transaction::{self, SanitizedTransaction, TransactionError, VersionedTransaction},
     },
-    solana_streamer::sendmmsg::{batch_send, SendPktsError},
-    solana_transaction_status::token_balances::{
+    nexis_streamer::sendmmsg::{batch_send, SendPktsError},
+    nexis_transaction_status::token_balances::{
         collect_token_balances, TransactionTokenBalancesSet,
     },
     std::{
@@ -433,7 +433,7 @@ impl BankingStage {
                 let data_budget = data_budget.clone();
                 let qos_service = qos_service.clone();
                 Builder::new()
-                    .name("solana-banking-stage-tx".to_string())
+                    .name("nexis-banking-stage-tx".to_string())
                     .spawn(move || {
                         Self::process_loop(
                             &verified_receiver,
@@ -1050,7 +1050,7 @@ impl BankingStage {
 
     pub fn num_threads() -> u32 {
         cmp::max(
-            env::var("SOLANA_BANKING_THREADS")
+            env::var("NZT_BANKING_THREADS")
                 .map(|x| x.parse().unwrap_or(NUM_THREADS))
                 .unwrap_or(NUM_THREADS),
             NUM_VOTE_PROCESSING_THREADS + MIN_THREADS_BANKING,
@@ -2094,23 +2094,23 @@ mod tests {
         super::*,
         crossbeam_channel::unbounded,
         itertools::Itertools,
-        solana_entry::entry::{next_entry, Entry, EntrySlice},
-        solana_gossip::{cluster_info::Node, contact_info::ContactInfo},
-        solana_ledger::{
+        nexis_entry::entry::{next_entry, Entry, EntrySlice},
+        nexis_gossip::{cluster_info::Node, contact_info::ContactInfo},
+        nexis_ledger::{
             blockstore::{entries_to_test_shreds, Blockstore},
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
             get_tmp_ledger_path_auto_delete,
             leader_schedule_cache::LeaderScheduleCache,
         },
-        solana_perf::packet::{to_packet_batches, PacketFlags},
-        solana_poh::{
+        nexis_perf::packet::{to_packet_batches, PacketFlags},
+        nexis_poh::{
             poh_recorder::{create_test_recorder, Record, WorkingBankEntry},
             poh_service::PohService,
         },
-        solana_program_runtime::{invoke_context::Executors, timings::ProgramTiming},
-        solana_rpc::transaction_status_service::TransactionStatusService,
-        solana_runtime::bank::TransactionExecutionDetails,
-        solana_sdk::{
+        nexis_program_runtime::{invoke_context::Executors, timings::ProgramTiming},
+        nexis_rpc::transaction_status_service::TransactionStatusService,
+        nexis_runtime::bank::TransactionExecutionDetails,
+        nexis_sdk::{
             hash::Hash,
             instruction::InstructionError,
             poh_config::PohConfig,
@@ -2119,9 +2119,9 @@ mod tests {
             system_transaction,
             transaction::{Transaction, TransactionError},
         },
-        solana_streamer::{recvmmsg::recv_mmsg, socket::SocketAddrSpace},
-        solana_transaction_status::TransactionWithMetadata,
-        solana_vote_program::vote_transaction,
+        nexis_streamer::{recvmmsg::recv_mmsg, socket::SocketAddrSpace},
+        nexis_transaction_status::TransactionWithMetadata,
+        nexis_vote_program::vote_transaction,
         std::{
             cell::RefCell,
             net::SocketAddr,
@@ -2197,7 +2197,7 @@ mod tests {
 
     #[test]
     fn test_banking_stage_tick() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo {
             mut genesis_config, ..
         } = create_genesis_config(2);
@@ -2270,7 +2270,7 @@ mod tests {
 
     #[test]
     fn test_banking_stage_entries_only() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -2317,16 +2317,16 @@ mod tests {
             bank.process_transaction(&fund_tx).unwrap();
 
             // good tx
-            let to = solana_sdk::pubkey::new_rand();
+            let to = nexis_sdk::pubkey::new_rand();
             let tx = system_transaction::transfer(&mint_keypair, &to, 1, start_hash);
 
             // good tx, but no verify
-            let to2 = solana_sdk::pubkey::new_rand();
+            let to2 = nexis_sdk::pubkey::new_rand();
             let tx_no_ver = system_transaction::transfer(&keypair, &to2, 2, start_hash);
 
             // bad tx, AccountNotFound
             let keypair = Keypair::new();
-            let to3 = solana_sdk::pubkey::new_rand();
+            let to3 = nexis_sdk::pubkey::new_rand();
             let tx_anf = system_transaction::transfer(&keypair, &to3, 1, start_hash);
 
             // send 'em over
@@ -2391,7 +2391,7 @@ mod tests {
 
     #[test]
     fn test_banking_stage_entryfication() {
-        solana_logger::setup();
+        nexis_logger::setup();
         // In this attack we'll demonstrate that a verifier can interpret the ledger
         // differently if either the server doesn't signal the ledger to add an
         // Entry OR if the verifier tries to parallelize across multiple Entries.
@@ -2503,7 +2503,7 @@ mod tests {
 
     #[test]
     fn test_bank_record_transactions() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -2534,9 +2534,9 @@ mod tests {
             let poh_simulator = simulate_poh(record_receiver, &poh_recorder);
 
             poh_recorder.lock().unwrap().set_bank(&bank);
-            let pubkey = solana_sdk::pubkey::new_rand();
+            let pubkey = nexis_sdk::pubkey::new_rand();
             let keypair2 = Keypair::new();
-            let pubkey2 = solana_sdk::pubkey::new_rand();
+            let pubkey2 = nexis_sdk::pubkey::new_rand();
 
             let txs = sanitize_transactions(vec![
                 system_transaction::transfer(&mint_keypair, &pubkey, 1, genesis_config.hash()),
@@ -2663,8 +2663,8 @@ mod tests {
 
     #[test]
     fn test_should_process_or_forward_packets() {
-        let my_pubkey = solana_sdk::pubkey::new_rand();
-        let my_pubkey1 = solana_sdk::pubkey::new_rand();
+        let my_pubkey = nexis_sdk::pubkey::new_rand();
+        let my_pubkey1 = nexis_sdk::pubkey::new_rand();
         let bank = Arc::new(Bank::default_for_tests());
         // having active bank allows to consume immediately
         assert_matches!(
@@ -2752,14 +2752,14 @@ mod tests {
 
     #[test]
     fn test_bank_process_and_record_transactions() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
             ..
         } = create_slow_genesis_config(10_000);
         let bank = Arc::new(Bank::new_no_wallclock_throttle_for_tests(&genesis_config));
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
 
         let transactions = sanitize_transactions(vec![system_transaction::transfer(
             &mint_keypair,
@@ -2886,14 +2886,14 @@ mod tests {
 
     #[test]
     fn test_bank_process_and_record_transactions_cost_tracker() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
             ..
         } = create_slow_genesis_config(10_000);
         let bank = Arc::new(Bank::new_no_wallclock_throttle_for_tests(&genesis_config));
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
 
         let ledger_path = get_tmp_ledger_path_auto_delete!();
         {
@@ -3017,7 +3017,7 @@ mod tests {
         let poh_recorder = poh_recorder.clone();
         let is_exited = poh_recorder.lock().unwrap().is_exited.clone();
         let tick_producer = Builder::new()
-            .name("solana-simulate_poh".to_string())
+            .name("nexis-simulate_poh".to_string())
             .spawn(move || loop {
                 PohService::read_record_receiver_and_process(
                     &poh_recorder,
@@ -3033,15 +3033,15 @@ mod tests {
 
     #[test]
     fn test_bank_process_and_record_transactions_account_in_use() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
             ..
         } = create_slow_genesis_config(10_000);
         let bank = Arc::new(Bank::new_no_wallclock_throttle_for_tests(&genesis_config));
-        let pubkey = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
 
         let transactions = sanitize_transactions(vec![
             system_transaction::transfer(&mint_keypair, &pubkey, 1, genesis_config.hash()),
@@ -3108,7 +3108,7 @@ mod tests {
 
     #[test]
     fn test_filter_valid_packets() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let mut packet_batches = (0..16)
             .map(|packets_id| {
@@ -3149,7 +3149,7 @@ mod tests {
 
     #[test]
     fn test_process_transactions_returns_unprocessed_txs() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -3157,7 +3157,7 @@ mod tests {
         } = create_slow_genesis_config(10_000);
         let bank = Arc::new(Bank::new_no_wallclock_throttle_for_tests(&genesis_config));
 
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
 
         let transactions = sanitize_transactions(vec![system_transaction::transfer(
             &mint_keypair,
@@ -3176,7 +3176,7 @@ mod tests {
                 bank.clone(),
                 Some((4, 4)),
                 bank.ticks_per_slot(),
-                &solana_sdk::pubkey::new_rand(),
+                &nexis_sdk::pubkey::new_rand(),
                 &Arc::new(blockstore),
                 &Arc::new(LeaderScheduleCache::new_from_bank(&bank)),
                 &Arc::new(PohConfig::default()),
@@ -3279,7 +3279,7 @@ mod tests {
 
     #[test]
     fn test_process_transactions_instruction_error() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let lamports = 10_000;
         let GenesisConfigInfo {
             genesis_config,
@@ -3336,7 +3336,7 @@ mod tests {
     }
     #[test]
     fn test_process_transactions_account_in_use() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -3391,18 +3391,18 @@ mod tests {
 
     #[test]
     fn test_write_persist_transaction_status() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo {
             mut genesis_config,
             mint_keypair,
             ..
-        } = create_slow_genesis_config(solana_sdk::native_token::sol_to_lamports(1000.0));
+        } = create_slow_genesis_config(nexis_sdk::native_token::nzt_to_lamports(1000.0));
         genesis_config.rent.lamports_per_byte_year = 50;
         genesis_config.rent.exemption_threshold = 2.0;
         let bank = Arc::new(Bank::new_no_wallclock_throttle_for_tests(&genesis_config));
         let rent_exempt_minimum = bank.get_minimum_balance_for_rent_exemption(0);
-        let pubkey = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
         let keypair1 = Keypair::new();
 
         let success_tx =
@@ -3531,7 +3531,7 @@ mod tests {
             bank.clone(),
             Some((4, 4)),
             bank.ticks_per_slot(),
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             &Arc::new(blockstore),
             &Arc::new(LeaderScheduleCache::new_from_bank(&bank)),
             &Arc::new(PohConfig::default()),
@@ -3540,9 +3540,9 @@ mod tests {
         let poh_recorder = Arc::new(Mutex::new(poh_recorder));
 
         // Set up unparallelizable conflicting transactions
-        let pubkey0 = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = nexis_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
+        let pubkey2 = nexis_sdk::pubkey::new_rand();
         let transactions = vec![
             system_transaction::transfer(mint_keypair, &pubkey0, 1, genesis_config.hash()),
             system_transaction::transfer(mint_keypair, &pubkey1, 1, genesis_config.hash()),
@@ -3732,7 +3732,7 @@ mod tests {
 
     #[test]
     fn test_forwarder_budget() {
-        solana_logger::setup();
+        nexis_logger::setup();
         // Create `PacketBatch` with 1 unprocessed packet
         let packet = Packet::from_data(None, &[0]).unwrap();
         let single_packet_batch = PacketBatch::new(vec![packet]);
@@ -3804,7 +3804,7 @@ mod tests {
 
     #[test]
     fn test_handle_forwarding() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         const FWD_PACKET: u8 = 1;
         let forwarded_packet = {
@@ -3918,7 +3918,7 @@ mod tests {
 
     #[test]
     fn test_push_unprocessed_batch_limit() {
-        solana_logger::setup();
+        nexis_logger::setup();
         // Create `PacketBatch` with 2 unprocessed packets
         let new_packet_batch = PacketBatch::new(vec![Packet::default(); 2]);
         let mut unprocessed_packets: UnprocessedPacketBatches =
@@ -4004,7 +4004,7 @@ mod tests {
     #[test]
     fn test_packet_message() {
         let keypair = Keypair::new();
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
         let blockhash = Hash::new_unique();
         let transaction = system_transaction::transfer(&keypair, &pubkey, 1, blockhash);
         let packet = Packet::from_data(None, &transaction).unwrap();
@@ -4035,7 +4035,7 @@ mod tests {
 
     #[test]
     fn test_transactions_from_packets() {
-        use solana_sdk::feature_set::FeatureSet;
+        use nexis_sdk::feature_set::FeatureSet;
         let keypair = Keypair::new();
         let transfer_tx =
             system_transaction::transfer(&keypair, &keypair.pubkey(), 1, Hash::default());

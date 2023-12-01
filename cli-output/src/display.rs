@@ -3,11 +3,11 @@ use {
     chrono::{DateTime, Local, NaiveDateTime, SecondsFormat, TimeZone, Utc},
     console::style,
     indicatif::{ProgressBar, ProgressStyle},
-    solana_sdk::{
+    nexis_sdk::{
         clock::UnixTimestamp, hash::Hash, message::Message, native_token::lamports_to_sol,
         program_utils::limited_deserialize, pubkey::Pubkey, stake, transaction::Transaction,
     },
-    solana_transaction_status::UiTransactionStatusMeta,
+    nexis_transaction_status::UiTransactionStatusMeta,
     spl_memo::{id as spl_memo_id, v1::id as spl_memo_v1_id},
     std::{collections::HashMap, fmt, io},
 };
@@ -41,15 +41,15 @@ pub fn build_balance_message_with_config(
     let value = if config.use_lamports_unit {
         lamports.to_string()
     } else {
-        let sol = lamports_to_sol(lamports);
-        let sol_str = format!("{:.9}", sol);
+        letnzt= lamports_to_nzt(lamports);
+        let nzt_str = format!("{:.9}", sol);
         if config.trim_trailing_zeros {
-            sol_str
+            nzt_str
                 .trim_end_matches('0')
                 .trim_end_matches('.')
                 .to_string()
         } else {
-            sol_str
+            nzt_str
         }
     };
     let unit = if config.show_unit {
@@ -57,7 +57,7 @@ pub fn build_balance_message_with_config(
             let ess = if lamports == 1 { "" } else { "s" };
             format!(" lamport{}", ess)
         } else {
-            " XZO".to_string()
+            " NZT".to_string()
         }
     } else {
         "".to_string()
@@ -235,9 +235,9 @@ pub fn write_transaction<W: io::Write>(
         }
 
         let mut raw = true;
-        if program_pubkey == solana_vote_program::id() {
+        if program_pubkey == nexis_vote_program::id() {
             if let Ok(vote_instruction) = limited_deserialize::<
-                solana_vote_program::vote_instruction::VoteInstruction,
+                nexis_vote_program::vote_instruction::VoteInstruction,
             >(&instruction.data)
             {
                 writeln!(w, "{}  {:?}", prefix, vote_instruction)?;
@@ -250,9 +250,9 @@ pub fn write_transaction<W: io::Write>(
                 writeln!(w, "{}  {:?}", prefix, stake_instruction)?;
                 raw = false;
             }
-        } else if program_pubkey == solana_sdk::system_program::id() {
+        } else if program_pubkey == nexis_sdk::system_program::id() {
             if let Ok(system_instruction) = limited_deserialize::<
-                solana_sdk::system_instruction::SystemInstruction,
+                nexis_sdk::system_instruction::SystemInstruction,
             >(&instruction.data)
             {
                 writeln!(w, "{}  {:?}", prefix, system_instruction)?;
@@ -284,7 +284,7 @@ pub fn write_transaction<W: io::Write>(
             w,
             "{}  Fee: ◎{}",
             prefix,
-            lamports_to_sol(transaction_status.fee)
+            lamports_to_nzt(transaction_status.fee)
         )?;
         assert_eq!(
             transaction_status.pre_balances.len(),
@@ -302,7 +302,7 @@ pub fn write_transaction<W: io::Write>(
                     "{}  Account {} balance: ◎{}",
                     prefix,
                     i,
-                    lamports_to_sol(*pre)
+                    lamports_to_nzt(*pre)
                 )?;
             } else {
                 writeln!(
@@ -310,8 +310,8 @@ pub fn write_transaction<W: io::Write>(
                     "{}  Account {} balance: ◎{} -> ◎{}",
                     prefix,
                     i,
-                    lamports_to_sol(*pre),
-                    lamports_to_sol(*post)
+                    lamports_to_nzt(*pre),
+                    lamports_to_nzt(*post)
                 )?;
             }
         }
@@ -346,8 +346,8 @@ pub fn write_transaction<W: io::Write>(
                             "-".to_string()
                         },
                         sign,
-                        lamports_to_sol(reward.lamports.unsigned_abs()),
-                        lamports_to_sol(reward.post_balance)
+                        lamports_to_nzt(reward.lamports.unsigned_abs()),
+                        lamports_to_nzt(reward.post_balance)
                     )?;
                 }
             }
@@ -427,7 +427,7 @@ pub fn unix_timestamp_to_string(unix_timestamp: UnixTimestamp) -> String {
 
 #[cfg(test)]
 mod test {
-    use {super::*, solana_sdk::pubkey::Pubkey};
+    use {super::*, nexis_sdk::pubkey::Pubkey};
 
     #[test]
     fn test_format_labeled_address() {

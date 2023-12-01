@@ -4,11 +4,11 @@
 //! table to blockstore.
 
 use {
-    solana_ledger::blockstore::Blockstore,
-    solana_measure::measure::Measure,
-    solana_program_runtime::timings::ExecuteTimings,
-    solana_runtime::{bank::Bank, cost_model::CostModel},
-    solana_sdk::timing::timestamp,
+    nexis_ledger::blockstore::Blockstore,
+    nexis_measure::measure::Measure,
+    nexis_program_runtime::timings::ExecuteTimings,
+    nexis_runtime::{bank::Bank, cost_model::CostModel},
+    nexis_sdk::timing::timestamp,
     std::{
         sync::atomic::{AtomicBool, Ordering},
         sync::{mpsc::Receiver, Arc, RwLock},
@@ -77,7 +77,7 @@ impl CostUpdateService {
         cost_update_receiver: CostUpdateReceiver,
     ) -> Self {
         let thread_hdl = Builder::new()
-            .name("solana-cost-update-service".to_string())
+            .name("nexis-cost-update-service".to_string())
             .spawn(move || {
                 Self::service_loop(exit, blockstore, cost_model, cost_update_receiver);
             })
@@ -175,7 +175,7 @@ impl CostUpdateService {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_program_runtime::timings::ProgramTiming, solana_sdk::pubkey::Pubkey};
+    use {super::*, nexis_program_runtime::timings::ProgramTiming, nexis_sdk::pubkey::Pubkey};
 
     #[test]
     fn test_update_cost_model_with_empty_execute_timings() {

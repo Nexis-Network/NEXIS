@@ -1,8 +1,13 @@
+/// This module contains the definition of the `Banks` trait and related types.
+/// The `Banks` trait defines the interface for interacting with a banking system.
+/// It provides methods for sending transactions, retrieving transaction status,
+/// getting account information, and other banking operations.
+/// The module also includes unit tests for the `Banks` client.
 #![allow(deprecated)]
 
 use {
     serde::{Deserialize, Serialize},
-    solana_sdk::{
+    nexis_sdk::{
         account::Account,
         clock::Slot,
         commitment_config::CommitmentLevel,

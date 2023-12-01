@@ -1,6 +1,6 @@
-use solana_evm_loader_program::instructions::v0;
-use solana_sdk::{evm_loader::ID as STATIC_PROGRAM_ID, instruction::CompiledInstruction};
-use solana_transaction_status::{
+use nexis_evm_loader_program::instructions::v0;
+use nexis_sdk::{evm_loader::ID as STATIC_PROGRAM_ID, instruction::CompiledInstruction};
+use nexis_transaction_status::{
     ConfirmedBlockWithOptionalMetadata, TransactionWithOptionalMetadata,
 };
 

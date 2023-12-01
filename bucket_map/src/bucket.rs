@@ -8,8 +8,8 @@ use {
         MaxSearch, RefCount,
     },
     rand::{thread_rng, Rng},
-    solana_measure::measure::Measure,
-    solana_sdk::pubkey::Pubkey,
+    nexis_measure::measure::Measure,
+    nexis_sdk::pubkey::Pubkey,
     std::{
         collections::hash_map::DefaultHasher,
         hash::{Hash, Hasher},

@@ -1,21 +1,44 @@
+//! This is the main file for the `bench-tps-evm` application.
+//!
+//! It includes the entry point of the application and the main function that orchestrates the benchmarking process.
+//! The application connects to a cluster of nodes, generates and funds keypairs, and performs benchmarking of transactions per second (TPS) on the Ethereum Virtual Machine (EVM).
+//! The benchmarking process involves generating and signing transactions using the keypairs, and measuring the TPS achieved.
+//! The application uses the `nexis_bench_tps_evm` and `nexis_gossip` crates for benchmarking and network communication, respectively.
+//!
+//! The main function performs the following steps:
+//! 1. Sets up the logger and panic hook for error handling.
+//! 2. Parses command-line arguments using the `cli` module.
+//! 3. Connects to the cluster of nodes specified by the entrypoint address.
+//! 4. Generates and funds the required number of keypairs for benchmarking.
+//! 5. Performs benchmarking of TPS using the generated keypairs.
+//!
+//! The benchmarking process can be customized by providing command-line arguments such as the entrypoint address, number of nodes, number of transactions, etc.
+//! The application supports both single-client and multi-client benchmarking modes.
+//!
+//! For more details on the benchmarking process and available command-line options, refer to the `cli` module and the documentation of the `nexis_bench_tps_evm` crate.
+//!
+//! Example usage:
+//! ```shell
+//! $ cargo run -- --entrypoint-addr 127.0.0.1:8000 --num-nodes 10 --tx-count 1000
+//! ```
 use log::*;
 use std::{process::exit, sync::Arc};
 
-use solana_bench_tps_evm::bench::generate_and_fund_keypairs;
-use solana_bench_tps_evm::bench_evm::{self, Peer};
-use solana_bench_tps_evm::cli;
-use solana_gossip::gossip_service::{discover_cluster, get_client, get_multi_client};
+use nexis_bench_tps_evm::bench::generate_and_fund_keypairs;
+use nexis_bench_tps_evm::bench_evm::{self, Peer};
+use nexis_bench_tps_evm::cli;
+use nexis_gossip::gossip_service::{discover_cluster, get_client, get_multi_client};
 
-use solana_streamer::socket::SocketAddrSpace;
+use nexis_streamer::socket::SocketAddrSpace;
 
 /// Number of signatures for all transactions in ~1 week at ~100K TPS
 pub const NUM_SIGNATURES_FOR_TXS: u64 = 100_000 * 60 * 60 * 24 * 7;
 
 fn main() {
-    solana_logger::setup_with_default("solana=info");
-    solana_metrics::set_panic_hook("bench-tps", None);
+    nexis_logger::setup_with_default("nexis=info");
+    nexis_metrics::set_panic_hook("bench-tps", None);
 
-    let matches = cli::build_args(solana_version::version!()).get_matches();
+    let matches = cli::build_args(nexis_version::version!()).get_matches();
     let cli_config = cli::extract_args(&matches);
 
     let cli::Config {

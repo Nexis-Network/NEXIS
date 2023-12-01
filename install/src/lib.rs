@@ -13,11 +13,11 @@ mod defaults;
 mod github;
 
 pub fn main() -> Result<(), String> {
-    solana_logger::setup();
+    nexis_logger::setup();
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .arg({
             let arg = Arg::with_name("config_file")
@@ -91,9 +91,9 @@ pub fn main() -> Result<(), String> {
 }
 
 pub fn main_init() -> Result<(), String> {
-    let matches = App::new("exzo-install-init")
+    let matches = App::new("nexis-install-init")
         .about("Initializes a new installation")
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .arg({
             let arg = Arg::with_name("config_file")
                 .short("c")

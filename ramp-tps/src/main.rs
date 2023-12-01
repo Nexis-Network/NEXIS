@@ -1,4 +1,4 @@
-//! Ramp up TPS for Tour de XZO until all validators drop out
+//! Ramp up TPS for Tour de NZT until all validators drop out
 #![allow(clippy::integer_arithmetic)]
 
 mod results;
@@ -10,10 +10,10 @@ mod voters;
 use clap::{crate_description, crate_name, crate_version, value_t, value_t_or_exit, App, Arg};
 use log::*;
 use results::Results;
-use solana_client::rpc_client::RpcClient;
-use solana_metrics::datapoint_info;
-use solana_sdk::{genesis_config::GenesisConfig, signature::read_keypair_file};
-use solana_stake_program::config::{id as stake_config_id, Config as StakeConfig};
+use nexis_client::rpc_client::RpcClient;
+use nexis_metrics::datapoint_info;
+use nexis_sdk::{genesis_config::GenesisConfig, signature::read_keypair_file};
+use nexis_stake_program::config::{id as stake_config_id, Config as StakeConfig};
 use std::{
     collections::HashMap,
     fs,
@@ -25,7 +25,7 @@ use std::{
 };
 
 const NUM_BENCH_CLIENTS: usize = 2;
-const TDS_ENTRYPOINT: &str = "tds.solana.com";
+const TDS_ENTRYPOINT: &str = "tds.nexis.network";
 const TMP_LEDGER_PATH: &str = ".tmp/ledger";
 const FAUCET_KEYPAIR_PATH: &str = "faucet-keypair.json";
 const PUBKEY_MAP_FILE: &str = "validators/all-username.yml";
@@ -34,7 +34,7 @@ const DEFAULT_TX_COUNT_BASELINE: &str = "5000";
 const DEFAULT_TX_COUNT_INCREMENT: &str = "5000";
 const DEFAULT_TPS_ROUND_MINUTES: &str = "60";
 const THREAD_BATCH_SLEEP_MS: &str = "1000";
-const DEFAULT_INITIAL_XZO_BALANCE: &str = "1";
+const DEFAULT_INITIAL_NZT_BALANCE: &str = "1";
 
 // Transaction count increments linearly each round
 fn tx_count_for_round(tps_round: u32, base: u64, incr: u64) -> u64 {
@@ -52,9 +52,9 @@ fn gift_for_round(tps_round: u32, initial_balance: u64) -> u64 {
 
 #[allow(clippy::cognitive_complexity)]
 fn main() {
-    solana_logger::setup_with_default("solana=debug");
-    solana_metrics::set_panic_hook("ramp-tps");
-    let mut notifier = solana_notifier::Notifier::default();
+    nexis_logger::setup_with_default("nexis=debug");
+    nexis_metrics::set_panic_hook("ramp-tps");
+    let mut notifier = nexis_notifier::Notifier::default();
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
@@ -128,8 +128,8 @@ fn main() {
                 .long("initial-balance")
                 .value_name("XZO")
                 .takes_value(true)
-                .default_value(DEFAULT_INITIAL_XZO_BALANCE)
-                .help("The number of XZO that each partipant started with"),
+                .default_value(DEFAULT_INITIAL_NZT_BALANCE)
+                .help("The number of NZT that each partipant started with"),
         )
         .arg(
             Arg::with_name("entrypoint")
@@ -174,7 +174,7 @@ fn main() {
             );
             exit(1);
         });
-    let pubkey_to_keybase = Rc::new(move |pubkey: &solana_sdk::pubkey::Pubkey| -> String {
+    let pubkey_to_keybase = Rc::new(move |pubkey: &nexis_sdk::pubkey::Pubkey| -> String {
         let pubkey = pubkey.to_string();
         match pubkey_map.get(&pubkey) {
             Some(keybase) => format!("{} ({})", keybase, pubkey),
@@ -204,7 +204,7 @@ fn main() {
 
     let entrypoint_str = matches.value_of("entrypoint").unwrap();
     debug!("Connecting to {}", entrypoint_str);
-    let entrypoint_addr = solana_net_utils::parse_host_port(&format!("{}:8899", entrypoint_str))
+    let entrypoint_addr = nexis_net_utils::parse_host_port(&format!("{}:8899", entrypoint_str))
         .expect("failed to parse entrypoint address");
     utils::download_genesis(&entrypoint_addr, &tmp_ledger_path).expect("genesis download failed");
     let genesis_config =

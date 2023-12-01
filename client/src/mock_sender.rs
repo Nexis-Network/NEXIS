@@ -16,8 +16,8 @@ use {
         rpc_sender::*,
     },
     serde_json::{json, Number, Value},
-    solana_account_decoder::{UiAccount, UiAccountEncoding},
-    solana_sdk::{
+    nexis_account_decoder::{UiAccount, UiAccountEncoding},
+    nexis_sdk::{
         account::Account,
         clock::{Slot, UnixTimestamp},
         epoch_info::EpochInfo,
@@ -29,13 +29,13 @@ use {
         sysvar::epoch_schedule::EpochSchedule,
         transaction::{self, Transaction, TransactionError},
     },
-    solana_transaction_status::{
+    nexis_transaction_status::{
         EncodedConfirmedBlock, EncodedConfirmedTransaction, EncodedTransaction,
         EncodedTransactionWithStatusMeta, Rewards, TransactionConfirmationStatus,
         TransactionStatus, UiCompiledInstruction, UiMessage, UiRawMessage, UiTransaction,
         UiTransactionEncoding, UiTransactionStatusMeta,
     },
-    solana_version::Version,
+    nexis_version::Version,
     std::{collections::HashMap, net::SocketAddr, str::FromStr, sync::RwLock},
 };
 
@@ -340,7 +340,7 @@ impl RpcSender for MockSender {
             "getVersion" => {
                 let version = Version::default();
                 json!(RpcVersionInfo {
-                    solana_core: version.to_string(),
+                    nexis_core: version.to_string(),
                     feature_set: Some(version.feature_set),
                 })
             }

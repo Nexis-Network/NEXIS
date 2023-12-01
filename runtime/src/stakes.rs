@@ -13,7 +13,7 @@ use {
         iter::{IntoParallelRefIterator, ParallelIterator},
         ThreadPool,
     },
-    solana_sdk::{
+    nexis_sdk::{
         account::{AccountSharedData, ReadableAccount},
         clock::{Epoch, Slot},
         pubkey::Pubkey,
@@ -22,8 +22,8 @@ use {
             state::{Delegation, StakeActivationStatus, StakeState},
         },
     },
-    solana_stake_program::stake_state,
-    solana_vote_program::vote_state::VoteState,
+    nexis_stake_program::stake_state,
+    nexis_vote_program::vote_state::VoteState,
     std::{
         collections::HashMap,
         sync::{Arc, RwLock, RwLockReadGuard},
@@ -50,7 +50,7 @@ impl StakesCache {
     }
 
     pub fn is_stake(account: &AccountSharedData) -> bool {
-        solana_vote_program::check_id(account.owner())
+        nexis_vote_program::check_id(account.owner())
             || stake::program::check_id(account.owner())
                 && account.data().len() >= std::mem::size_of::<StakeState>()
     }
@@ -61,7 +61,7 @@ impl StakesCache {
         account: &AccountSharedData,
         remove_delegation_on_inactive: bool,
     ) {
-        if solana_vote_program::check_id(account.owner()) {
+        if nexis_vote_program::check_id(account.owner()) {
             let new_vote_account = if account.lamports() != 0
                 && VoteState::is_correct_size_and_initialized(account.data())
             {
@@ -79,7 +79,7 @@ impl StakesCache {
                 .write()
                 .unwrap()
                 .update_vote_account(pubkey, new_vote_account);
-        } else if solana_stake_program::check_id(account.owner()) {
+        } else if nexis_stake_program::check_id(account.owner()) {
             let new_delegation = stake_state::delegation_from(account).map(|delegation| {
                 let stakes = self.stakes();
                 let stake = if account.lamports() != 0 {
@@ -373,18 +373,18 @@ pub mod tests {
     use {
         super::*,
         rayon::ThreadPoolBuilder,
-        solana_sdk::{account::WritableAccount, pubkey::Pubkey, rent::Rent},
-        solana_stake_program::stake_state,
-        solana_vote_program::vote_state::{self, VoteState, VoteStateVersions},
+        nexis_sdk::{account::WritableAccount, pubkey::Pubkey, rent::Rent},
+        nexis_stake_program::stake_state,
+        nexis_vote_program::vote_state::{self, VoteState, VoteStateVersions},
     };
 
     //  set up some dummies for a staked node     ((     vote      )  (     stake     ))
     pub fn create_staked_node_accounts(
         stake: u64,
     ) -> ((Pubkey, AccountSharedData), (Pubkey, AccountSharedData)) {
-        let vote_pubkey = solana_sdk::pubkey::new_rand();
+        let vote_pubkey = nexis_sdk::pubkey::new_rand();
         let vote_account =
-            vote_state::create_account(&vote_pubkey, &solana_sdk::pubkey::new_rand(), 0, 1);
+            vote_state::create_account(&vote_pubkey, &nexis_sdk::pubkey::new_rand(), 0, 1);
         (
             (vote_pubkey, vote_account),
             create_stake_account(stake, &vote_pubkey),
@@ -393,13 +393,13 @@ pub mod tests {
 
     //   add stake to a vote_pubkey                               (   stake    )
     pub fn create_stake_account(stake: u64, vote_pubkey: &Pubkey) -> (Pubkey, AccountSharedData) {
-        let stake_pubkey = solana_sdk::pubkey::new_rand();
+        let stake_pubkey = nexis_sdk::pubkey::new_rand();
         (
             stake_pubkey,
             stake_state::create_account(
                 &stake_pubkey,
                 vote_pubkey,
-                &vote_state::create_account(vote_pubkey, &solana_sdk::pubkey::new_rand(), 0, 1),
+                &vote_state::create_account(vote_pubkey, &nexis_sdk::pubkey::new_rand(), 0, 1),
                 &Rent::free(),
                 stake,
             ),
@@ -410,9 +410,9 @@ pub mod tests {
         stake: u64,
         epoch: Epoch,
     ) -> ((Pubkey, AccountSharedData), (Pubkey, AccountSharedData)) {
-        let vote_pubkey = solana_sdk::pubkey::new_rand();
+        let vote_pubkey = nexis_sdk::pubkey::new_rand();
         let vote_account =
-            vote_state::create_account(&vote_pubkey, &solana_sdk::pubkey::new_rand(), 0, 1);
+            vote_state::create_account(&vote_pubkey, &nexis_sdk::pubkey::new_rand(), 0, 1);
         (
             (vote_pubkey, vote_account),
             create_warming_stake_account(stake, epoch, &vote_pubkey),
@@ -425,13 +425,13 @@ pub mod tests {
         epoch: Epoch,
         vote_pubkey: &Pubkey,
     ) -> (Pubkey, AccountSharedData) {
-        let stake_pubkey = solana_sdk::pubkey::new_rand();
+        let stake_pubkey = nexis_sdk::pubkey::new_rand();
         (
             stake_pubkey,
             stake_state::create_account_with_activation_epoch(
                 &stake_pubkey,
                 vote_pubkey,
-                &vote_state::create_account(vote_pubkey, &solana_sdk::pubkey::new_rand(), 0, 1),
+                &vote_state::create_account(vote_pubkey, &nexis_sdk::pubkey::new_rand(), 0, 1),
                 &Rent::free(),
                 stake,
                 epoch,

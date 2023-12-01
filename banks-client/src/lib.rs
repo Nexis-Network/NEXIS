@@ -6,16 +6,16 @@
 //! cumbersome to use.
 
 pub use crate::error::BanksClientError;
-pub use solana_banks_interface::{BanksClient as TarpcClient, TransactionStatus};
+pub use nexis_banks_interface::{BanksClient as TarpcClient, TransactionStatus};
 use {
     borsh::BorshDeserialize,
     futures::{future::join_all, Future, FutureExt, TryFutureExt},
-    solana_banks_interface::{BanksRequest, BanksResponse, BanksTransactionResultWithSimulation},
-    solana_program::{
+    nexis_banks_interface::{BanksRequest, BanksResponse, BanksTransactionResultWithSimulation},
+    nexis_program::{
         clock::Slot, fee_calculator::FeeCalculator, hash::Hash, program_pack::Pack, pubkey::Pubkey,
         rent::Rent, sysvar::Sysvar,
     },
-    solana_sdk::{
+    nexis_sdk::{
         account::{from_account, Account},
         commitment_config::CommitmentLevel,
         message::Message,
@@ -477,12 +477,12 @@ pub async fn start_tcp_client<T: ToSocketAddrs>(addr: T) -> io::Result<BanksClie
 mod tests {
     use {
         super::*,
-        solana_banks_server::banks_server::start_local_server,
-        solana_runtime::{
+        nexis_banks_server::banks_server::start_local_server,
+        nexis_runtime::{
             bank::Bank, bank_forks::BankForks, commitment::BlockCommitmentCache,
             genesis_utils::create_genesis_config,
         },
-        solana_sdk::{message::Message, signature::Signer, system_instruction},
+        nexis_sdk::{message::Message, signature::Signer, system_instruction},
         std::sync::{Arc, RwLock},
         tarpc::transport,
         tokio::{runtime::Runtime, time::sleep},
@@ -508,7 +508,7 @@ mod tests {
         ));
         let bank_forks = Arc::new(RwLock::new(BankForks::new(bank)));
 
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = nexis_sdk::pubkey::new_rand();
         let mint_pubkey = genesis.mint_keypair.pubkey();
         let instruction = system_instruction::transfer(&mint_pubkey, &bob_pubkey, 1);
         let message = Message::new(&[instruction], Some(&mint_pubkey));
@@ -542,7 +542,7 @@ mod tests {
         let bank_forks = Arc::new(RwLock::new(BankForks::new(bank)));
 
         let mint_pubkey = &genesis.mint_keypair.pubkey();
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = nexis_sdk::pubkey::new_rand();
         let instruction = system_instruction::transfer(mint_pubkey, &bob_pubkey, 1);
         let message = Message::new(&[instruction], Some(mint_pubkey));
 

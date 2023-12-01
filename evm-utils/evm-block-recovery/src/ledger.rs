@@ -1,5 +1,5 @@
 use anyhow::*;
-use solana_storage_bigtable::LedgerStorage;
+use nexis_storage_bigtable::LedgerStorage;
 
 pub async fn with_params(creds_path: Option<String>, instance: String) -> Result<LedgerStorage> {
     log::info!(

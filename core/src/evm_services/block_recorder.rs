@@ -1,5 +1,5 @@
 use crossbeam_channel::{Receiver, RecvTimeoutError, Sender};
-use solana_ledger::blockstore::Blockstore;
+use nexis_ledger::blockstore::Blockstore;
 use std::{
     sync::{
         atomic::{AtomicBool, Ordering},

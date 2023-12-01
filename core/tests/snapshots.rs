@@ -52,12 +52,12 @@ mod tests {
         fs_extra::dir::CopyOptions,
         itertools::Itertools,
         log::{info, trace},
-        solana_core::{
+        nexis_core::{
             accounts_hash_verifier::AccountsHashVerifier,
             snapshot_packager_service::SnapshotPackagerService,
         },
-        solana_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
-        solana_runtime::{
+        nexis_gossip::{cluster_info::ClusterInfo, contact_info::ContactInfo},
+        nexis_runtime::{
             accounts_background_service::{
                 AbsRequestHandler, AbsRequestSender, AccountsBackgroundService,
                 SnapshotRequestHandler,
@@ -75,7 +75,7 @@ mod tests {
             snapshot_utils::{self, ArchiveFormat, SnapshotVersion},
             status_cache::MAX_CACHE_ENTRIES,
         },
-        solana_sdk::{
+        nexis_sdk::{
             clock::Slot,
             genesis_config::{ClusterType, GenesisConfig},
             hash::{hashv, Hash},
@@ -84,7 +84,7 @@ mod tests {
             system_transaction,
             timing::timestamp,
         },
-        solana_streamer::socket::SocketAddrSpace,
+        nexis_streamer::socket::SocketAddrSpace,
         std::{
             collections::HashSet,
             fs,
@@ -246,7 +246,7 @@ mod tests {
     ) where
         F: Fn(&mut Bank, &Keypair),
     {
-        solana_logger::setup();
+        nexis_logger::setup();
         // Set up snapshotting config
         let mut snapshot_test_config = SnapshotTestConfig::new(
             snapshot_version,
@@ -369,7 +369,7 @@ mod tests {
         snapshot_version: SnapshotVersion,
         cluster_type: ClusterType,
     ) {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         // Set up snapshotting config
         let mut snapshot_test_config =
@@ -583,7 +583,7 @@ mod tests {
     }
 
     fn run_test_slots_to_snapshot(snapshot_version: SnapshotVersion, cluster_type: ClusterType) {
-        solana_logger::setup();
+        nexis_logger::setup();
         let num_set_roots = MAX_CACHE_ENTRIES * 2;
 
         for add_root_interval in &[1, 3, 9] {
@@ -668,7 +668,7 @@ mod tests {
         snapshot_version: SnapshotVersion,
         cluster_type: ClusterType,
     ) {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         const SET_ROOT_INTERVAL: Slot = 2;
         const INCREMENTAL_SNAPSHOT_ARCHIVE_INTERVAL_SLOTS: Slot = SET_ROOT_INTERVAL * 2;
@@ -879,7 +879,7 @@ mod tests {
         snapshot_version: SnapshotVersion,
         cluster_type: ClusterType,
     ) {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         const SET_ROOT_INTERVAL_SLOTS: Slot = 2;
         const BANK_SNAPSHOT_INTERVAL_SLOTS: Slot = SET_ROOT_INTERVAL_SLOTS * 2;

@@ -4,11 +4,11 @@ use {
         ProgressBar,
     },
     console::style,
-    solana_client::{
+    nexis_client::{
         client_error, rpc_client::RpcClient, rpc_request, rpc_response::RpcContactInfo,
     },
-    solana_core::validator::ValidatorStartProgress,
-    solana_sdk::{
+    nexis_core::validator::ValidatorStartProgress,
+    nexis_sdk::{
         clock::Slot, commitment_config::CommitmentConfig, exit::Exit, native_token::Sol,
         pubkey::Pubkey,
     },

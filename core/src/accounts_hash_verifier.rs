@@ -6,9 +6,9 @@
 
 use {
     rayon::ThreadPool,
-    solana_gossip::cluster_info::{ClusterInfo, MAX_SNAPSHOT_HASHES},
-    solana_measure::measure::Measure,
-    solana_runtime::{
+    nexis_gossip::cluster_info::{ClusterInfo, MAX_SNAPSHOT_HASHES},
+    nexis_measure::measure::Measure,
+    nexis_runtime::{
         accounts_db::{self, AccountsDb},
         accounts_hash::HashStats,
         snapshot_config::SnapshotConfig,
@@ -18,7 +18,7 @@ use {
         },
         sorted_storages::SortedStorages,
     },
-    solana_sdk::{clock::Slot, hash::Hash, pubkey::Pubkey},
+    nexis_sdk::{clock::Slot, hash::Hash, pubkey::Pubkey},
     std::{
         collections::{HashMap, HashSet},
         path::{Path, PathBuf},
@@ -51,7 +51,7 @@ impl AccountsHashVerifier {
         let exit = exit.clone();
         let cluster_info = cluster_info.clone();
         let t_accounts_hash_verifier = Builder::new()
-            .name("solana-hash-accounts".to_string())
+            .name("nexis-hash-accounts".to_string())
             .spawn(move || {
                 let mut hashes = vec![];
                 let mut thread_pool = None;
@@ -167,7 +167,7 @@ impl AccountsHashVerifier {
             // For testing, publish an invalid hash to gossip.
             use {
                 rand::{thread_rng, Rng},
-                solana_sdk::hash::extend_and_hash,
+                nexis_sdk::hash::extend_and_hash,
             };
             warn!("inserting fault at slot: {}", accounts_package.slot);
             let rand = thread_rng().gen_range(0, 10);
@@ -281,18 +281,18 @@ impl AccountsHashVerifier {
 
 #[cfg(test)]
 mod tests {
-    use solana_runtime::bank::Bank;
+    use nexis_runtime::bank::Bank;
 
     use {
         super::*,
-        solana_gossip::{cluster_info::make_accounts_hashes_message, contact_info::ContactInfo},
-        solana_runtime::snapshot_utils::{ArchiveFormat, SnapshotVersion},
-        solana_sdk::{
+        nexis_gossip::{cluster_info::make_accounts_hashes_message, contact_info::ContactInfo},
+        nexis_runtime::snapshot_utils::{ArchiveFormat, SnapshotVersion},
+        nexis_sdk::{
             genesis_config::ClusterType,
             hash::hash,
             signature::{Keypair, Signer},
         },
-        solana_streamer::socket::SocketAddrSpace,
+        nexis_streamer::socket::SocketAddrSpace,
     };
     use evm_state::AccountProvider;
 
@@ -339,7 +339,7 @@ mod tests {
 
     #[test]
     fn test_max_hashes() {
-        solana_logger::setup();
+        nexis_logger::setup();
         use {std::path::PathBuf, tempfile::TempDir};
         let keypair = Keypair::new();
 

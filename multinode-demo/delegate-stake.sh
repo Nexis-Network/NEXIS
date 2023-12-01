@@ -20,22 +20,22 @@ usage: $0 [cluster_rpc_url]
    CONFIG
 
  Required arguments:
-   cluster_rpc_url  - RPC URL and port for a running Solana cluster (ex: http://34.83.146.144:8899)
+   cluster_rpc_url  - RPC URL and port for a running Nexis cluster (ex: http://34.83.146.144:8899)
 EOF
     exit $exitcode
 }
 
 function get_cluster_version {
-    clusterVersion="$(curl -s -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1, "method":"getVersion"}' "$url" | jq '.result | ."solana-core" ')"
+    clusterVersion="$(curl -s -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1, "method":"getVersion"}' "$url" | jq '.result | ."nexis-core" ')"
     echo Cluster software version: "$clusterVersion"
 }
 
 function get_token_capitalization {
     totalSupplyLamports="$(curl -s -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1, "method":"getTotalSupply"}' "$url" | cut -d , -f 2 | cut -d : -f 2)"
-    totalSupplySol=$((totalSupplyLamports / LAMPORTS_PER_VLX))
+    totalSupplySol=$((totalSupplyLamports / LAMPORTS_PER_NZT))
     
     printf "\n--- Token Capitalization ---\n"
-    printf "Total token capitalization %'d SOL\n" "$totalSupplySol"
+    printf "Total token capitalization %'d NZT\n" "$totalSupplySol"
     printf "Total token capitalization %'d Lamports\n" "$totalSupplyLamports"
     
 }
@@ -55,11 +55,11 @@ for account in ${accountBalancesLamports[@]}; do
     totalAccountBalancesLamports=$((totalAccountBalancesLamports + account))
     numberOfAccounts=$((numberOfAccounts + 1))
 done
-totalAccountBalancesSol=$((totalAccountBalancesLamports / LAMPORTS_PER_VLX))
+totalAccountBalancesSol=$((totalAccountBalancesLamports / LAMPORTS_PER_NZT))
 
 printf "\n--- %s Account Balance Totals ---\n" "$PROGRAM_NAME"
 printf "Number of %s Program accounts: %'.f\n" "$PROGRAM_NAME" "$numberOfAccounts"
-printf "Total token balance in all %s accounts: %'d SOL\n" "$PROGRAM_NAME" "$totalAccountBalancesSol"
+printf "Total token balance in all %s accounts: %'d NZT\n" "$PROGRAM_NAME" "$totalAccountBalancesSol"
 printf "Total token balance in all %s accounts: %'d Lamports\n" "$PROGRAM_NAME" "$totalAccountBalancesLamports"
 
 case $PROGRAM_NAME in
@@ -91,7 +91,7 @@ grandTotalAccountBalancesSol=$((systemAccountBalanceTotalSol + stakeAccountBalan
 grandTotalAccountBalancesLamports=$((systemAccountBalanceTotalLamports + stakeAccountBalanceTotalLamports + voteAccountBalanceTotalLamports + configAccountBalanceTotalLamports))
 
 printf "\n--- Total Token Distribution in all Account Balances ---\n"
-printf "Total VLX in all Account Balances: %'d\n" "$grandTotalAccountBalancesSol"
+printf "Total NZT in all Account Balances: %'d\n" "$grandTotalAccountBalancesSol"
 printf "Total Lamports in all Account Balances: %'d\n" "$grandTotalAccountBalancesLamports"
 }
 
@@ -99,7 +99,7 @@ url=$1
 [[ -n $url ]] || usage "Missing required RPC URL"
 shift
 
-LAMPORTS_PER_VLX=1000000000 # 1 billion
+LAMPORTS_PER_NZT=1000000000 # 1 billion
 
 stakeAccountBalanceTotalSol=
 systemAccountBalanceTotalSol=
@@ -140,7 +140,7 @@ if [[ -n ${positional_args[0]} ]]; then
   stake_sol=${positional_args[0]}
 fi
 
-VALIDATOR_KEYS_DIR=$SOLANA_CONFIG_DIR/validator$label
+VALIDATOR_KEYS_DIR=$NZT_CONFIG_DIR/validator$label
 vote_account="${vote_account:-$VALIDATOR_KEYS_DIR/vote-account.json}"
 stake_account="${stake_account:-$VALIDATOR_KEYS_DIR/stake-account.json}"
 
@@ -155,7 +155,7 @@ if ((airdrops_enabled)); then
     exit 1
   fi
   $exzo_cli \
-    "${common_args[@]}" --keypair "$SOLANA_CONFIG_DIR/faucet.json" \
+    "${common_args[@]}" --keypair "$NZT_CONFIG_DIR/faucet.json" \
     transfer --allow-unfunded-recipient "$keypair" "$stake_sol"
 fi
 

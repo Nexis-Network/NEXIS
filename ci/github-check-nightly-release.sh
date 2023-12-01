@@ -45,7 +45,7 @@ if git merge-base --is-ancestor ${release_commit} HEAD; then
         hub release delete ${tag}
         hub release create -p -F release.md ${tag}
     fi
-    for file in exzo-release-$TARGET.yml exzo-install-init-$TARGET$EXE_EXT exzo-release-$TARGET.tar.bz2; do
+    for file in nexis-release-$TARGET.yml exzo-install-init-$TARGET$EXE_EXT nexis-release-$TARGET.tar.bz2; do
         hub release edit -a "$file" -m ''  ${tag}
     done
 else

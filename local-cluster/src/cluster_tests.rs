@@ -6,18 +6,18 @@ use log::*;
 use {
     rand::{thread_rng, Rng},
     rayon::prelude::*,
-    solana_client::thin_client::create_client,
-    solana_core::consensus::VOTE_THRESHOLD_DEPTH,
-    solana_entry::entry::{Entry, EntrySlice},
-    solana_gossip::{
+    nexis_client::thin_client::create_client,
+    nexis_core::consensus::VOTE_THRESHOLD_DEPTH,
+    nexis_entry::entry::{Entry, EntrySlice},
+    nexis_gossip::{
         cluster_info::{self, VALIDATOR_PORT_RANGE},
         contact_info::ContactInfo,
         crds_value::{self, CrdsData, CrdsValue},
         gossip_error::GossipError,
         gossip_service::discover_cluster,
     },
-    solana_ledger::blockstore::Blockstore,
-    solana_sdk::{
+    nexis_ledger::blockstore::Blockstore,
+    nexis_sdk::{
         client::SyncClient,
         clock::{self, Slot, NUM_CONSECUTIVE_LEADER_SLOTS},
         commitment_config::CommitmentConfig,
@@ -31,8 +31,8 @@ use {
         timing::{duration_as_ms, timestamp},
         transport::TransportError,
     },
-    solana_streamer::socket::SocketAddrSpace,
-    solana_vote_program::vote_transaction,
+    nexis_streamer::socket::SocketAddrSpace,
+    nexis_vote_program::vote_transaction,
     std::{
         collections::{HashMap, HashSet},
         net::SocketAddr,

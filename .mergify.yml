@@ -28,11 +28,11 @@ pull_request_rules:
     actions:
       request_reviews:
         teams:
-          - "@solana-labs/community-pr-subscribers"
+          - "@nexis-labs/community-pr-subscribers"
   - name: automatic merge (squash) on CI success
     conditions:
       - and:
-        - status-success=buildkite/solana
+        - status-success=buildkitenexis
         - status-success=ci-gate
         - label=automerge
         - label!=no-automerge
@@ -58,7 +58,7 @@ pull_request_rules:
   - name: automatic merge (rebase) on CI success
     conditions:
       - and:
-        - status-success=buildkite/solana
+        - status-success=buildkitenexis
         - status-success=ci-gate
         - label=automerge
         - label!=no-automerge

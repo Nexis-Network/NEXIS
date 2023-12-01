@@ -18,19 +18,19 @@ fi
 if [[ $(uname) != Linux ]]; then
     # Protect against unsupported configurations to prevent non-obvious errors
     # later. Arguably these should be fatal errors but for now prefer tolerance.
-    if [[ -n $SOLANA_CUDA ]]; then
+    if [[ -n $NZT_CUDA ]]; then
         echo "Warning: CUDA is not supported on $(uname)"
-        SOLANA_CUDA=
+        NZT_CUDA=
     fi
 fi
 
-if [[ -n $USE_INSTALL || ! -f "$SOLANA_ROOT"/Cargo.toml ]]; then
+if [[ -n $USE_INSTALL || ! -f "$NZT_ROOT"/Cargo.toml ]]; then
     exzo_program() {
         declare program="$1"
         if [[ -z $program ]]; then
             printf "exzo"
         else
-            printf "exzo-%s" "$program"
+            printf "nexis-%s" "$program"
         fi
     }
 else
@@ -41,7 +41,7 @@ else
       crate="cli"
       program="exzo"
     else
-      program="exzo-$program"
+      program="nexis-$program"
     fi
 
     if [[ -n $NDEBUG ]]; then
@@ -62,10 +62,10 @@ else
 fi
 
 exzo_bench_tps=$(exzo_program bench-tps)
-exzo_faucet=$(exzo_program faucet solana)
+exzo_faucet=$(exzo_program faucet nexis)
 exzo_validator=$(exzo_program validator)
 exzo_validator_cuda="$exzo_validator --cuda"
-exzo_genesis=$(exzo_program genesis solana)
+exzo_genesis=$(exzo_program genesis nexis)
 exzo_gossip=$(exzo_program gossip)
 exzo_keygen=$(exzo_program keygen)
 exzo_ledger_tool=$(exzo_program ledger-tool)

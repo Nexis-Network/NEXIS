@@ -1,6 +1,6 @@
 use {
     log::*,
-    solana_sdk::{
+    nexis_sdk::{
         account::{AccountSharedData, ReadableAccount},
         pubkey::Pubkey,
         rent::Rent,
@@ -75,7 +75,7 @@ pub(crate) fn check_rent_state(
 ) -> Result<()> {
     if let Some((pre_rent_state, post_rent_state)) = pre_rent_state.zip(post_rent_state) {
         submit_rent_state_metrics(pre_rent_state, post_rent_state);
-        if !solana_sdk::incinerator::check_id(address)
+        if !nexis_sdk::incinerator::check_id(address)
             && !post_rent_state.transition_allowed_from(pre_rent_state, do_support_realloc)
         {
             debug!("Account {:?} not rent exempt, state {:?}", address, account);
@@ -87,7 +87,7 @@ pub(crate) fn check_rent_state(
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_sdk::pubkey::Pubkey};
+    use {super::*, nexis_sdk::pubkey::Pubkey};
 
     #[test]
     fn test_from_account() {

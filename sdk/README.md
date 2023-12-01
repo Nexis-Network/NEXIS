@@ -1,15 +1,15 @@
 <p align="center">
-  <a href="https://solana.com">
-    <img alt="Solana" src="https://i.imgur.com/IKyzQ6T.png" width="250" />
+  <a href="https://nexis.network">
+    <img alt="Nexis" src="https://i.imgur.com/IKyzQ6T.png" width="250" />
   </a>
 </p>
 
-# Solana SDK
+# Nexis SDK
 
-Use the Solana SDK Crate to write client side applications in Rust.  If writing on-chain programs, use the [Solana Program Crate](https://crates.io/crates/solana-program) instead.
+Use the Nexis SDK Crate to write client side applications in Rust.  If writing on-chain programs, use the [Nexis Program Crate](https://crates.io/crates/nexis-program) instead.
 
-More information about Solana is available in the [Solana documentation](https://docs.solana.com/).
+More information about Nexis is available in the [Nexis documentation](https://docs.nexis.network/).
 
-The [Solana Program Library](https://github.com/solana-labs/solana-program-library) provides examples of how to use this crate.
+The [Nexis Program Library](https://github.com/nexis-labs/nexis-program-library) provides examples of how to use this crate.
 
 Still have questions?  Ask us on [Discord](https://discordapp.com/invite/pquxPsq)

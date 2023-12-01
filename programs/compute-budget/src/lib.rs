@@ -1,6 +1,6 @@
 use {
-    solana_program_runtime::invoke_context::InvokeContext,
-    solana_sdk::instruction::InstructionError,
+    nexis_program_runtime::invoke_context::InvokeContext,
+    nexis_sdk::instruction::InstructionError,
 };
 
 pub fn process_instruction(

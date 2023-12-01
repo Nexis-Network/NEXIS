@@ -8,7 +8,7 @@ use {
     log::*,
     num_derive::{FromPrimitive, ToPrimitive},
     serde::Serialize,
-    solana_sdk::{
+    nexis_sdk::{
         account::ReadableAccount,
         decode_error::DecodeError,
         instruction::InstructionError,

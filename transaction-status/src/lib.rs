@@ -16,14 +16,14 @@ pub mod parse_token;
 pub mod parse_vote;
 pub mod token_balances;
 
-pub use {crate::extract_memos::extract_and_fmt_memos, solana_runtime::bank::RewardType};
+pub use {crate::extract_memos::extract_and_fmt_memos, nexis_runtime::bank::RewardType};
 use {
     crate::{
         parse_accounts::{parse_accounts, ParsedAccount},
         parse_instruction::{parse, ParsedInstruction},
     },
-    solana_account_decoder::parse_token::UiTokenAmount,
-    solana_sdk::{
+    nexis_account_decoder::parse_token::UiTokenAmount,
+    nexis_sdk::{
         clock::{Slot, UnixTimestamp},
         commitment_config::CommitmentConfig,
         deserialize_utils::default_on_eof,
@@ -222,7 +222,7 @@ impl Default for TransactionStatusMeta {
 #[serde(rename_all = "camelCase")]
 pub struct UiTransactionStatusMeta {
     pub err: Option<TransactionError>,
-    pub status: Result<()>, // This field is deprecated.  See https://github.com/solana-labs/solana/issues/9302
+    pub status: Result<()>, // This field is deprecated.  See https://github.com/nexis-labs/nexis/issues/9302
     pub fee: u64,
     pub pre_balances: Vec<u64>,
     pub post_balances: Vec<u64>,

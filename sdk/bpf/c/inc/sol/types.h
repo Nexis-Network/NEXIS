@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @brief Solana types for BPF programs
+ * @brief Nexis types for BPF programs
  */
 
 #ifdef __cplusplus
@@ -124,7 +124,7 @@ static_assert(sizeof(uint64_t) == 8);
 /**
  * Computes the number of elements in an array
  */
-#define SOL_ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
+#define NZT_ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 
 /**
  * Byte array pointer and string

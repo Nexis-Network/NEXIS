@@ -1,11 +1,11 @@
 //! Test mem functions
 
 use crate::{run_mem_tests, MemOps};
-use solana_program::{
+use nexis_program::{
     account_info::AccountInfo,
     entrypoint,
     entrypoint::ProgramResult,
-    program_memory::{sol_memcmp, sol_memcpy, sol_memmove, sol_memset},
+    program_memory::{nzt_memcmp, nzt_memcpy, nzt_memmove, nzt_memset},
     pubkey::Pubkey,
 };
 
@@ -21,16 +21,16 @@ pub fn process_instruction(
     struct MemOpSyscalls();
     impl MemOps for MemOpSyscalls {
         fn memcpy(&self, dst: &mut [u8], src: &[u8], n: usize) {
-            sol_memcpy(dst, src, n)
+            nzt_memcpy(dst, src, n)
         }
         unsafe fn memmove(&self, dst: *mut u8, src: *mut u8, n: usize) {
-            sol_memmove(dst, src, n)
+            nzt_memmove(dst, src, n)
         }
         fn memset(&self, s: &mut [u8], c: u8, n: usize) {
-            sol_memset(s, c, n)
+            nzt_memset(s, c, n)
         }
         fn memcmp(&self, s1: &[u8], s2: &[u8], n: usize) -> i32 {
-            sol_memcmp(s1, s2, n)
+            nzt_memcmp(s1, s2, n)
         }
     }
     run_mem_tests(MemOpSyscalls::default());

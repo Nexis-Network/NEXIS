@@ -1,6 +1,6 @@
 /// A helper for calculating a stake-weighted timestamp estimate from a set of timestamps and epoch
 /// stake.
-use solana_sdk::{
+use nexis_sdk::{
     clock::{Slot, UnixTimestamp},
     pubkey::Pubkey,
 };
@@ -102,7 +102,7 @@ where
 pub mod tests {
     use {
         super::*,
-        solana_sdk::{account::Account, native_token::sol_to_lamports},
+        nexis_sdk::{account::Account, native_token::nzt_to_lamports},
     };
 
     #[test]
@@ -110,41 +110,41 @@ pub mod tests {
         let recent_timestamp: UnixTimestamp = 1_578_909_061;
         let slot = 5;
         let slot_duration = Duration::from_millis(400);
-        let pubkey0 = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
-        let pubkey2 = solana_sdk::pubkey::new_rand();
-        let pubkey3 = solana_sdk::pubkey::new_rand();
-        let pubkey4 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = nexis_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
+        let pubkey2 = nexis_sdk::pubkey::new_rand();
+        let pubkey3 = nexis_sdk::pubkey::new_rand();
+        let pubkey4 = nexis_sdk::pubkey::new_rand();
         let max_allowable_drift = MaxAllowableDrift { fast: 25, slow: 25 };
 
         // Test low-staked outlier(s)
         let stakes: HashMap<Pubkey, (u64, Account)> = [
             (
                 pubkey0,
-                (sol_to_lamports(1.0), Account::new(1, 0, &Pubkey::default())),
+                (nzt_to_lamports(1.0), Account::new(1, 0, &Pubkey::default())),
             ),
             (
                 pubkey1,
-                (sol_to_lamports(1.0), Account::new(1, 0, &Pubkey::default())),
+                (nzt_to_lamports(1.0), Account::new(1, 0, &Pubkey::default())),
             ),
             (
                 pubkey2,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey3,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey4,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
@@ -229,21 +229,21 @@ pub mod tests {
             (
                 pubkey0,
                 (
-                    sol_to_lamports(1_000_000.0), // 1/3 stake
+                    nzt_to_lamports(1_000_000.0), // 1/3 stake
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey1,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey2,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
@@ -277,14 +277,14 @@ pub mod tests {
             (
                 pubkey0,
                 (
-                    sol_to_lamports(1_000_001.0), // 1/3 stake
+                    nzt_to_lamports(1_000_001.0), // 1/3 stake
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey1,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
@@ -325,29 +325,29 @@ pub mod tests {
         };
         let acceptable_delta = (max_allowable_drift_percentage * poh_offset as u32 / 100) as i64;
         let poh_estimate = epoch_start_timestamp + poh_offset as i64;
-        let pubkey0 = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = nexis_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
+        let pubkey2 = nexis_sdk::pubkey::new_rand();
 
         let stakes: HashMap<Pubkey, (u64, Account)> = [
             (
                 pubkey0,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey1,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey2,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
@@ -466,29 +466,29 @@ pub mod tests {
             (max_allowable_drift_percentage_50 * poh_offset as u32 / 100) as i64;
         assert!(acceptable_delta_50 > acceptable_delta_25 + 1);
         let poh_estimate = epoch_start_timestamp + poh_offset as i64;
-        let pubkey0 = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = nexis_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
+        let pubkey2 = nexis_sdk::pubkey::new_rand();
 
         let stakes: HashMap<Pubkey, (u64, Account)> = [
             (
                 pubkey0,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey1,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey2,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
@@ -602,29 +602,29 @@ pub mod tests {
             (max_allowable_drift_percentage_50 * poh_offset as u32 / 100) as i64;
         assert!(acceptable_delta_slow > acceptable_delta_fast + 1);
         let poh_estimate = epoch_start_timestamp + poh_offset as i64;
-        let pubkey0 = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = nexis_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
+        let pubkey2 = nexis_sdk::pubkey::new_rand();
 
         let stakes: HashMap<Pubkey, (u64, Account)> = [
             (
                 pubkey0,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey1,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey2,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
@@ -740,29 +740,29 @@ pub mod tests {
         };
         let acceptable_delta = (max_allowable_drift_percentage * poh_offset as u32 / 100) as i64;
         let poh_estimate = epoch_start_timestamp + poh_offset as i64;
-        let pubkey0 = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
-        let pubkey2 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = nexis_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
+        let pubkey2 = nexis_sdk::pubkey::new_rand();
 
         let stakes: HashMap<Pubkey, (u64, Account)> = [
             (
                 pubkey0,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey1,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),
             (
                 pubkey2,
                 (
-                    sol_to_lamports(1_000_000.0),
+                    nzt_to_lamports(1_000_000.0),
                     Account::new(1, 0, &Pubkey::default()),
                 ),
             ),

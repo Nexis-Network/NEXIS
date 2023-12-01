@@ -9,7 +9,7 @@ use {
     },
     bincode::serialize_into,
     rand::{thread_rng, Rng},
-    solana_sdk::{
+    nexis_sdk::{
         account::{AccountSharedData, ReadableAccount},
         clock::Slot,
         genesis_config::{create_genesis_config, ClusterType},
@@ -133,7 +133,7 @@ where
 }
 
 fn test_accounts_serialize_style(evm_version: EvmStateVersion) {
-    solana_logger::setup();
+    nexis_logger::setup();
     let (_accounts_dir, paths) = get_temp_accounts_paths(4).unwrap();
     let accounts = Accounts::new_with_config_for_tests(
         paths,
@@ -181,7 +181,7 @@ fn test_accounts_serialize_style(evm_version: EvmStateVersion) {
 }
 
 fn test_bank_serialize_style(evm_version: EvmStateVersion) {
-    solana_logger::setup();
+    nexis_logger::setup();
     let (genesis_config, _) = create_genesis_config(500);
     let bank0 = Arc::new(Bank::new_for_tests(&genesis_config));
     let bank1 = Bank::new_from_parent(&bank0, &Pubkey::default(), 1);

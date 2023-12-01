@@ -1,5 +1,5 @@
 [package]
-name = "exzo-account-program"
+name = "nexis-account-program"
 version = "0.0.1"
 edition = "2018"
 
@@ -12,7 +12,7 @@ borsh = "0.9.1"
 borsh-derive = "0.9.1"
 serde = { version = "1.0.125", features = ["derive"] }
 
-solana-sdk = { path = "../../sdk", version = "1.9.13" }
+nexis-sdk = { path = "../../sdk", version = "1.9.13" }
 
 [dev-dependencies]
 base64 = "0.13.0"

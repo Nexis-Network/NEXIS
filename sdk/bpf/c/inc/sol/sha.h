@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @brief Solana sha system call
+ * @brief Nexis sha system call
  */
 
 #include <sol/types.h>
@@ -21,7 +21,7 @@ extern "C" {
  * @param bytes_len Number of byte arrays
  * @param result 32 byte array to hold the result
  */
-uint64_t sol_sha256(
+uint64_t nzt_sha256(
     const SolBytes *bytes,
     int bytes_len,
     uint8_t *result

@@ -1,4 +1,4 @@
-//! solana-program Javascript interface
+//!nexis-program Javascript interface
 #![cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
 

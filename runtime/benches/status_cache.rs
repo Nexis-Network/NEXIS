@@ -4,8 +4,8 @@ extern crate test;
 
 use {
     bincode::serialize,
-    solana_runtime::status_cache::*,
-    solana_sdk::{
+    nexis_runtime::status_cache::*,
+    nexis_sdk::{
         hash::{hash, Hash},
         signature::Signature,
     },

@@ -2,11 +2,11 @@ use {
     crate::accountsdb_repl_server::{
         self, ReplicaAccountData, ReplicaAccountInfo, ReplicaAccountMeta, ReplicaAccountsServer,
     },
-    solana_runtime::{
+    nexis_runtime::{
         accounts_cache::CachedAccount, accounts_db::LoadedAccount, append_vec::StoredAccountMeta,
         bank_forks::BankForks,
     },
-    solana_sdk::account::Account,
+    nexis_sdk::account::Account,
     std::{
         cmp::Eq,
         sync::{Arc, RwLock},

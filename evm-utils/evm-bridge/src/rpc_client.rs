@@ -14,7 +14,7 @@ use serde_json::{json, Value};
 use tokio::sync::RwLock;
 use tokio::time::sleep;
 
-use solana_client::{
+use nexis_client::{
     client_error::{ClientError, ClientErrorKind, Result as ClientResult},
     rpc_client::serialize_and_encode,
     rpc_config::RpcSendTransactionConfig,
@@ -23,7 +23,7 @@ use solana_client::{
     rpc_response::Response as RpcResponse,
     rpc_response::*,
 };
-use solana_sdk::{
+use nexis_sdk::{
     clock::{Slot, DEFAULT_MS_PER_SLOT},
     commitment_config::CommitmentConfig,
     fee_calculator::FeeCalculator,
@@ -32,11 +32,11 @@ use solana_sdk::{
     signature::Signature,
     transaction::uses_durable_nonce,
 };
-use solana_transaction_status::{TransactionStatus, UiTransactionEncoding};
+use nexis_transaction_status::{TransactionStatus, UiTransactionEncoding};
 
 use evm_rpc::{BlockId, Hex, RPCBlock, RPCLog, RPCLogFilter, RPCReceipt, RPCTransaction};
 use evm_state::{Address, H256, U256};
-use solana_evm_loader_program::scope::solana;
+use nexis_evm_loader_program::scope::nexis;
 
 #[derive(Deserialize, Debug)]
 struct RpcErrorObject {
@@ -250,7 +250,7 @@ impl AsyncRpcClient {
             let node_version = self.get_version().await.map_err(|e| {
                 RpcError::RpcRequestError(format!("cluster version query failed: {}", e))
             })?;
-            let node_version = semver::Version::parse(&node_version.solana_core).map_err(|e| {
+            let node_version = semver::Version::parse(&node_version.nexis_core).map_err(|e| {
                 RpcError::RpcRequestError(format!("failed to parse cluster version: {}", e))
             })?;
             *w_node_version = Some(node_version.clone());
@@ -315,7 +315,7 @@ impl AsyncRpcClient {
         &self,
         signature: &Signature,
         commitment_config: CommitmentConfig,
-    ) -> ClientResult<Option<solana_sdk::transaction::Result<()>>> {
+    ) -> ClientResult<Option<nexis_sdk::transaction::Result<()>>> {
         let result: RpcResponse<Vec<Option<TransactionStatus>>> = self
             .send(
                 RpcRequest::GetSignatureStatuses,
@@ -331,7 +331,7 @@ impl AsyncRpcClient {
     pub async fn get_signature_status(
         &self,
         signature: &Signature,
-    ) -> ClientResult<Option<solana_sdk::transaction::Result<()>>> {
+    ) -> ClientResult<Option<nexis_sdk::transaction::Result<()>>> {
         self.get_signature_status_with_commitment(signature, CommitmentConfig::processed())
             .await
     }
@@ -360,7 +360,7 @@ impl AsyncRpcClient {
 
     pub async fn send_and_confirm_transaction_with_config(
         &self,
-        transaction: &solana::Transaction,
+        transaction: &nexis::Transaction,
         config: RpcSendTransactionConfig,
     ) -> ClientResult<Signature> {
         const SEND_RETRIES: usize = 20;
@@ -416,7 +416,7 @@ impl AsyncRpcClient {
 
     pub async fn send_transaction_with_config(
         &self,
-        transaction: &solana::Transaction,
+        transaction: &nexis::Transaction,
         config: RpcSendTransactionConfig,
     ) -> ClientResult<Signature> {
         let encoding = config.encoding.unwrap_or(UiTransactionEncoding::Base64);
@@ -429,7 +429,7 @@ impl AsyncRpcClient {
             ..config
         };
         let serialized_encoded =
-            serialize_and_encode::<solana::Transaction>(transaction, encoding)?;
+            serialize_and_encode::<nexis::Transaction>(transaction, encoding)?;
         let request = RpcRequest::SendTransaction;
         let response = match self
             .send_request(request, json!([serialized_encoded, config]))

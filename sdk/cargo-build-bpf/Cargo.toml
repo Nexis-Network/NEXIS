@@ -1,10 +1,10 @@
 [package]
-name = "solana-cargo-build-bpf"
+name = "nexis-cargo-build-bpf"
 version = "1.9.29"
-description = "Compile a local package and all of its dependencies using the Solana BPF SDK"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
-homepage = "https://solana.com/"
+description = "Compile a local package and all of its dependencies using the Nexis BPF SDK"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
+homepage = "https://nexis.network/"
 license = "Apache-2.0"
 edition = "2021"
 publish = false
@@ -14,8 +14,8 @@ bzip2 = "0.4.3"
 clap = "2.33.3"
 regex = "1.5.4"
 cargo_metadata = "0.15.1"
-solana-sdk = { path = "..", version = "=1.9.29" }
-solana-download-utils = { path = "../../download-utils", version = "=1.9.29" }
+nexis-sdk = { path = "..", version = "=1.9.29" }
+nexis-download-utils = { path = "../../download-utils", version = "=1.9.29" }
 tar = "0.4.37"
 
 [dev-dependencies]

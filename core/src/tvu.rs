@@ -28,18 +28,18 @@ use {
         voting_service::VotingService,
     },
     crossbeam_channel::{self, bounded, unbounded, RecvTimeoutError},
-    solana_geyser_plugin_manager::block_metadata_notifier_interface::BlockMetadataNotifierLock,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::{
+    nexis_geyser_plugin_manager::block_metadata_notifier_interface::BlockMetadataNotifierLock,
+    nexis_gossip::cluster_info::ClusterInfo,
+    nexis_ledger::{
         blockstore::Blockstore, blockstore_processor::TransactionStatusSender,
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_poh::poh_recorder::PohRecorder,
-    solana_rpc::{
+    nexis_poh::poh_recorder::PohRecorder,
+    nexis_rpc::{
         max_slots::MaxSlots, optimistically_confirmed_bank_tracker::BankNotificationSender,
         rpc_subscriptions::RpcSubscriptions,
     },
-    solana_runtime::{
+    nexis_runtime::{
         accounts_background_service::{
             AbsRequestHandler, AbsRequestSender, AccountsBackgroundService, SnapshotRequestHandler,
         },
@@ -56,7 +56,7 @@ use {
         },
         vote_sender_types::ReplayVoteSender,
     },
-    solana_sdk::{clock::Slot, pubkey::Pubkey, signature::Keypair},
+    nexis_sdk::{clock::Slot, pubkey::Pubkey, signature::Keypair},
     std::{
         boxed::Box,
         collections::HashSet,
@@ -440,17 +440,17 @@ pub mod tests {
     use {
         super::*,
         serial_test::serial,
-        solana_gossip::cluster_info::{ClusterInfo, Node},
-        solana_ledger::{
+        nexis_gossip::cluster_info::{ClusterInfo, Node},
+        nexis_ledger::{
             blockstore::BlockstoreSignals,
             create_new_tmp_ledger,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
         },
-        solana_poh::poh_recorder::create_test_recorder,
-        solana_rpc::optimistically_confirmed_bank_tracker::OptimisticallyConfirmedBank,
-        solana_runtime::bank::Bank,
-        solana_sdk::signature::{Keypair, Signer},
-        solana_streamer::socket::SocketAddrSpace,
+        nexis_poh::poh_recorder::create_test_recorder,
+        nexis_rpc::optimistically_confirmed_bank_tracker::OptimisticallyConfirmedBank,
+        nexis_runtime::bank::Bank,
+        nexis_sdk::signature::{Keypair, Signer},
+        nexis_streamer::socket::SocketAddrSpace,
         std::sync::atomic::AtomicU64,
         std::sync::atomic::Ordering,
     };
@@ -459,7 +459,7 @@ pub mod tests {
     #[test]
     #[serial]
     fn test_tvu_exit() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let leader = Node::new_localhost();
         let target1_keypair = Keypair::new();
         let target1 = Node::new_localhost_with_pubkey(&target1_keypair.pubkey());

@@ -9,9 +9,9 @@ use {
     log::*,
     num_derive::{FromPrimitive, ToPrimitive},
     serde_derive::{Deserialize, Serialize},
-    solana_metrics::inc_new_counter_info,
-    solana_program_runtime::invoke_context::InvokeContext,
-    solana_sdk::{
+    nexis_metrics::inc_new_counter_info,
+    nexis_program_runtime::invoke_context::InvokeContext,
+    nexis_sdk::{
         decode_error::DecodeError,
         feature_set,
         hash::Hash,
@@ -345,7 +345,7 @@ fn verify_rent_exemption(
 /// These methods facilitate a transition from fetching sysvars from keyed
 /// accounts to fetching from the sysvar cache without breaking consensus. In
 /// order to keep consistent behavior, they continue to enforce the same checks
-/// as `solana_sdk::keyed_account::from_keyed_account` despite dynamically
+/// as `nexis_sdk::keyed_account::from_keyed_account` despite dynamically
 /// loading them instead of deserializing from account data.
 mod get_sysvar_with_keyed_account_check {
     use super::*;
@@ -497,10 +497,10 @@ mod tests {
     use {
         super::*,
         bincode::serialize,
-        solana_program_runtime::{
+        nexis_program_runtime::{
             invoke_context::mock_process_instruction, sysvar_cache::SysvarCache,
         },
-        solana_sdk::{
+        nexis_sdk::{
             account::{self, Account, AccountSharedData},
             rent::Rent,
         },
@@ -563,7 +563,7 @@ mod tests {
         sysvar_cache.set_rent(Rent::free());
         sysvar_cache.set_clock(Clock::default());
         sysvar_cache.set_slot_hashes(SlotHashes::default());
-        solana_program_runtime::invoke_context::mock_process_instruction_with_sysvars(
+        nexis_program_runtime::invoke_context::mock_process_instruction_with_sysvars(
             &id(),
             Vec::new(),
             &instruction.data,
@@ -600,7 +600,7 @@ mod tests {
 
     #[test]
     fn test_vote_process_instruction() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let instructions = create_account(
             &Pubkey::new_unique(),
             &Pubkey::new_unique(),

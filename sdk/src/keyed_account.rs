@@ -3,7 +3,7 @@ use {
         account::{from_account, AccountSharedData, ReadableAccount},
         account_utils::{State, StateMut},
     },
-    solana_program::{clock::Epoch, instruction::InstructionError, pubkey::Pubkey, sysvar::Sysvar},
+    nexis_program::{clock::Epoch, instruction::InstructionError, pubkey::Pubkey, sysvar::Sysvar},
     std::{
         cell::{Ref, RefCell, RefMut},
         iter::FromIterator,
@@ -282,7 +282,7 @@ mod tests {
         something: Pubkey,
     }
     crate::declare_id!("TestSysvar111111111111111111111111111111111");
-    impl solana_program::sysvar::SysvarId for TestSysvar {
+    impl nexis_program::sysvar::SysvarId for TestSysvar {
         fn id() -> crate::pubkey::Pubkey {
             id()
         }

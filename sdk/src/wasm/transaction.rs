@@ -7,7 +7,7 @@ use {
         signer::keypair::Keypair,
         {message::Message, transaction::Transaction},
     },
-    solana_program::{
+    nexis_program::{
         pubkey::Pubkey,
         wasm::{display_to_jsvalue, instructions::Instructions},
     },

@@ -6,14 +6,14 @@ extern crate test;
 use {
     rand::seq::SliceRandom,
     raptorq::{Decoder, Encoder},
-    solana_entry::entry::{create_ticks, Entry},
-    solana_ledger::shred::{
+    nexis_entry::entry::{create_ticks, Entry},
+    nexis_ledger::shred::{
         max_entries_per_n_shred, max_ticks_per_n_shreds, ProcessShredsStats, Shred, Shredder,
         MAX_DATA_SHREDS_PER_FEC_BLOCK, SHRED_PAYLOAD_SIZE, SIZE_OF_CODING_SHRED_HEADERS,
         SIZE_OF_DATA_SHRED_PAYLOAD,
     },
-    solana_perf::test_tx,
-    solana_sdk::{hash::Hash, signature::Keypair},
+    nexis_perf::test_tx,
+    nexis_sdk::{hash::Hash, signature::Keypair},
     test::Bencher,
 };
 

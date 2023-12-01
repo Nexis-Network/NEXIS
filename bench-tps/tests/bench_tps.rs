@@ -1,20 +1,37 @@
+/// This code defines a test function `test_bench_tps_local_cluster_nexis` that benchmarks the transactions per second (TPS) of a local Nexis cluster.
+/// The function creates a local cluster with a single node and a specified number of validator configurations.
+/// It sets up a local faucet and transfers funds to a specified number of keypairs.
+/// Then, it executes the `do_bench_tps` function to perform the TPS benchmarking.
+/// The benchmarking parameters, such as the number of transactions, duration, and other configurations, can be customized through the `Config` struct.
+/// This test function is annotated with `#[serial]` to ensure it runs sequentially and not in parallel with other tests.
+fn test_bench_tps_local_cluster(config: Config) {
+    // ... (existing code)
+}
+
+/// This test function `test_bench_tps_local_cluster_nexis` is a wrapper around the `test_bench_tps_local_cluster` function.
+/// It sets the default benchmarking parameters and calls the `test_bench_tps_local_cluster` function with these parameters.
+#[test]
+#[serial]
+fn test_bench_tps_local_cluster_nexis() {
+    // ... (existing code)
+}
 #![allow(clippy::integer_arithmetic)]
 use {
     serial_test::serial,
-    solana_bench_tps::{
+    nexis_bench_tps::{
         bench::{do_bench_tps, generate_and_fund_keypairs},
         cli::Config,
     },
-    solana_client::thin_client::create_client,
-    solana_core::validator::ValidatorConfig,
-    solana_faucet::faucet::run_local_faucet_with_port,
-    solana_gossip::cluster_info::VALIDATOR_PORT_RANGE,
-    solana_local_cluster::{
+    nexis_client::thin_client::create_client,
+    nexis_core::validator::ValidatorConfig,
+    nexis_faucet::faucet::run_local_faucet_with_port,
+    nexis_gossip::cluster_info::VALIDATOR_PORT_RANGE,
+    nexis_local_cluster::{
         local_cluster::{ClusterConfig, LocalCluster},
         validator_configs::make_identical_validator_configs,
     },
-    solana_sdk::signature::{Keypair, Signer},
-    solana_streamer::socket::SocketAddrSpace,
+    nexis_sdk::signature::{Keypair, Signer},
+    nexis_streamer::socket::SocketAddrSpace,
     std::{
         sync::{mpsc::channel, Arc},
         time::Duration,
@@ -24,7 +41,7 @@ use {
 fn test_bench_tps_local_cluster(config: Config) {
     let native_instruction_processors = vec![];
 
-    solana_logger::setup();
+    nexis_logger::setup();
     const NUM_NODES: usize = 1;
     let cluster = LocalCluster::new(
         &mut ClusterConfig {
@@ -79,7 +96,7 @@ fn test_bench_tps_local_cluster(config: Config) {
 
 #[test]
 #[serial]
-fn test_bench_tps_local_cluster_solana() {
+fn test_bench_tps_local_cluster_nexis() {
     test_bench_tps_local_cluster(Config {
         tx_count: 100,
         duration: Duration::from_secs(10),

@@ -1,7 +1,7 @@
 use {
     crate::{StoredExtendedRewards, StoredTransactionStatusMeta},
-    solana_account_decoder::parse_token::{real_number_string_trimmed, UiTokenAmount},
-    solana_sdk::{
+    nexis_account_decoder::parse_token::{real_number_string_trimmed, UiTokenAmount},
+    nexis_sdk::{
         hash::Hash,
         instruction::{CompiledInstruction, InstructionError},
         message::{Message, MessageHeader},
@@ -9,7 +9,7 @@ use {
         signature::Signature,
         transaction::{Transaction, TransactionError},
     },
-    solana_transaction_status::{
+    nexis_transaction_status::{
         ConfirmedBlock, ConfirmedBlockWithOptionalMetadata, InnerInstructions, Reward, RewardType,
         TransactionByAddrInfo, TransactionStatusMeta, TransactionTokenBalance,
         TransactionWithMetadata, TransactionWithOptionalMetadata,
@@ -23,21 +23,21 @@ use {
 pub mod generated {
     include!(concat!(
         env!("OUT_DIR"),
-        "/solana.storage.confirmed_block.rs"
+        "nexis.storage.confirmed_block.rs"
     ));
 }
 
 pub mod tx_by_addr {
     include!(concat!(
         env!("OUT_DIR"),
-        "/solana.storage.transaction_by_addr.rs"
+        "nexis.storage.transaction_by_addr.rs"
     ));
 }
 
 pub mod generated_evm {
     include!(concat!(
         env!("CARGO_MANIFEST_DIR"),
-        concat!("/proto/solana.storage.evm_compatibility.rs")
+        concat!("/protonexis.storage.evm_compatibility.rs")
     ));
 }
 

@@ -1,8 +1,8 @@
 use {
     crate::blockstore::Blockstore,
     log::*,
-    solana_measure::measure::Measure,
-    solana_sdk::clock::Slot,
+    nexis_measure::measure::Measure,
+    nexis_sdk::clock::Slot,
     std::{
         collections::HashSet,
         result::Result,
@@ -23,7 +23,7 @@ const BLOCK_READ_AHEAD_DEPTH: usize = NUM_BLOCKS_TO_UPLOAD_IN_PARALLEL * 2;
 
 pub async fn upload_confirmed_blocks(
     blockstore: Arc<Blockstore>,
-    bigtable: solana_storage_bigtable::LedgerStorage,
+    bigtable: nexis_storage_bigtable::LedgerStorage,
     starting_slot: Slot,
     ending_slot: Option<Slot>,
     force_reupload: bool,
@@ -211,7 +211,7 @@ pub async fn upload_confirmed_blocks(
 
 pub async fn upload_evm_confirmed_blocks(
     blockstore: Arc<Blockstore>,
-    bigtable: solana_storage_bigtable::LedgerStorage,
+    bigtable: nexis_storage_bigtable::LedgerStorage,
     starting_block: evm_state::BlockNum,
     ending_block: Option<evm_state::BlockNum>,
     push_not_confirmed: bool,

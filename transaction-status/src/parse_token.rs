@@ -3,14 +3,14 @@ use {
         check_num_accounts, ParsableProgram, ParseInstructionError, ParsedInstructionEnum,
     },
     serde_json::{json, Map, Value},
-    solana_account_decoder::parse_token::{pubkey_from_spl_token, token_amount_to_ui_amount},
-    solana_sdk::{
+    nexis_account_decoder::parse_token::{pubkey_from_spl_token, token_amount_to_ui_amount},
+    nexis_sdk::{
         instruction::{AccountMeta, CompiledInstruction, Instruction},
         pubkey::Pubkey,
     },
     spl_token::{
         instruction::{AuthorityType, TokenInstruction},
-        solana_program::{
+        nexis_program::{
             instruction::Instruction as SplTokenInstruction, program_option::COption,
         },
     },
@@ -458,10 +458,10 @@ pub fn spl_token_instruction(instruction: SplTokenInstruction) -> Instruction {
 mod test {
     use {
         super::*,
-        solana_sdk::instruction::CompiledInstruction,
+        nexis_sdk::instruction::CompiledInstruction,
         spl_token::{
             instruction::*,
-            solana_program::{
+            nexis_program::{
                 instruction::CompiledInstruction as SplTokenCompiledInstruction, message::Message,
                 pubkey::Pubkey as SplTokenPubkey,
             },
@@ -488,7 +488,7 @@ mod test {
     fn test_parse_token() {
         let mut keys: Vec<Pubkey> = vec![];
         for _ in 0..10 {
-            keys.push(solana_sdk::pubkey::new_rand());
+            keys.push(nexis_sdk::pubkey::new_rand());
         }
 
         // Test InitializeMint variations
@@ -1093,7 +1093,7 @@ mod test {
     fn test_token_ix_not_enough_keys() {
         let mut keys: Vec<Pubkey> = vec![];
         for _ in 0..10 {
-            keys.push(solana_sdk::pubkey::new_rand());
+            keys.push(nexis_sdk::pubkey::new_rand());
         }
 
         // Test InitializeMint variations

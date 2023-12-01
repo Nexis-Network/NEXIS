@@ -10,17 +10,17 @@ use {
         spend_utils::{resolve_spend_tx_and_check_account_balance, SpendAmount},
     },
     clap::{App, Arg, ArgMatches, SubCommand},
-    solana_clap_utils::{
+    nexis_clap_utils::{
         input_parsers::*,
         input_validators::*,
         keypair::{CliSigners, DefaultSigner, SignerIndex},
         memo::{memo_arg, MEMO_ARG},
         nonce::*,
     },
-    solana_cli_output::CliNonceAccount,
-    solana_client::{nonce_utils::*, rpc_client::RpcClient},
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_sdk::{
+    nexis_cli_output::CliNonceAccount,
+    nexis_client::{nonce_utils::*, rpc_client::RpcClient},
+    nexis_remote_wallet::remote_wallet::RemoteWalletManager,
+    nexis_sdk::{
         account::Account,
         feature_set::merge_nonce_error_into_system_error,
         hash::Hash,
@@ -141,12 +141,12 @@ impl NonceSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of XZO"),
+                        .help("Display balance in lamports instead of NZT"),
                 ),
         )
         .subcommand(
             SubCommand::with_name("withdraw-from-nonce-account")
-                .about("Withdraw XZO from the nonce account")
+                .about("Withdraw NZT from the nonce account")
                 .arg(
                     pubkey!(Arg::with_name("nonce_account_pubkey")
                         .index(1)
@@ -159,7 +159,7 @@ impl NonceSubCommands for App<'_, '_> {
                         .index(2)
                         .value_name("RECIPIENT_ADDRESS")
                         .required(true),
-                        "The account to which the XZO should be transferred. "),
+                        "The account to which the NZT should be transferred. "),
                 )
                 .arg(
                     Arg::with_name("amount")
@@ -168,7 +168,7 @@ impl NonceSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .required(true)
                         .validator(is_amount)
-                        .help("The amount to withdraw from the nonce account, in XZO"),
+                        .help("The amount to withdraw from the nonce account, in NZT"),
                 )
                 .arg(nonce_authority_arg())
                 .arg(memo_arg()),
@@ -314,7 +314,7 @@ pub fn parse_withdraw_from_nonce_account(
     let nonce_account = pubkey_of_signer(matches, "nonce_account_pubkey", wallet_manager)?.unwrap();
     let destination_account_pubkey =
         pubkey_of_signer(matches, "destination_account_pubkey", wallet_manager)?.unwrap();
-    let lamports = lamports_of_sol(matches, "amount").unwrap();
+    let lamports = lamports_of_nzt(matches, "amount").unwrap();
     let memo = matches.value_of(MEMO_ARG.name).map(String::from);
     let (nonce_authority, nonce_authority_pubkey) =
         signer_of(matches, NONCE_AUTHORITY_ARG.name, wallet_manager)?;
@@ -713,7 +713,7 @@ mod tests {
     use {
         super::*,
         crate::{clap_app::get_clap_app, cli::parse_command},
-        solana_sdk::{
+        nexis_sdk::{
             account::Account,
             account_utils::StateMut,
             hash::hash,
@@ -1001,7 +1001,7 @@ mod tests {
         let durable_nonce =
             DurableNonce::from_blockhash(&Hash::default(), /*separate_domains:*/ true);
         let blockhash = *durable_nonce.as_hash();
-        let nonce_pubkey = solana_sdk::pubkey::new_rand();
+        let nonce_pubkey = nexis_sdk::pubkey::new_rand();
         let data = Versions::new(
             State::Initialized(nonce::state::Data::new(nonce_pubkey, durable_nonce, 0)),
             true, // separate_domains
@@ -1042,7 +1042,7 @@ mod tests {
 
         let data = Versions::new(
             State::Initialized(nonce::state::Data::new(
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 durable_nonce,
                 0,
             )),

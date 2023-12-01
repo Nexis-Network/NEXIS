@@ -4,7 +4,7 @@ use {
         bucket_storage::{BucketStorage, Uid},
         RefCount,
     },
-    solana_sdk::{clock::Slot, pubkey::Pubkey},
+    nexis_sdk::{clock::Slot, pubkey::Pubkey},
     std::{
         collections::hash_map::DefaultHasher,
         fmt::Debug,

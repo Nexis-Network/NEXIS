@@ -6,8 +6,8 @@ use {
     primitive_types::{H256, U256},
     reqwest::{self, header::CONTENT_TYPE},
     serde_json::{json, Value},
-    solana_account_decoder::UiAccount,
-    solana_client::{
+    nexis_account_decoder::UiAccount,
+    nexis_client::{
         client_error::{ClientErrorKind, Result as ClientResult},
         pubsub_client::PubsubClient,
         rpc_client::RpcClient,
@@ -16,11 +16,11 @@ use {
         rpc_response::{Response as RpcResponse, RpcSignatureResult, SlotUpdate},
         tpu_client::{TpuClient, TpuClientConfig},
     },
-    solana_evm_loader_program::{
+    nexis_evm_loader_program::{
         free_ownership, instructions::FeePayerType, send_raw_tx, transfer_native_to_evm_ixs,
     },
-    solana_rpc::rpc::JsonRpcConfig,
-    solana_sdk::{
+    nexis_rpc::rpc::JsonRpcConfig,
+    nexis_sdk::{
         commitment_config::{CommitmentConfig, CommitmentLevel},
         fee_calculator::FeeRateGovernor,
         hash::Hash,
@@ -31,9 +31,9 @@ use {
         system_transaction,
         transaction::Transaction,
     },
-    solana_streamer::socket::SocketAddrSpace,
-    solana_test_validator::{TestValidator, TestValidatorGenesis},
-    solana_transaction_status::TransactionStatus,
+    nexis_streamer::socket::SocketAddrSpace,
+    nexis_test_validator::{TestValidator, TestValidatorGenesis},
+    nexis_transaction_status::TransactionStatus,
     std::{
         collections::HashSet,
         net::UdpSocket,
@@ -85,7 +85,7 @@ fn get_blockhash(rpc_url: &str) -> Hash {
 fn wait_finalization(rpc_url: &str, signatures: &[&Value]) -> bool {
     let request = json_req!("getSignatureStatuses", [signatures]);
 
-    for _ in 0..solana_sdk::clock::DEFAULT_TICKS_PER_SLOT {
+    for _ in 0..nexis_sdk::clock::DEFAULT_TICKS_PER_SLOT {
         let json = post_rpc(request.clone(), &rpc_url);
         let values = json["result"]["value"].as_array().unwrap();
         if values.iter().all(|v| !v.is_null()) {
@@ -105,14 +105,14 @@ fn wait_finalization(rpc_url: &str, signatures: &[&Value]) -> bool {
 
 #[test]
 fn test_rpc_send_tx() {
-    solana_logger::setup();
+    nexis_logger::setup();
 
     let alice = Keypair::new();
     let test_validator =
         TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);
     let rpc_url = test_validator.rpc_url();
 
-    let bob_pubkey = solana_sdk::pubkey::new_rand();
+    let bob_pubkey = nexis_sdk::pubkey::new_rand();
 
     let req = json_req!("getRecentBlockhash", json!([]));
     let json = post_rpc(req, &rpc_url);
@@ -141,7 +141,7 @@ fn test_rpc_send_tx() {
 
     let request = json_req!("getSignatureStatuses", [[signature]]);
 
-    for _ in 0..solana_sdk::clock::DEFAULT_TICKS_PER_SLOT {
+    for _ in 0..nexis_sdk::clock::DEFAULT_TICKS_PER_SLOT {
         let json = post_rpc(request.clone(), &rpc_url);
 
         let result: Option<TransactionStatus> =
@@ -159,7 +159,7 @@ fn test_rpc_send_tx() {
     assert!(confirmed_tx);
 
     use {
-        solana_account_decoder::UiAccountEncoding, solana_client::rpc_config::RpcAccountInfoConfig,
+        nexis_account_decoder::UiAccountEncoding, nexis_client::rpc_config::RpcAccountInfoConfig,
     };
     let config = RpcAccountInfoConfig {
         encoding: Some(UiAccountEncoding::Base64),
@@ -176,7 +176,7 @@ fn test_rpc_send_tx() {
 
 #[test]
 fn test_rpc_send_transaction_with_native_fee_and_zero_gas_price() {
-    solana_logger::setup_with_default("warn");
+    nexis_logger::setup_with_default("warn");
 
     let evm_secret_key = evm_state::SecretKey::from_slice(&[1; 32]).unwrap();
     let evm_address = evm_state::addr_from_public_key(&evm_state::PublicKey::from_secret_key(
@@ -227,7 +227,7 @@ fn test_rpc_send_transaction_with_native_fee_and_zero_gas_price() {
 
     let blockhash = get_blockhash(&rpc_url);
     let ixs = vec![
-        assign(&alice.pubkey(), &solana_sdk::evm_loader::ID),
+        assign(&alice.pubkey(), &nexis_sdk::evm_loader::ID),
         send_raw_tx(alice.pubkey(), evm_tx, None, FeePayerType::Native),
         free_ownership(alice.pubkey()),
     ];
@@ -253,7 +253,7 @@ fn test_rpc_send_transaction_with_native_fee_and_zero_gas_price() {
         .sign(&evm_secret_key, Some(chain_id));
     let blockhash = get_blockhash(&rpc_url);
     let ixs = vec![
-        assign(&alice.pubkey(), &solana_sdk::evm_loader::ID),
+        assign(&alice.pubkey(), &nexis_sdk::evm_loader::ID),
         send_raw_tx(alice.pubkey(), evm_tx, None, FeePayerType::Evm),
         free_ownership(alice.pubkey()),
     ];
@@ -271,8 +271,8 @@ fn test_rpc_send_transaction_with_native_fee_and_zero_gas_price() {
 
 #[test]
 fn test_rpc_replay_transaction() {
-    // let filter = "warn,solana_runtime::message_processor=debug,evm=debug";
-    solana_logger::setup_with_default("warn");
+    // let filter = "warn,nexis_runtime::message_processor=debug,evm=debug";
+    nexis_logger::setup_with_default("warn");
 
     let evm_secret_key = evm_state::SecretKey::from_slice(&[1; 32]).unwrap();
     let evm_address = evm_state::addr_from_public_key(&evm_state::PublicKey::from_secret_key(
@@ -346,7 +346,7 @@ fn test_rpc_replay_transaction() {
 
 #[test]
 fn test_rpc_block_transaction() {
-    solana_logger::setup_with_default("warn");
+    nexis_logger::setup_with_default("warn");
 
     let evm_secret_key = evm_state::SecretKey::from_slice(&[1; 32]).unwrap();
     let evm_address = evm_state::addr_from_public_key(&evm_state::PublicKey::from_secret_key(
@@ -430,7 +430,7 @@ fn test_rpc_block_transaction() {
 
 #[test]
 fn test_rpc_replay_transaction_timestamp() {
-    solana_logger::setup_with_default("warn");
+    nexis_logger::setup_with_default("warn");
 
     let evm_secret_key = evm_state::SecretKey::from_slice(&[1; 32]).unwrap();
     let evm_address = evm_state::addr_from_public_key(&evm_state::PublicKey::from_secret_key(
@@ -518,7 +518,7 @@ fn test_rpc_replay_transaction_timestamp() {
 
 #[test]
 fn test_rpc_replay_transaction_gas_used() {
-    solana_logger::setup_with_default("warn");
+    nexis_logger::setup_with_default("warn");
 
     let evm_secret_key = evm_state::SecretKey::from_slice(&[1; 32]).unwrap();
     let evm_address = evm_state::addr_from_public_key(&evm_state::PublicKey::from_secret_key(
@@ -694,7 +694,7 @@ fn test_rpc_replay_transaction_gas_used() {
 
 #[test]
 fn test_rpc_get_logs() {
-    solana_logger::setup();
+    nexis_logger::setup();
 
     let evm_secret_key = evm_state::SecretKey::from_slice(&[1; 32]).unwrap();
     let evm_address = evm_state::addr_from_public_key(&evm_state::PublicKey::from_secret_key(
@@ -784,14 +784,14 @@ fn test_rpc_get_logs() {
 
 #[test]
 fn test_rpc_invalid_requests() {
-    solana_logger::setup();
+    nexis_logger::setup();
 
     let alice = Keypair::new();
     let test_validator =
         TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);
     let rpc_url = test_validator.rpc_url();
 
-    let bob_pubkey = solana_sdk::pubkey::new_rand();
+    let bob_pubkey = nexis_sdk::pubkey::new_rand();
 
     // test invalid get_balance request
     let req = json_req!("getBalance", json!(["invalid9999"]));
@@ -817,7 +817,7 @@ fn test_rpc_invalid_requests() {
 
 #[test]
 fn test_rpc_slot_updates() {
-    solana_logger::setup();
+    nexis_logger::setup();
 
     let test_validator =
         TestValidator::with_no_fees(Pubkey::new_unique(), None, SocketAddrSpace::Unspecified);
@@ -878,8 +878,8 @@ fn test_rpc_slot_updates() {
 #[test]
 #[ignore]
 fn test_rpc_subscriptions() {
-    solana_logger::setup();
-    use solana_sdk::signature::Signature;
+    nexis_logger::setup();
+    use nexis_sdk::signature::Signature;
     let alice = Keypair::new();
     let test_validator =
         TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);
@@ -895,7 +895,7 @@ fn test_rpc_subscriptions() {
         .map(|_| {
             system_transaction::transfer(
                 &alice,
-                &solana_sdk::pubkey::new_rand(),
+                &nexis_sdk::pubkey::new_rand(),
                 Rent::default().minimum_balance(0),
                 recent_blockhash,
             )
@@ -1081,7 +1081,7 @@ fn test_tpu_send_transaction() {
 
 #[test]
 fn deserialize_rpc_error() -> ClientResult<()> {
-    solana_logger::setup();
+    nexis_logger::setup();
 
     let alice = Keypair::new();
     let validator = TestValidator::with_no_fees(alice.pubkey(), None, SocketAddrSpace::Unspecified);

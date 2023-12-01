@@ -2,15 +2,15 @@
 
 extern crate test;
 use {
-    solana_ledger::{
+    nexis_ledger::{
         shred::{Shred, SIZE_OF_DATA_SHRED_PAYLOAD},
         sigverify_shreds::{sign_shreds_cpu, sign_shreds_gpu, sign_shreds_gpu_pinned_keypair},
     },
-    solana_perf::{
+    nexis_perf::{
         packet::{Packet, PacketBatch},
         recycler_cache::RecyclerCache,
     },
-    solana_sdk::signature::Keypair,
+    nexis_sdk::signature::Keypair,
     std::sync::Arc,
     test::Bencher,
 };

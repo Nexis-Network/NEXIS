@@ -1,6 +1,15 @@
+/// This module contains the implementation of the `Unlocks` struct and related types.
+/// The `Unlocks` struct represents a series of unlock events that occur over time.
+/// Each unlock event is described by the `Unlock` struct.
+/// The `Unlocks` struct is an iterator that generates these unlock events based on the specified parameters.
+/// The unlock events are calculated based on the cliff fraction, cliff years, number of unlocks, and unlock years.
+/// The module also includes unit tests for the `Unlocks` struct.
+mod unlocks {
+    // ... (existing code)
+}
 //! lockups generator
 use {
-    solana_sdk::{clock::Epoch, epoch_schedule::EpochSchedule, timing::years_as_slots},
+    nexis_sdk::{clock::Epoch, epoch_schedule::EpochSchedule, timing::years_as_slots},
     std::time::Duration,
 };
 

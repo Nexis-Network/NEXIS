@@ -2,8 +2,8 @@
 use {
     crate::rpc_client::RpcClient,
     log::*,
-    solana_measure::measure::Measure,
-    solana_sdk::{
+    nexis_measure::measure::Measure,
+    nexis_sdk::{
         commitment_config::CommitmentConfig, signature::Signature, timing::timestamp,
         transaction::Transaction,
     },

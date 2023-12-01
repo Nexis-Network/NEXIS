@@ -1,10 +1,30 @@
+/// create_and_add_stakes function creates stake accounts for lamports with at most stake_granularity in each account.
+/// 
+/// # Arguments
+/// 
+/// * `genesis_config` - A mutable reference to the GenesisConfig struct.
+/// * `staker_info` - A reference to the StakerInfo struct containing information about the staker for this group of stakes.
+/// * `unlock_info` - A reference to the UnlockInfo struct describing how the stakes' lockups will expire.
+/// * `granularity` - An optional u64 value representing the largest each stake account should be, in lamports.
+/// 
+/// # Returns
+/// 
+/// The total lamports used for creating the stake accounts.
+pub fn create_and_add_stakes(
+    genesis_config: &mut GenesisConfig,
+    staker_info: &StakerInfo,
+    unlock_info: &UnlockInfo,
+    granularity: Option<u64>,
+) -> u64 {
+    // Function implementation...
+}
 //! stakes generator
 use {
     crate::{
         address_generator::AddressGenerator,
         unlocks::{UnlockInfo, Unlocks},
     },
-    solana_sdk::{
+    nexis_sdk::{
         account::Account,
         clock::Slot,
         genesis_config::GenesisConfig,
@@ -16,7 +36,7 @@ use {
         system_program,
         timing::years_as_slots,
     },
-    solana_stake_program::stake_state::create_lockup_stake_account,
+    nexis_stake_program::stake_state::create_lockup_stake_account,
 };
 
 #[derive(Debug)]
@@ -165,7 +185,7 @@ pub fn create_and_add_stakes(
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_sdk::rent::Rent};
+    use {super::*, nexis_sdk::rent::Rent};
 
     fn create_and_check_stakes(
         genesis_config: &mut GenesisConfig,

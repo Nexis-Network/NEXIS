@@ -3,7 +3,7 @@ The testnet and mainnet-beta clusters currently have a large population of
 validators that need to be staked by a central authority.
 
 ## Staking Criteria
-1. All non-delinquent validators receive 50,000 XZO stake
+1. All non-delinquent validators receive 50,000 NZT stake
 1. Additionally, non-deliquent validators that have produced a block in 75% of
    their slots in the previous epoch receive bonus stake of 500,000 XZO
 

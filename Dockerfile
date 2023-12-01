@@ -7,18 +7,18 @@ RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 RUN rustup component add rustfmt && rustup update
 
-COPY . /solana
-WORKDIR /solana
+COPY . /nexis
+WORKDIR nexis
 RUN --mount=type=ssh cargo build --release
-RUN rm /solana/target/release/deps -rf
-RUN rm /solana/target/release/build -rf
+RUN rm /nexis/target/release/deps -rf
+RUN rm /nexis/target/release/build -rf
 
 
 FROM ubuntu:20.04 as dest
 RUN apt-get -y update && apt-get -y install libssl-dev libudev-dev curl
 
-COPY --from=builder /solana/target/release/ /usr/local/solana
+COPY --from=builder /nexis/target/release/ /usr/localnexis
 COPY ./entrypoint.sh /entrypoint.sh
-ENV PATH="/usr/local/solana:$PATH"
+ENV PATH="/usr/localnexis:$PATH"
 
 # CMD /bin/bash

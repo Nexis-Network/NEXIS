@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
-# Run a minimal Solana cluster.  Ctrl-C to exit.
+# Run a minimal Nexis cluster.  Ctrl-C to exit.
 #
-# Before running this script ensure standard Solana programs are available
+# Before running this script ensure standard Nexis programs are available
 # in the PATH, or that `cargo build` ran successfully
 #
 set -e
@@ -34,12 +34,12 @@ $ok || {
     exit 1
 }
 
-export RUST_LOG=${RUST_LOG:-solana=info,solana_metrics=off,evm_state=debug} # if RUST_LOG is unset, default to info
+export RUST_LOG=${RUST_LOG:-nexis=info,nexis_metrics=off,evm_state=debug} # if RUST_LOG is unset, default to info
 export RUST_BACKTRACE=1
 dataDir=$PWD/config/"$(basename "$0" .sh)"
 ledgerDir=$PWD/config/ledger
 
-SOLANA_RUN_SH_CLUSTER_TYPE=${SOLANA_RUN_SH_CLUSTER_TYPE:-development}
+NZT_RUN_SH_CLUSTER_TYPE=${NZT_RUN_SH_CLUSTER_TYPE:-development}
 
 set -x
 if ! exzo address; then
@@ -82,10 +82,10 @@ else
     "$validator_vote_account" \
     "$validator_stake_account" \
     --ledger "$ledgerDir" \
-    --cluster-type "$SOLANA_RUN_SH_CLUSTER_TYPE" \
+    --cluster-type "$NZT_RUN_SH_CLUSTER_TYPE" \
     $SPL_GENESIS_ARGS \
     --max-genesis-archive-unpacked-size=300000000 \
-    $SOLANA_RUN_SH_GENESIS_ARGS
+    $NZT_RUN_SH_GENESIS_ARGS
     # --evm-root="0x7b343e0165c8f354ac7b1e7e7889389f42927ccb9d0330b3036fb749e12795ba" \
     # --evm-state-file="../state.json" \
     # --evm-chain-id 111\
@@ -128,7 +128,7 @@ args=(
     --evm-state-archive "$ledgerDir"/archive-evm
 )
 # shellcheck disable=SC2086
-exzo-validator "${args[@]}" $SOLANA_RUN_SH_VALIDATOR_ARGS &
+exzo-validator "${args[@]}" $NZT_RUN_SH_VALIDATOR_ARGS &
 validator=$!
 
 wait "$validator"

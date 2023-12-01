@@ -30,9 +30,9 @@ use jsonrpc_http_server::*;
 use snafu::ResultExt;
 
 use derivative::*;
-use solana_evm_loader_program::instructions::FeePayerType;
-use solana_evm_loader_program::scope::*;
-use solana_sdk::{
+use nexis_evm_loader_program::instructions::FeePayerType;
+use nexis_evm_loader_program::scope::*;
+use nexis_sdk::{
     clock::MS_PER_TICK,
     fee_calculator::DEFAULT_TARGET_LAMPORTS_PER_SIGNATURE,
     instruction::{AccountMeta, Instruction},
@@ -43,7 +43,7 @@ use solana_sdk::{
     transaction::TransactionError,
 };
 
-use solana_client::{
+use nexis_client::{
     client_error::{ClientError, ClientErrorKind},
     rpc_config::*,
     rpc_request::RpcResponseErrorData,
@@ -179,7 +179,7 @@ mod compatibility {
 #[derivative(Debug)]
 pub struct EvmBridge {
     evm_chain_id: u64,
-    key: solana_sdk::signature::Keypair,
+    key: nexis_sdk::signature::Keypair,
     accounts: HashMap<evm_state::Address, evm_state::SecretKey>,
     #[derivative(Debug = "ignore")]
     rpc_client: AsyncRpcClient,
@@ -220,7 +220,7 @@ impl EvmBridge {
         let rpc_client = AsyncRpcClient::new(addr);
 
         info!("Loading keypair from: {}", keypath);
-        let key = solana_sdk::signature::read_keypair_file(&keypath).unwrap();
+        let key = nexis_sdk::signature::read_keypair_file(&keypath).unwrap();
 
         info!("Creating mempool...");
         let pool = EthPool::new(SystemClock);
@@ -244,7 +244,7 @@ impl EvmBridge {
         self.whitelist = whitelist;
     }
 
-    /// Wrap evm tx into solana, optionally add meta keys, to solana signature.
+    /// Wrap evm tx into nexis, optionally add meta keys, to nexissignature.
     async fn send_tx(
         &self,
         tx: evm::Transaction,
@@ -336,14 +336,14 @@ impl EvmBridge {
                 native_fee_used = true;
                 info!("Using Native fee for tx: {}", tx.tx_id_hash());
             }
-            solana_evm_loader_program::send_raw_tx(
+            nexis_evm_loader_program::send_raw_tx(
                 self.key.pubkey(),
                 tx.clone(),
                 Some(self.key.pubkey()),
                 fee_type,
             )
         } else {
-            solana_evm_loader_program::send_raw_tx_old(
+            nexis_evm_loader_program::send_raw_tx_old(
                 self.key.pubkey(),
                 tx.clone(),
                 Some(self.key.pubkey()),
@@ -357,9 +357,9 @@ impl EvmBridge {
 
         if native_fee_used {
             vec![
-                system_instruction::assign(&self.key.pubkey(), &solana_sdk::evm_loader::ID),
+                system_instruction::assign(&self.key.pubkey(), &nexis_sdk::evm_loader::ID),
                 ix,
-                solana_evm_loader_program::free_ownership(self.key.pubkey()),
+                nexis_evm_loader_program::free_ownership(self.key.pubkey()),
             ]
         } else {
             vec![ix]
@@ -380,15 +380,15 @@ impl EvmBridge {
                 native_fee_used = true;
                 info!("Using Native fee for tx: {}", tx.tx_id_hash());
             }
-            solana_evm_loader_program::big_tx_execute(storage_pubkey, Some(&payer_pubkey), fee_type)
+            nexis_evm_loader_program::big_tx_execute(storage_pubkey, Some(&payer_pubkey), fee_type)
         } else {
-            solana_evm_loader_program::big_tx_execute_old(storage_pubkey, Some(&payer_pubkey))
+            nexis_evm_loader_program::big_tx_execute_old(storage_pubkey, Some(&payer_pubkey))
         };
         if native_fee_used {
             vec![
-                system_instruction::assign(&self.key.pubkey(), &solana_sdk::evm_loader::ID),
+                system_instruction::assign(&self.key.pubkey(), &nexis_sdk::evm_loader::ID),
                 ix,
-                solana_evm_loader_program::free_ownership(self.key.pubkey()),
+                nexis_evm_loader_program::free_ownership(self.key.pubkey()),
             ]
         } else {
             vec![ix]
@@ -420,7 +420,7 @@ impl BridgeERPC for BridgeErpcImpl {
         let mut message_data =
             format!("\x19Ethereum Signed Message:\n{}", data.0.len()).into_bytes();
         message_data.extend_from_slice(&data.0);
-        let hash_to_sign = solana_sdk::keccak::hash(&message_data);
+        let hash_to_sign = nexis_sdk::keccak::hash(&message_data);
         let msg: Message = Message::from_slice(&hash_to_sign.to_bytes()).unwrap();
         let sig = SECP256K1.sign_recoverable(&msg, secret_key);
         let (rid, sig) = { sig.serialize_compact() };
@@ -496,7 +496,7 @@ impl BridgeERPC for BridgeErpcImpl {
             let meta_keys = meta_keys
                 .into_iter()
                 .flatten()
-                .map(|s| solana_sdk::pubkey::Pubkey::from_str(&s))
+                .map(|s| nexis_sdk::pubkey::Pubkey::from_str(&s))
                 .collect::<StdResult<HashSet<_>, _>>()
                 .map_err(|e| into_native_error(e, meta.verbose_errors))?;
 
@@ -553,7 +553,7 @@ impl BridgeERPC for BridgeErpcImpl {
             let meta_keys = meta_keys
                 .into_iter()
                 .flatten()
-                .map(|s| solana_sdk::pubkey::Pubkey::from_str(&s))
+                .map(|s| nexis_sdk::pubkey::Pubkey::from_str(&s))
                 .collect::<StdResult<HashSet<_>, _>>()
                 .map_err(|e| into_native_error(e, meta.verbose_errors))?;
 
@@ -624,7 +624,7 @@ impl GeneralERPC for GeneralErpcProxy {
 
     #[instrument]
     fn protocol_version(&self, _meta: Self::Metadata) -> EvmResult<String> {
-        Ok(solana_version::semver!().into())
+        Ok(nexis_version::semver!().into())
     }
 
     #[instrument]
@@ -946,7 +946,7 @@ impl ChainERPC for ChainErpcProxy {
 pub(crate) fn from_client_error(client_error: ClientError) -> evm_rpc::Error {
     let client_error_kind = client_error.kind();
     match client_error_kind {
-        ClientErrorKind::RpcError(solana_client::rpc_request::RpcError::RpcResponseError {
+        ClientErrorKind::RpcError(nexis_client::rpc_request::RpcError::RpcResponseError {
             code,
             message,
             data,
@@ -1023,7 +1023,7 @@ impl Args {
         let gwei: U256 = 1_000_000_000.into();
         fn min_gas_price() -> U256 {
             //TODO: Add gas logic
-            (21000 * solana_evm_loader_program::scope::evm::LAMPORTS_TO_GWEI_PRICE
+            (21000 * nexis_evm_loader_program::scope::evm::LAMPORTS_TO_GWEI_PRICE
                 / DEFAULT_TARGET_LAMPORTS_PER_SIGNATURE)
                 .into() // 21000 is smallest call in evm
         }
@@ -1061,7 +1061,7 @@ async fn main(args: Args) -> StdResult<(), Box<dyn std::error::Error>> {
     let min_gas_price = args.min_gas_price_or_default();
     let keyfile_path = args
         .keyfile
-        .unwrap_or_else(|| solana_cli_config::Config::default().keypair_path);
+        .unwrap_or_else(|| nexis_cli_config::Config::default().keypair_path);
     let server_path = args.rpc_address;
     let binding_address = args.binding_address;
 
@@ -1172,7 +1172,7 @@ async fn main(args: Args) -> StdResult<(), Box<dyn std::error::Error>> {
 
 async fn send_and_confirm_transactions<T: Signers>(
     rpc_client: &AsyncRpcClient,
-    mut transactions: Vec<solana::Transaction>,
+    mut transactions: Vec<nexis::Transaction>,
     signer_keys: &T,
 ) -> StdResult<(), anyhow::Error> {
     const SEND_RETRIES: usize = 5;
@@ -1260,7 +1260,7 @@ mod tests {
     use evm_rpc::{BridgeERPC, Hex};
     use evm_state::Address;
     use secp256k1::SecretKey;
-    use solana_sdk::signature::Keypair;
+    use nexis_sdk::signature::Keypair;
     use std::str::FromStr;
     use std::sync::Arc;
 

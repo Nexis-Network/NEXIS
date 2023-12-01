@@ -2,12 +2,12 @@ use {
     crate::transaction_notifier_interface::TransactionNotifierLock,
     crossbeam_channel::{Receiver, RecvTimeoutError},
     itertools::izip,
-    solana_ledger::{
+    nexis_ledger::{
         blockstore::Blockstore,
         blockstore_processor::{TransactionStatusBatch, TransactionStatusMessage},
     },
-    solana_runtime::bank::{DurableNonceFee, TransactionExecutionDetails},
-    solana_transaction_status::{
+    nexis_runtime::bank::{DurableNonceFee, TransactionExecutionDetails},
+    nexis_transaction_status::{
         extract_and_fmt_memos, InnerInstructions, Reward, TransactionStatusMeta,
     },
     std::{
@@ -36,7 +36,7 @@ impl TransactionStatusService {
     ) -> Self {
         let exit = exit.clone();
         let thread_hdl = Builder::new()
-            .name("solana-transaction-status-writer".to_string())
+            .name("nexis-transaction-status-writer".to_string())
             .spawn(move || loop {
                 if exit.load(Ordering::Relaxed) {
                     break;
@@ -200,10 +200,10 @@ pub(crate) mod tests {
         crate::transaction_notifier_interface::TransactionNotifier,
         crossbeam_channel::unbounded,
         dashmap::DashMap,
-        solana_account_decoder::parse_token::token_amount_to_ui_amount,
-        solana_ledger::{genesis_utils::create_genesis_config, get_tmp_ledger_path},
-        solana_runtime::bank::{Bank, NonceFull, NoncePartial, RentDebits, TransactionBalancesSet},
-        solana_sdk::{
+        nexis_account_decoder::parse_token::token_amount_to_ui_amount,
+        nexis_ledger::{genesis_utils::create_genesis_config, get_tmp_ledger_path},
+        nexis_runtime::bank::{Bank, NonceFull, NoncePartial, RentDebits, TransactionBalancesSet},
+        nexis_sdk::{
             account_utils::StateMut,
             clock::Slot,
             hash::Hash,
@@ -218,7 +218,7 @@ pub(crate) mod tests {
                 SanitizedTransaction, Transaction, TransactionError, VersionedTransaction,
             },
         },
-        solana_transaction_status::{
+        nexis_transaction_status::{
             token_balances::TransactionTokenBalancesSet, TransactionStatusMeta,
             TransactionTokenBalance,
         },

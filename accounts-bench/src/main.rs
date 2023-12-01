@@ -1,26 +1,30 @@
 #![allow(clippy::integer_arithmetic)]
+
+// Importing external crates and modules
 #[macro_use]
 extern crate log;
 use {
     clap::{crate_description, crate_name, value_t, App, Arg},
     rayon::prelude::*,
-    solana_measure::measure::Measure,
-    solana_runtime::{
+    nexis_measure::measure::Measure,
+    nexis_runtime::{
         accounts::{create_test_accounts, update_accounts_bench, Accounts},
         accounts_db::AccountShrinkThreshold,
         accounts_index::AccountSecondaryIndexes,
         ancestors::Ancestors,
     },
-    solana_sdk::{genesis_config::ClusterType, pubkey::Pubkey},
+    nexis_sdk::{genesis_config::ClusterType, pubkey::Pubkey},
     std::{env, fs, path::PathBuf},
 };
 
+/// The main function of the program.
 fn main() {
-    solana_logger::setup();
+    nexis_logger::setup();
 
+    // Parsing command line arguments
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .arg(
             Arg::with_name("num_slots")
                 .long("num_slots")
@@ -50,18 +54,22 @@ fn main() {
         )
         .get_matches();
 
+    // Extracting values from command line arguments or using default values
     let num_slots = value_t!(matches, "num_slots", usize).unwrap_or(4);
     let num_accounts = value_t!(matches, "num_accounts", usize).unwrap_or(10_000);
     let iterations = value_t!(matches, "iterations", usize).unwrap_or(20);
     let clean = matches.is_present("clean");
     println!("clean: {:?}", clean);
 
+    // Setting up the file system path for benchmarking
     let path = PathBuf::from(env::var("FARF_DIR").unwrap_or_else(|_| "farf".to_owned()))
-        .join("accounts-bench");
+        .join("accounts-benchmark");
     println!("cleaning file system: {:?}", path);
     if fs::remove_dir_all(path.clone()).is_err() {
         println!("Warning: Couldn't remove {:?}", path);
     }
+
+    // Creating the accounts database
     let accounts = Accounts::new_with_config_for_benches(
         vec![path],
         &ClusterType::Testnet,
@@ -69,7 +77,10 @@ fn main() {
         false,
         AccountShrinkThreshold::default(),
     );
+
     println!("Creating {} accounts", num_accounts);
+
+    // Creating test accounts in parallel
     let mut create_time = Measure::start("create accounts");
     let pubkeys: Vec<_> = (0..num_slots)
         .into_par_iter()
@@ -92,6 +103,8 @@ fn main() {
         num_slots,
         create_time
     );
+
+    // Setting up ancestors for the accounts
     let mut ancestors = Vec::with_capacity(num_slots);
     ancestors.push(0);
     for i in 1..num_slots {
@@ -99,8 +112,11 @@ fn main() {
         accounts.add_root(i as u64);
     }
     let ancestors = Ancestors::from(ancestors);
+
     let mut elapsed = vec![0; iterations];
     let mut elapsed_store = vec![0; iterations];
+
+    // Running the benchmark iterations
     for x in 0..iterations {
         if clean {
             let mut time = Measure::start("clean");
@@ -120,7 +136,7 @@ fn main() {
             let results_store = accounts.accounts_db.update_accounts_hash_with_index_option(
                 false,
                 false,
-                solana_sdk::clock::Slot::default(),
+                nexis_sdk::clock::Slot::default(),
                 &ancestors,
                 None,
                 false,
@@ -144,6 +160,7 @@ fn main() {
         }
     }
 
+    // Printing the elapsed time for each iteration
     for x in elapsed {
         info!("update_accounts_hash(us),{}", x);
     }

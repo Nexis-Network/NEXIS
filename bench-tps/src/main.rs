@@ -1,18 +1,34 @@
+//! This is the main file for the `bench-tps` application.
+//!
+//! The `bench-tps` application is used to benchmark the transaction processing speed (TPS) of the Nexis blockchain network.
+//! It generates and executes a large number of transactions using multiple client nodes, measuring the TPS achieved.
+//!
+//! The application uses the `nexis_bench_tps` and `nexis_genesis` crates for benchmarking and generating keypairs respectively.
+//! It also relies on the `nexis_gossip` crate for discovering the cluster nodes, and the `nexis_sdk` crate for interacting with the Nexis blockchain.
+//!
+//! The main function of this file sets up the necessary configurations, connects to the cluster, generates or reads keypairs,
+//! and then calls the `do_bench_tps` function to perform the benchmarking.
+//!
+//! For more information on how to use the `bench-tps` application, refer to the documentation of the `nexis_bench_tps` crate.
+//!
+//! Example usage:
+//!
+//!
 #![allow(clippy::integer_arithmetic)]
 use {
     log::*,
-    solana_bench_tps::{
+    nexis_bench_tps::{
         bench::{do_bench_tps, generate_and_fund_keypairs, generate_keypairs},
         cli,
     },
-    solana_genesis::Base64Account,
-    solana_gossip::gossip_service::{discover_cluster, get_client, get_multi_client},
-    solana_sdk::{
+    nexis_genesis::Base64Account,
+    nexis_gossip::gossip_service::{discover_cluster, get_client, get_multi_client},
+    nexis_sdk::{
         fee_calculator::FeeRateGovernor,
         signature::{Keypair, Signer},
         system_program,
     },
-    solana_streamer::socket::SocketAddrSpace,
+    nexis_streamer::socket::SocketAddrSpace,
     std::{collections::HashMap, fs::File, io::prelude::*, path::Path, process::exit, sync::Arc},
 };
 
@@ -20,10 +36,10 @@ use {
 pub const NUM_SIGNATURES_FOR_TXS: u64 = 100_000 * 60 * 60 * 24 * 7;
 
 fn main() {
-    solana_logger::setup_with_default("solana=info");
-    solana_metrics::set_panic_hook("bench-tps", /*version:*/ None);
+    nexis_logger::setup_with_default("nexis=info");
+    nexis_metrics::set_panic_hook("bench-tps", /*version:*/ None);
 
-    let matches = cli::build_args(solana_version::version!()).get_matches();
+    let matches = cli::build_args(nexis_version::version!()).get_matches();
     let cli_config = cli::extract_args(&matches);
 
     let cli::Config {

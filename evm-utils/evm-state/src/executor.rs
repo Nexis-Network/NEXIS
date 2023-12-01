@@ -471,7 +471,7 @@ impl Executor {
     }
 
     /// Do lowlevel operation with executor, without storing transaction into logs.
-    /// Usefull for testing and transfering tokens from evm to solana and back.
+    /// Usefull for testing and transfering tokens from evm to nexisand back.
     // Used for:
     // 1. deposit
     // 2. withdrawal? - currently unused

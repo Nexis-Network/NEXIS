@@ -2,9 +2,9 @@
 //! "ticks", a measure of time in the PoH stream
 use crate::poh_recorder::{PohRecorder, Record};
 use crossbeam_channel::Receiver;
-use solana_ledger::poh::Poh;
-use solana_measure::measure::Measure;
-use solana_sdk::poh_config::PohConfig;
+use nexis_ledger::poh::Poh;
+use nexis_measure::measure::Measure;
+use nexis_sdk::poh_config::PohConfig;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::thread::{self, sleep, Builder, JoinHandle};
@@ -91,9 +91,9 @@ impl PohService {
         let poh_exit_ = poh_exit.clone();
         let poh_config = poh_config.clone();
         let tick_producer = Builder::new()
-            .name("solana-poh-service-tick_producer".to_string())
+            .name("nexis-poh-service-tick_producer".to_string())
             .spawn(move || {
-                solana_sys_tuner::request_realtime_poh();
+                nexis_sys_tuner::request_realtime_poh();
                 if poh_config.hashes_per_tick.is_none() {
                     if poh_config.target_tick_count.is_none() {
                         Self::sleepy_tick_producer(
@@ -351,22 +351,22 @@ mod tests {
     use super::*;
     use crate::poh_recorder::WorkingBank;
     use rand::{thread_rng, Rng};
-    use solana_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo};
-    use solana_ledger::leader_schedule_cache::LeaderScheduleCache;
-    use solana_ledger::{blockstore::Blockstore, get_tmp_ledger_path};
-    use solana_measure::measure::Measure;
-    use solana_perf::test_tx::test_tx;
-    use solana_runtime::bank::Bank;
-    use solana_sdk::clock;
-    use solana_sdk::hash::hash;
-    use solana_sdk::pubkey::Pubkey;
-    use solana_sdk::timing;
+    use nexis_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo};
+    use nexis_ledger::leader_schedule_cache::LeaderScheduleCache;
+    use nexis_ledger::{blockstore::Blockstore, get_tmp_ledger_path};
+    use nexis_measure::measure::Measure;
+    use nexis_perf::test_tx::test_tx;
+    use nexis_runtime::bank::Bank;
+    use nexis_sdk::clock;
+    use nexis_sdk::hash::hash;
+    use nexis_sdk::pubkey::Pubkey;
+    use nexis_sdk::timing;
     use std::time::Duration;
 
     #[test]
     #[ignore]
     fn test_poh_service() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(2);
         let bank = Arc::new(Bank::new_no_wallclock_throttle(&genesis_config));
         let prev_hash = bank.last_blockhash();
@@ -419,7 +419,7 @@ mod tests {
                 let exit = exit.clone();
 
                 Builder::new()
-                    .name("solana-poh-service-entry_producer".to_string())
+                    .name("nexis-poh-service-entry_producer".to_string())
                     .spawn(move || {
                         let now = Instant::now();
                         let mut total_us = 0;

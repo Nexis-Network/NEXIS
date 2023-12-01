@@ -73,7 +73,7 @@ windows)
   ;;
 esac
 
-RELEASE_BASENAME="${RELEASE_BASENAME:=exzo-release}"
+RELEASE_BASENAME="${RELEASE_BASENAME:=nexis-release}"
 TARBALL_BASENAME="${TARBALL_BASENAME:="$RELEASE_BASENAME"}"
 
 echo --- Creating release tarball
@@ -127,7 +127,7 @@ for file in "${TARBALL_BASENAME}"-$TARGET.tar.bz2 "${TARBALL_BASENAME}"-$TARGET.
       ci/upload-github-release-asset.sh "$file"
     fi
   elif [[ -n $TRAVIS ]]; then
-    # .travis.yml uploads everything in the travis-s3-upload/ directory to release.solana.com
+    # .travis.yml uploads everything in the travis-s3-upload/ directory to release.nexis.network
     mkdir -p travis-s3-upload/"$CHANNEL_OR_TAG"
     cp -v "$file" travis-s3-upload/"$CHANNEL_OR_TAG"/
 
@@ -143,20 +143,20 @@ for file in "${TARBALL_BASENAME}"-$TARGET.tar.bz2 "${TARBALL_BASENAME}"-$TARGET.
   fi
 done
 
-# Create install wrapper for release.solana.com
+# Create install wrapper for release.nexis.network
 #if [[ -n $DO_NOT_PUBLISH_TAR ]]; then
 #  echo "Skipping publishing install wrapper"
 #elif [[ -n $BUILDKITE ]]; then
-#  cat > release.solana.com-install <<EOF
-#SOLANA_RELEASE=$CHANNEL_OR_TAG
-#SOLANA_INSTALL_INIT_ARGS=$CHANNEL_OR_TAG
-#SOLANA_DOWNLOAD_ROOT=https://release.solana.com
+#  cat > release.nexis.network-install <<EOF
+#NZT_RELEASE=$CHANNEL_OR_TAG
+#NZT_INSTALL_INIT_ARGS=$CHANNEL_OR_TAG
+#NZT_DOWNLOAD_ROOT=https://release.nexis.network
 #EOF
-#  cat install/solana-install-init.sh >> release.solana.com-install
+#  cat install/nexis-install-init.sh >> release.nexis.network-install
 #
 #  echo --- AWS S3 Store: "install"
-#  $DRYRUN upload-s3-artifact "/solana/release.solana.com-install" "s3://release.solana.com/$CHANNEL_OR_TAG/install"
+#  $DRYRUN upload-s3-artifact "/nexis/release.nexis.network-install" "s3://release.nexis.network/$CHANNEL_OR_TAG/install"
 #  echo Published to:
-#  $DRYRUN ci/format-url.sh https://release.solana.com/"$CHANNEL_OR_TAG"/install
+#  $DRYRUN ci/format-url.sh https://release.nexis.network/"$CHANNEL_OR_TAG"/install
 #fi
 echo --- ok

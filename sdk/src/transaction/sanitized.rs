@@ -10,7 +10,7 @@ use {
         pubkey::Pubkey,
         sanitize::Sanitize,
         signature::Signature,
-        solana_sdk::feature_set,
+        nexis_sdk::feature_set,
         transaction::{Result, Transaction, TransactionError, VersionedTransaction},
     },
     std::sync::Arc,

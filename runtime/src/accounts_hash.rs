@@ -1,8 +1,8 @@
 use {
     log::*,
     rayon::prelude::*,
-    solana_measure::measure::Measure,
-    solana_sdk::{
+    nexis_measure::measure::Measure,
+    nexis_sdk::{
         hash::{Hash, Hasher},
         pubkey::Pubkey,
     },
@@ -859,7 +859,7 @@ pub mod tests {
 
     #[test]
     fn test_accountsdb_rest_of_hash_calculation() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let mut account_maps = Vec::new();
 
@@ -928,7 +928,7 @@ pub mod tests {
 
     #[test]
     fn test_accountsdb_multi_pass_rest_of_hash_calculation() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         // passes:
         // 0: empty, NON-empty, empty, empty final
@@ -1020,7 +1020,7 @@ pub mod tests {
 
     #[test]
     fn test_accountsdb_multi_pass_rest_of_hash_calculation_partial() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let mut account_maps = Vec::new();
 
@@ -1097,7 +1097,7 @@ pub mod tests {
 
     #[test]
     fn test_accountsdb_multi_pass_rest_of_hash_calculation_partial_hashes() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let mut account_maps = Vec::new();
         let accounts_hash = AccountsHash::default();
@@ -1232,7 +1232,7 @@ pub mod tests {
 
     #[test]
     fn test_accountsdb_de_dup_accounts_empty() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let accounts_hash = AccountsHash::default();
 
         let vec = vec![vec![], vec![]];
@@ -1261,7 +1261,7 @@ pub mod tests {
 
     #[test]
     fn test_accountsdb_de_dup_accounts_from_stores() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let key_a = Pubkey::new(&[1u8; 32]);
         let key_b = Pubkey::new(&[2u8; 32]);
@@ -1423,7 +1423,7 @@ pub mod tests {
 
     #[test]
     fn test_accountsdb_compare_two_hash_entries() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let key = Pubkey::new_unique();
         let hash = Hash::new_unique();
         let val = CalculateHashIntermediate::new(hash, 1, key);
@@ -1469,7 +1469,7 @@ pub mod tests {
 
     #[test]
     fn test_accountsdb_remove_zero_balance_accounts() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let key = Pubkey::new_unique();
         let hash = Hash::new_unique();
@@ -1741,7 +1741,7 @@ pub mod tests {
 
     #[test]
     fn test_accountsdb_compute_merkle_root_large() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         // handle fanout^x -1, +0, +1 for a few 'x's
         const FANOUT: usize = 3;
@@ -1770,7 +1770,7 @@ pub mod tests {
 
     #[test]
     fn test_accountsdb_compute_merkle_root() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let expected_results = vec![
             (0, 0, "GKot5hBsd81kMupNCXHaqbhv3huEbxAFMLnpcX2hniwn", 0),
@@ -1845,7 +1845,7 @@ pub mod tests {
     #[test]
     #[should_panic(expected = "overflow is detected while summing capitalization")]
     fn test_accountsdb_lamport_overflow() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let offset = 2;
         let input = vec![
@@ -1862,7 +1862,7 @@ pub mod tests {
     #[test]
     #[should_panic(expected = "overflow is detected while summing capitalization")]
     fn test_accountsdb_lamport_overflow2() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let offset = 2;
         let input = vec![

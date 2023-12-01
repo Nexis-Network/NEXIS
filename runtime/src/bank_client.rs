@@ -1,7 +1,7 @@
 use {
     crate::bank::Bank,
     evm_state::AccountProvider,
-    solana_sdk::{
+    nexis_sdk::{
         account::Account,
         client::{AsyncClient, Client, SyncClient},
         commitment_config::CommitmentConfig,
@@ -235,7 +235,7 @@ impl SyncClient for BankClient {
         signature: &Signature,
         min_confirmed_blocks: usize,
     ) -> Result<usize> {
-        // https://github.com/solana-labs/solana/issues/7199
+        // https://github.com/nexis-labs/nexis/issues/7199
         assert_eq!(min_confirmed_blocks, 1, "BankClient cannot observe the passage of multiple blocks, so min_confirmed_blocks must be 1");
         let now = Instant::now();
         let confirmed_blocks;
@@ -369,7 +369,7 @@ impl BankClient {
         let bank = bank.clone();
         let join_bg_thread = Some(
             Builder::new()
-                .name("solana-bank-client".to_string())
+                .name("nexis-bank-client".to_string())
                 .spawn(move || Self::run(&thread_bank, transaction_receiver))
                 .unwrap(),
         );
@@ -389,7 +389,7 @@ impl BankClient {
 mod tests {
     use {
         super::*,
-        solana_sdk::{genesis_config::create_genesis_config, instruction::AccountMeta},
+        nexis_sdk::{genesis_config::create_genesis_config, instruction::AccountMeta},
     };
 
     #[test]
@@ -403,7 +403,7 @@ mod tests {
         let bank_client = BankClient::new(bank);
 
         // Create 2-2 Multisig Transfer instruction.
-        let bob_pubkey = solana_sdk::pubkey::new_rand();
+        let bob_pubkey = nexis_sdk::pubkey::new_rand();
         let mut transfer_instruction = system_instruction::transfer(&john_pubkey, &bob_pubkey, 42);
         transfer_instruction
             .accounts

@@ -1,9 +1,9 @@
 use {
     crate::tpu_info::TpuInfo,
     log::*,
-    solana_metrics::{datapoint_warn, inc_new_counter_info},
-    solana_runtime::{bank::Bank, bank_forks::BankForks},
-    solana_sdk::{hash::Hash, nonce_account, pubkey::Pubkey, signature::Signature},
+    nexis_metrics::{datapoint_warn, inc_new_counter_info},
+    nexis_runtime::{bank::Bank, bank_forks::BankForks},
+    nexis_sdk::{hash::Hash, nonce_account, pubkey::Pubkey, signature::Signature},
     std::{
         collections::hash_map::{Entry, HashMap},
         net::{SocketAddr, UdpSocket},
@@ -338,7 +338,7 @@ mod test {
     use {
         super::*,
         crate::tpu_info::NullTpuInfo,
-        solana_sdk::{
+        nexis_sdk::{
             account::AccountSharedData,
             genesis_config::create_genesis_config,
             nonce::{self, state::DurableNonce},
@@ -371,7 +371,7 @@ mod test {
 
     #[test]
     fn process_transactions() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let (genesis_config, mint_keypair) = create_genesis_config(4);
         let bank = Bank::new_for_tests(&genesis_config);
@@ -616,7 +616,7 @@ mod test {
 
     #[test]
     fn test_retry_durable_nonce_transactions() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let (genesis_config, mint_keypair) = create_genesis_config(4);
         let bank = Bank::new_for_tests(&genesis_config);

@@ -1,21 +1,21 @@
 #![allow(clippy::integer_arithmetic)]
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-use solana_entry::entry::{self, create_ticks, init_poh, EntrySlice, VerifyRecyclers};
+use nexis_entry::entry::{self, create_ticks, init_poh, EntrySlice, VerifyRecyclers};
 #[cfg(not(any(target_arch = "x86", target_arch = "x86_64")))]
-use solana_entry::entry::{create_ticks, init_poh, EntrySlice, VerifyRecyclers};
+use nexis_entry::entry::{create_ticks, init_poh, EntrySlice, VerifyRecyclers};
 use {
     clap::{crate_description, crate_name, value_t, App, Arg},
-    solana_measure::measure::Measure,
-    solana_perf::perf_libs,
-    solana_sdk::hash::hash,
+    nexis_measure::measure::Measure,
+    nexis_perf::perf_libs,
+    nexis_sdk::hash::hash,
 };
 
 fn main() {
-    solana_logger::setup();
+    nexis_logger::setup();
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .arg(
             Arg::with_name("max_num_entries")
                 .long("max-num-entries")

@@ -4,8 +4,8 @@ use {
         crate_description, crate_name, crate_version, value_t, value_t_or_exit, values_t, App, Arg,
     },
     regex::Regex,
-    solana_download_utils::download_file,
-    solana_sdk::signature::{write_keypair_file, Keypair},
+    nexis_download_utils::download_file,
+    nexis_sdk::signature::{write_keypair_file, Keypair},
     std::{
         collections::{HashMap, HashSet},
         env,
@@ -134,7 +134,7 @@ fn install_if_missing(
         fs::remove_dir(&target_path).map_err(|err| err.to_string())?;
     }
 
-    // Check whether the package is already in ~/.cache/solana.
+    // Check whether the package is already in ~/.cachenexis.
     // Download it and place in the proper location if not found.
     if !target_path.is_dir()
         && !target_path
@@ -428,7 +428,7 @@ fn build_bpf_package(config: &Config, target_directory: &Path, package: &cargo_m
         }
     };
 
-    let legacy_program_feature_present = package.name == "solana-sdk";
+    let legacy_program_feature_present = package.name == "nexis-sdk";
     let root_package_dir = &package.manifest_path.parent().unwrap_or_else(|| {
         eprintln!("Unable to get directory of {}", package.manifest_path);
         exit(1);
@@ -463,11 +463,11 @@ fn build_bpf_package(config: &Config, target_directory: &Path, package: &cargo_m
         println!("Legacy program feature detected");
     }
     let bpf_tools_download_file_name = if cfg!(target_os = "windows") {
-        "solana-bpf-tools-windows.tar.bz2"
+        "nexis-bpf-tools-windows.tar.bz2"
     } else if cfg!(target_os = "macos") {
-        "solana-bpf-tools-osx.tar.bz2"
+        "nexis-bpf-tools-osx.tar.bz2"
     } else {
-        "solana-bpf-tools-linux.tar.bz2"
+        "nexis-bpf-tools-linux.tar.bz2"
     };
 
     let home_dir = PathBuf::from(env::var("HOME").unwrap_or_else(|err| {
@@ -481,14 +481,14 @@ fn build_bpf_package(config: &Config, target_directory: &Path, package: &cargo_m
     let package = "bpf-tools";
     let target_path = home_dir
         .join(".cache")
-        .join("solana")
+        .join("nexis")
         .join(bpf_tools_version)
         .join(package);
     install_if_missing(
         config,
         package,
         bpf_tools_version,
-        "https://github.com/solana-labs/bpf-tools/releases/download",
+        "https://github.com/nexis-labs/bpf-tools/releases/download",
         bpf_tools_download_file_name,
         &target_path,
     )
@@ -663,7 +663,7 @@ fn build_bpf_package(config: &Config, target_directory: &Path, package: &cargo_m
 
         println!();
         println!("To deploy this program:");
-        println!("  $ solana program deploy {}", program_so.display());
+        println!("  $ nexisprogram deploy {}", program_so.display());
         println!("The program address will default to this keypair (override with --program-id):");
         println!("  {}", program_keypair.display());
     } else if config.dump {
@@ -743,7 +743,7 @@ fn main() {
                 .value_name("PATH")
                 .takes_value(true)
                 .default_value(&default_bpf_sdk)
-                .help("Path to the Solana BPF SDK"),
+                .help("Path to the Nexis BPF SDK"),
         )
         .arg(
             Arg::with_name("cargo_args")

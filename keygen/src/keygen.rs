@@ -5,7 +5,7 @@ use {
         crate_description, crate_name, value_t, value_t_or_exit, values_t_or_exit, App,
         AppSettings, Arg, ArgMatches, SubCommand,
     },
-    solana_clap_utils::{
+    nexis_clap_utils::{
         input_parsers::STDOUT_OUTFILE_TOKEN,
         input_validators::{is_parsable, is_prompt_signer_source},
         keypair::{
@@ -14,9 +14,9 @@ use {
         },
         ArgConstant, DisplayError,
     },
-    solana_cli_config::{Config, CONFIG_FILE},
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_sdk::{
+    nexis_cli_config::{Config, CONFIG_FILE},
+    nexis_remote_wallet::remote_wallet::RemoteWalletManager,
+    nexis_sdk::{
         instruction::{AccountMeta, Instruction},
         message::Message,
         pubkey::{write_pubkey_file, Pubkey},
@@ -333,7 +333,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
     let default_num_threads = num_cpus::get().to_string();
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .arg({
             let arg = Arg::with_name("config_file")

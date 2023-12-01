@@ -31,8 +31,8 @@ use bincode::serialize;
 use indexmap::map::{rayon::ParValues, Entry, IndexMap};
 use indexmap::set::IndexSet;
 use rayon::{prelude::*, ThreadPool};
-use solana_sdk::hash::{hash, Hash};
-use solana_sdk::pubkey::Pubkey;
+use nexis_sdk::hash::{hash, Hash};
+use nexis_sdk::pubkey::Pubkey;
 use std::{
     cmp::Ordering,
     collections::{hash_map, BTreeMap, HashMap, VecDeque},
@@ -547,7 +547,7 @@ mod test {
     use rand::{thread_rng, Rng, SeedableRng};
     use rand_chacha::ChaChaRng;
     use rayon::ThreadPoolBuilder;
-    use solana_sdk::signature::{Keypair, Signer};
+    use nexis_sdk::signature::{Keypair, Signer};
     use std::{collections::HashSet, iter::repeat_with};
 
     #[test]
@@ -1164,7 +1164,7 @@ mod test {
     fn test_label_order() {
         let v1 = VersionedCrdsValue::new(
             CrdsValue::new_unsigned(CrdsData::ContactInfo(ContactInfo::new_localhost(
-                &solana_sdk::pubkey::new_rand(),
+                &nexis_sdk::pubkey::new_rand(),
                 0,
             ))),
             Cursor::default(),
@@ -1172,7 +1172,7 @@ mod test {
         );
         let v2 = VersionedCrdsValue::new(
             CrdsValue::new_unsigned(CrdsData::ContactInfo(ContactInfo::new_localhost(
-                &solana_sdk::pubkey::new_rand(),
+                &nexis_sdk::pubkey::new_rand(),
                 0,
             ))),
             Cursor::default(),

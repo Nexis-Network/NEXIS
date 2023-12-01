@@ -1,7 +1,7 @@
 use {
     crate::{blockstore::*, blockstore_db::{BlockstoreError, Result}, blockstore_meta::SlotMeta},
     log::*,
-    solana_sdk::clock::Slot,
+    nexis_sdk::clock::Slot,
 };
 
 pub struct RootedSlotIterator<'a> {
@@ -79,7 +79,7 @@ impl<'a> Iterator for RootedSlotIterator<'a> {
 mod tests {
     use {
         super::*, crate::blockstore_processor::fill_blockstore_slot_with_ticks,
-        solana_sdk::hash::Hash,
+        nexis_sdk::hash::Hash,
     };
 
     #[test]

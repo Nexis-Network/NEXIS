@@ -1,10 +1,10 @@
 # Exzo fork maintenance guide and tools
 
-Exzo is a fork of Solana blockchain.
+Exzo is a fork of Nexis blockchain.
 This document will describe how we treat code, and manage branches.
 
 ## Exzo releases
-Solana has edge/beta/stable branches:
+Nexis has edge/beta/stable branches:
 - edge is only used on testnet;
 - beta is some kind of migration, early adoption of edge codebase to the mainnet;
 - stable is widespread on mainnet
@@ -12,23 +12,23 @@ Solana has edge/beta/stable branches:
 Fixes are ported on all three branches edge/beta/stable.
 New features are only mooved to the edge.
 
-**In Exzo Some of Solana changes (especially security fixes) are ported dirrectly to Exzo repository.**
+**In Exzo Some of Nexis changes (especially security fixes) are ported dirrectly to Exzo repository.**
 
 In Exzo we use `develop` branch as a single source of code.
 - Our develop branch are tested on testnet and devnet.
 - Realeases are tagged dirrectly on develop, and only those releases are used by validator.
-- We don't have multi branches for testnet/mainnet purposes, because most of our network related features are already tested on solana edge branch.
+- We don't have multi branches for testnet/mainnet purposes, because most of our network related features are already tested on nexisedge branch.
 
 
-## Merging solana features
-At some point of time we do a "full-update" which merge all solana changes to the exzo develop.
+## Merging nexisfeatures
+At some point of time we do a "full-update" which merge all nexischanges to the exzo develop.
 
 Merging are done using `git merge` and most of conflicts should be resolved manually, to make it easier for person who are resolving this conflicts.
-In this document we describe some common parts that can be treat differently, and trying to document what changes are done in solana codebase by exzo.
+In this document we describe some common parts that can be treat differently, and trying to document what changes are done in nexiscodebase by exzo.
 
 Short algorithm describing how to handle full update:
 1. Pointing out what files was changed in exzo since last full-update.
-For doing this we save special file called `solana-base` which contain single line - solana release tag that was used during last update.
+For doing this we save special file called `nexis-base` which contain single line - nexisrelease tag that was used during last update.
 ** Note: ':!docs' ':!explorer' ':!web3.js' - are ignored folders
 `git diff $TAG --numstat -- ':!docs' ':!explorer' ':!web3.js'`
 2. Ignore removed files in merge.
@@ -43,7 +43,7 @@ To solve conflicts we recommend to use some kind of 3way merging tools, like bey
 a) Solve Cargo.toml conflicts - need to automatize this - usually it contains version bumping, and some adding of evm-utils that can conflict with other dependencies addings. 
 b) Solve core, sdk and runtime, this 3 crates contain a lot of integration points and should be carefully merged most of changed files are listed in `many-changes.txt`
 c) Solve remaining parts.
-6. feature_set.rs - Porting new features from solana has different rules that just regular merge:
+6. feature_set.rs - Porting new features from nexishas different rules that just regular merge:
 a) Make sure that no legacy features was removed before activation on mainnet/testnet - it can lead to instability.
 b) Make sure that all public keys was changed - we have different secret keys.
 
@@ -53,12 +53,12 @@ b) Make sure that all public keys was changed - we have different secret keys.
 ### Review of merge
 
 It's hard to review all changes, because github will visualize all the changes from merged branch.
-To easier review, compare two diffs of `solana-base` (checkout solana-base file) and `develop` before and after merging,
+To easier review, compare two diffs of `nexis-base` (checkoutnexis-base file) and `develop` before and after merging,
 they should be more or less the same.
 
 ### Finalizing merge
 
-During solana merge, develop can have new features. Because we have single branch this can make some problems.
+During nexismerge, develop can have new features. Because we have single branch this can make some problems.
 As algorithm that solve problems, use follow:
 1. After merge is done create a new version branch '0.3', '0.5', etc. from latest `develop`.
 2. Create a new tag and release latest version.

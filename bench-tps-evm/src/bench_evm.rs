@@ -1,3 +1,123 @@
+/// Generates EVM keypair using the provided seed keypair.
+///
+/// # Arguments
+///
+/// * `seed_keypair` - The seed keypair used to generate the EVM keypair.
+///
+/// # Returns
+///
+/// The generated EVM keypair.
+pub fn generate_evm_key(seed_keypair: &Keypair) -> evm::SecretKey {
+    // implementation details...
+}
+
+/// Generates and funds EVM keypairs.
+///
+/// # Arguments
+///
+/// * `client` - The client used to interact with the blockchain.
+/// * `_faucet_addr` - The faucet address (optional).
+/// * `sources` - The source keypairs used to generate the EVM keypairs.
+/// * `lamports_per_account` - The amount of lamports to fund per account.
+///
+/// # Returns
+///
+/// A vector of tuples containing the generated keypairs and their corresponding EVM keypairs.
+pub fn generate_and_fund_evm_keypairs<T: 'static + Client + Send + Sync>(
+    client: Arc<T>,
+    _faucet_addr: Option<SocketAddr>,
+    sources: Vec<Keypair>,
+    lamports_per_account: u64,
+) -> Result<Vec<(Keypair, evm::SecretKey)>> {
+    // implementation details...
+}
+
+/// Verifies the funding transfer for an EVM key.
+///
+/// # Arguments
+///
+/// * `client` - The client used to interact with the blockchain.
+/// * `evm_key` - The EVM key to verify the funding transfer for.
+/// * `_tx` - The transaction used for the funding transfer.
+/// * `amount` - The amount of lamports transferred.
+///
+/// # Returns
+///
+/// `true` if the funding transfer is verified, `false` otherwise.
+fn verify_funding_transfer<T: Client>(
+    client: &Arc<T>,
+    evm_key: evm::Address,
+    _tx: &Transaction,
+    amount: u64,
+) -> bool {
+    // implementation details...
+}
+
+/// Trait for handling funding transactions.
+trait FundingTransactions<'a> {
+    /// Funds the specified keypairs with the given amount of lamports.
+    fn fund<T: 'static + Client + Send + Sync>(
+        &mut self,
+        client: &Arc<T>,
+        to_fund: &'a [(Keypair, evm::SecretKey)],
+        to_lamports: u64,
+    );
+    
+    /// Creates funding transactions for the specified keypairs.
+    fn make(&mut self, to_fund: &'a [(Keypair, evm::SecretKey)], to_lamports: u64);
+    
+    /// Signs the funding transactions with the provided blockhash.
+    fn sign(&mut self, blockhash: Hash);
+    
+    /// Sends the funding transactions to the blockchain.
+    fn send<T: Client>(&self, client: &Arc<T>);
+    
+    /// Verifies the funding transactions.
+    fn verify<T: 'static + Client + Send + Sync>(&mut self, client: &Arc<T>, to_lamports: u64);
+}
+
+/// Implementation of the `FundingTransactions` trait for a vector of keypairs, EVM keypairs, and transactions.
+impl<'a> FundingTransactions<'a> for Vec<(&'a Keypair, &'a evm::SecretKey, Transaction)> {
+    // implementation details...
+}
+
+/// Funds EVM keys with the specified amount of lamports.
+///
+/// # Arguments
+///
+/// * `client` - The client used to interact with the blockchain.
+/// * `keys` - The keypairs and EVM keypairs to fund.
+/// * `lamports_per_account` - The amount of lamports to fund per account.
+pub fn fund_evm_keys<T: 'static + Client + Send + Sync>(
+    client: Arc<T>,
+    keys: &[(Keypair, evm::SecretKey)],
+    lamports_per_account: u64,
+) {
+    // implementation details...
+}
+
+/// Generates system transactions for transferring funds between peers.
+///
+/// # Arguments
+///
+/// * `source` - The source peers.
+/// * `dest` - The destination peers.
+/// * `reclaim` - Indicates whether to reclaim funds from the destination peers.
+/// * `blockhash` - The blockhash used for the transactions.
+/// * `chain_id` - The chain ID (optional).
+///
+/// # Returns
+///
+/// A vector of tuples containing the generated transactions and the amount of lamports transferred.
+fn generate_system_txs(
+    source: &mut [Peer],
+    dest: &mut VecDeque<Peer>,
+    reclaim: bool,
+    blockhash: &Hash,
+    chain_id: Option<u64>,
+) -> Vec<(Transaction, u64)> {
+    // implementation details...
+}
 use crate::cli::Config;
 use log::*;
 use rayon::prelude::*;
@@ -14,9 +134,9 @@ use std::{
 
 use crate::bench::Result;
 use crate::bench::SharedTransactions;
-use solana_measure::measure::Measure;
-use solana_metrics::{self, datapoint_info};
-use solana_sdk::{
+use nexis_measure::measure::Measure;
+use nexis_metrics::{self, datapoint_info};
+use nexis_sdk::{
     client::Client,
     hash::Hash,
     message::Message,
@@ -27,9 +147,9 @@ use solana_sdk::{
 };
 
 pub const MAX_SPENDS_PER_TX: u64 = 4;
-use solana_evm_loader_program::scope::evm::FromKey;
-use solana_evm_loader_program::scope::evm::U256;
-use solana_evm_loader_program::scope::*;
+use nexis_evm_loader_program::scope::evm::FromKey;
+use nexis_evm_loader_program::scope::evm::U256;
+use nexis_evm_loader_program::scope::*;
 
 pub const BENCH_SEED: &str = "authority";
 
@@ -37,7 +157,7 @@ pub const BENCH_SEED: &str = "authority";
 pub struct Peer(pub std::sync::Arc<Keypair>, pub evm::SecretKey, pub u64);
 
 pub fn generate_evm_key(seed_keypair: &Keypair) -> evm::SecretKey {
-    use solana_evm_loader_program::scope::evm::rand::SeedableRng;
+    use nexis_evm_loader_program::scope::evm::rand::SeedableRng;
 
     let mut seed = [0u8; 32];
     seed.copy_from_slice(&seed_keypair.to_bytes()[..32]);
@@ -62,7 +182,7 @@ pub fn generate_and_fund_evm_keypairs<T: 'static + Client + Send + Sync>(
         .collect();
     info!("Get lamports...");
 
-    // Sample the first keypair, to prevent lamport loss on repeated solana-bench-tps executions
+    // Sample the first keypair, to prevent lamport loss on repeatednexis-bench-tps executions
     let first_key = keypairs[0].1;
     let first_keypair_balance = client
         .get_evm_balance(&first_key.to_address())
@@ -158,7 +278,7 @@ impl<'a> FundingTransactions<'a> for Vec<(&'a Keypair, &'a evm::SecretKey, Trans
         let to_fund_txs: Vec<(&Keypair, &evm::SecretKey, Transaction)> = to_fund
             .par_iter()
             .map(|(k, evm)| {
-                let instructions = solana_evm_loader_program::transfer_native_to_evm_ixs(
+                let instructions = nexis_evm_loader_program::transfer_native_to_evm_ixs(
                     k.pubkey(),
                     to_lamports,
                     evm.to_address(),
@@ -321,11 +441,11 @@ fn generate_system_txs(
             let tx_call = tx_call.sign(&from.1, chain_id);
 
             from.2 += 1;
-            let ix = solana_evm_loader_program::send_raw_tx(
+            let ix = nexis_evm_loader_program::send_raw_tx(
                 from.0.pubkey(),
                 tx_call,
                 None,
-                solana_evm_loader_program::instructions::FeePayerType::Evm,
+                nexis_evm_loader_program::instructions::FeePayerType::Evm,
             );
 
             let message = Message::new(&[ix], Some(&from.0.pubkey()));
@@ -441,7 +561,7 @@ where
         let client = client.clone();
         let id = id.pubkey();
         Builder::new()
-            .name("solana-blockhash-poller".to_string())
+            .name("nexis-blockhash-poller".to_string())
             .spawn(move || {
                 crate::bench::poll_blockhash(&exit_signal, &recent_blockhash, &client, &id);
             })
@@ -648,7 +768,7 @@ where
             let total_tx_sent_count = total_tx_sent_count.clone();
             let client = client.clone();
             Builder::new()
-                .name("solana-client-sender".to_string())
+                .name("nexis-client-sender".to_string())
                 .spawn(move || {
                     do_tx_transfers(
                         &exit_signal,

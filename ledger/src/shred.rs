@@ -55,12 +55,12 @@ use {
     num_enum::{IntoPrimitive, TryFromPrimitive},
     rayon::{prelude::*, ThreadPool},
     serde::{Deserialize, Serialize},
-    solana_entry::entry::{create_ticks, Entry},
-    solana_measure::measure::Measure,
-    solana_perf::packet::Packet,
-    solana_rayon_threadlimit::get_thread_count,
-    solana_runtime::bank::Bank,
-    solana_sdk::{
+    nexis_entry::entry::{create_ticks, Entry},
+    nexis_measure::measure::Measure,
+    nexis_perf::packet::Packet,
+    nexis_rayon_threadlimit::get_thread_count,
+    nexis_runtime::bank::Bank,
+    nexis_sdk::{
         clock::Slot,
         feature_set,
         hash::{hashv, Hash},
@@ -1228,7 +1228,7 @@ pub mod tests {
         bincode::serialized_size,
         matches::assert_matches,
         rand::{seq::SliceRandom, Rng},
-        solana_sdk::{
+        nexis_sdk::{
             hash::{self, hash},
             shred_version, system_transaction,
         },
@@ -1733,13 +1733,13 @@ pub mod tests {
         let mut rng = rand::thread_rng();
         let txs = repeat_with(|| {
             let from_pubkey = Pubkey::new_unique();
-            let instruction = solana_sdk::system_instruction::transfer(
+            let instruction = nexis_sdk::system_instruction::transfer(
                 &from_pubkey,
                 &Pubkey::new_unique(), // to
                 rng.gen(),             // lamports
             );
-            let message = solana_sdk::message::Message::new(&[instruction], Some(&from_pubkey));
-            let mut tx = solana_sdk::transaction::Transaction::new_unsigned(message);
+            let message = nexis_sdk::message::Message::new(&[instruction], Some(&from_pubkey));
+            let mut tx = nexis_sdk::transaction::Transaction::new_unsigned(message);
             // Also randomize the signatre bytes.
             let mut signature = [0u8; 64];
             rng.fill(&mut signature[..]);
@@ -1995,7 +1995,7 @@ pub mod tests {
 
     #[test]
     fn test_shred_offsets() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let mut packet = Packet::default();
         let shred = Shred::new_from_data(1, 3, 0, None, true, true, 0, 0, 0);
         shred.copy_to_packet(&mut packet);

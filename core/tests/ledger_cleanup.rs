@@ -5,13 +5,13 @@
 mod tests {
     use {
         log::*,
-        solana_core::ledger_cleanup_service::LedgerCleanupService,
-        solana_ledger::{
+        nexis_core::ledger_cleanup_service::LedgerCleanupService,
+        nexis_ledger::{
             blockstore::{make_many_slot_entries, Blockstore},
             get_tmp_ledger_path,
             shred::Shred,
         },
-        solana_measure::measure::Measure,
+        nexis_measure::measure::Measure,
         std::{
             collections::VecDeque,
             str::FromStr,
@@ -223,7 +223,7 @@ mod tests {
 
     #[test]
     fn test_ledger_cleanup_compaction() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let blockstore_path = get_tmp_ledger_path!();
         let mut blockstore = Blockstore::open(&blockstore_path).unwrap();
         let config = get_benchmark_config();

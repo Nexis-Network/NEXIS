@@ -8,8 +8,8 @@ use {
         leader_schedule_cache::LeaderScheduleCache,
     },
     log::*,
-    solana_entry::entry::VerifyRecyclers,
-    solana_runtime::{
+    nexis_entry::entry::VerifyRecyclers,
+    nexis_runtime::{
         accounts_update_notifier_interface::AccountsUpdateNotifier,
         bank_forks::BankForks,
         snapshot_archive_info::SnapshotArchiveInfoGetter,
@@ -18,7 +18,7 @@ use {
         snapshot_package::AccountsPackageSender,
         snapshot_utils,
     },
-    solana_sdk::{clock::Slot, genesis_config::GenesisConfig},
+    nexis_sdk::{clock::Slot, genesis_config::GenesisConfig},
     std::{
         fs,
         path::{Path, PathBuf},

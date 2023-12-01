@@ -2,61 +2,61 @@
 
 set -e
 cd "$(dirname "$0")"
-SOLANA_ROOT="$(cd ../..; pwd)"
+NZT_ROOT="$(cd ../..; pwd)"
 
 logDir="$PWD"/logs
 rm -rf "$logDir"
 mkdir "$logDir"
 
-solanaInstallDataDir=$PWD/releases
-solanaInstallGlobalOpts=(
-  --data-dir "$solanaInstallDataDir"
-  --config "$solanaInstallDataDir"/config.yml
+nexisInstallDataDir=$PWD/releases
+nexisInstallGlobalOpts=(
+  --data-dir "$nexisInstallDataDir"
+  --config "$nexisInstallDataDir"/config.yml
   --no-modify-path
 )
 
-# Install all the solana versions
+# Install all the nexisversions
 bootstrapInstall() {
   declare v=$1
-  if [[ ! -h $solanaInstallDataDir/active_release ]]; then
-    sh "$SOLANA_ROOT"/install/exzo-install-init.sh "$v" "${solanaInstallGlobalOpts[@]}"
+  if [[ ! -h $nexisInstallDataDir/active_release ]]; then
+    sh "$NZT_ROOT"/install/exzo-install-init.sh "$v" "${nexisInstallGlobalOpts[@]}"
   fi
-  export PATH="$solanaInstallDataDir/active_release/bin/:$PATH"
+  export PATH="$nexisInstallDataDir/active_release/bin/:$PATH"
 }
 
 bootstrapInstall "edge"
 exzo-install-init --version
 exzo-install-init edge
-solana-gossip --version
-solana-dos --version
+nexis-gossip --version
+nexis-dos --version
 
-killall solana-gossip || true
-solana-gossip spy --gossip-port 8001 > "$logDir"/gossip.log 2>&1 &
-solanaGossipPid=$!
-echo "solana-gossip pid: $solanaGossipPid"
+killallnexis-gossip || true
+nexis-gossip spy --gossip-port 8001 > "$logDir"/gossip.log 2>&1 &
+nexisGossipPid=$!
+echo "nexis-gossip pid: $nexisGossipPid"
 sleep 5
-solana-dos --mode gossip --data-type random --data-size 1232 &
+nexis-dos --mode gossip --data-type random --data-size 1232 &
 dosPid=$!
-echo "solana-dos pid: $dosPid"
+echo "nexis-dos pid: $dosPid"
 
 pass=true
 
 SECONDS=
 while ((SECONDS < 600)); do
-  if ! kill -0 $solanaGossipPid; then
-    echo "solana-gossip is no longer running after $SECONDS seconds"
+  if ! kill -0 $nexisGossipPid; then
+    echo "nexis-gossip is no longer running after $SECONDS seconds"
     pass=false
     break
   fi
   if ! kill -0 $dosPid; then
-    echo "solana-dos is no longer running after $SECONDS seconds"
+    echo "nexis-dos is no longer running after $SECONDS seconds"
     pass=false
     break
   fi
   sleep 1
 done
 
-kill $solanaGossipPid || true
+kill $nexisGossipPid || true
 kill $dosPid || true
 wait || true
 

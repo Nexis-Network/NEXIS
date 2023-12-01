@@ -1,7 +1,7 @@
 use crate::scope::*;
 use evm_state::{CallScheme, ExitError};
 use hex::FromHexError;
-use solana_sdk::instruction::InstructionError;
+use nexis_sdk::instruction::InstructionError;
 
 use snafu::Snafu;
 #[derive(Debug, Snafu)]
@@ -41,7 +41,7 @@ pub enum PrecompileErrors {
     UnexpectedInput { expected: String, got: String },
 
     #[snafu(display("Failed to find account, account_pk = {}", public_key))]
-    AccountNotFound { public_key: solana::Address },
+    AccountNotFound { public_key: nexis::Address },
 
     #[snafu(display(
         "No enough tokens, on EVM state account, to credit request = {}",

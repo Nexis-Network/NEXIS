@@ -1,9 +1,50 @@
-//! The `rpc_banks_service` module implements the Solana Banks RPC API.
+//! The `rpc_banks_service` module implements the Nexis Banks RPC API.
+//!
+//! This module provides the `RpcBanksService` struct, which represents the RPC service for the Nexis Banks.
+//! It includes methods for starting and stopping the TCP server, as well as joining the server thread.
+//!
+//! # Example
+//!
+//! ```rust
+//! use std::net::SocketAddr;
+//! use nexis_runtime::{bank_forks::BankForks, commitment::BlockCommitmentCache};
+//! use std::sync::{atomic::AtomicBool, Arc, RwLock};
+//! use std::thread;
+//! use tokio::runtime::Runtime;
+//!
+//! let listen_addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+//! let tpu_addr: SocketAddr = "127.0.0.1:8000".parse().unwrap();
+//! let bank_forks = Arc::new(RwLock::new(BankForks::new()));
+//! let block_commitment_cache = Arc::new(RwLock::new(BlockCommitmentCache::new()));
+//! let exit = Arc::new(AtomicBool::new(false));
+//!
+//! let rpc_service = RpcBanksService::new(
+//!     listen_addr,
+//!     tpu_addr,
+//!     &bank_forks,
+//!     &block_commitment_cache,
+//!     &exit,
+//! );
+//!
+//! // Start the TCP server
+//! thread::spawn(move || {
+//!     rpc_service.run();
+//! });
+//!
+//! // ... Perform other operations ...
+//!
+//! // Stop the TCP server
+//! exit.store(true, Ordering::Relaxed);
+//! rpc_service.join().unwrap();
+//! ```
+//!
+//! For more information, see the [Nexis Banks RPC API documentation](https://docs.nexis.com/rpc/banks).
+//! The `rpc_banks_service` module implements the Nexis Banks RPC API.
 
 use {
     crate::banks_server::start_tcp_server,
     futures::{future::FutureExt, pin_mut, prelude::stream::StreamExt, select},
-    solana_runtime::{bank_forks::BankForks, commitment::BlockCommitmentCache},
+    nexis_runtime::{bank_forks::BankForks, commitment::BlockCommitmentCache},
     std::{
         net::SocketAddr,
         sync::{
@@ -81,7 +122,7 @@ impl RpcBanksService {
         let block_commitment_cache = block_commitment_cache.clone();
         let exit = exit.clone();
         let thread_hdl = Builder::new()
-            .name("solana-rpc-banks".to_string())
+            .name("nexis-rpc-banks".to_string())
             .spawn(move || {
                 Self::run(
                     listen_addr,
@@ -103,7 +144,7 @@ impl RpcBanksService {
 
 #[cfg(test)]
 mod tests {
-    use {super::*, solana_runtime::bank::Bank};
+    use {super::*, nexis_runtime::bank::Bank};
 
     #[test]
     fn test_rpc_banks_server_exit() {

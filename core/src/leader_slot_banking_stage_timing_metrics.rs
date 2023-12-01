@@ -1,6 +1,6 @@
 use {
-    solana_program_runtime::timings::ExecuteTimings,
-    solana_sdk::{clock::Slot, saturating_add_assign},
+    nexis_program_runtime::timings::ExecuteTimings,
+    nexis_sdk::{clock::Slot, saturating_add_assign},
     std::time::Instant,
 };
 

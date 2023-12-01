@@ -1,24 +1,24 @@
 #![allow(clippy::integer_arithmetic)]
 use {
-    solana_cli::{
+    nexis_cli::{
         check_balance,
         cli::{process_command, request_and_confirm_airdrop, CliCommand, CliConfig},
         spend_utils::SpendAmount,
     },
-    solana_cli_output::{parse_sign_only_reply_string, OutputFormat},
-    solana_client::{
+    nexis_cli_output::{parse_sign_only_reply_string, OutputFormat},
+    nexis_client::{
         blockhash_query::{self, BlockhashQuery},
         rpc_client::RpcClient,
     },
-    solana_faucet::faucet::run_local_faucet,
-    solana_sdk::{
+    nexis_faucet::faucet::run_local_faucet,
+    nexis_sdk::{
         account_utils::StateMut,
         commitment_config::CommitmentConfig,
         signature::{Keypair, NullSigner, Signer},
     },
-    solana_streamer::socket::SocketAddrSpace,
-    solana_test_validator::TestValidator,
-    solana_vote_program::vote_state::{VoteAuthorize, VoteState, VoteStateVersions},
+    nexis_streamer::socket::SocketAddrSpace,
+    nexis_test_validator::TestValidator,
+    nexis_vote_program::vote_state::{VoteAuthorize, VoteState, VoteStateVersions},
 };
 
 #[test]
@@ -72,7 +72,7 @@ fn test_vote_authorize_and_withdraw() {
         .max(1);
     check_balance!(expected_balance, &rpc_client, &vote_account_pubkey);
 
-    // Transfer in some more SOL
+    // Transfer in some more NZT
     config.signers = vec![&default_signer];
     config.command = CliCommand::Transfer {
         amount: SpendAmount::Some(10_000),
@@ -165,7 +165,7 @@ fn test_vote_authorize_and_withdraw() {
     assert_eq!(authorized_withdrawer, withdraw_authority.pubkey());
 
     // Withdraw from vote account
-    let destination_account = solana_sdk::pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
+    let destination_account = nexis_sdk::pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
     config.signers = vec![&default_signer, &withdraw_authority];
     config.command = CliCommand::WithdrawFromVoteAccount {
         vote_account_pubkey,
@@ -203,7 +203,7 @@ fn test_vote_authorize_and_withdraw() {
     process_command(&config).unwrap();
 
     // Close vote account
-    let destination_account = solana_sdk::pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
+    let destination_account = nexis_sdk::pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
     config.signers = vec![&default_signer, &withdraw_authority];
     config.command = CliCommand::CloseVoteAccount {
         vote_account_pubkey,
@@ -291,7 +291,7 @@ fn test_offline_vote_authorize_and_withdraw() {
         .max(1);
     check_balance!(expected_balance, &rpc_client, &vote_account_pubkey);
 
-    // Transfer in some more SOL
+    // Transfer in some more NZT
     config_payer.signers = vec![&default_signer];
     config_payer.command = CliCommand::Transfer {
         amount: SpendAmount::Some(10_000),
@@ -361,7 +361,7 @@ fn test_offline_vote_authorize_and_withdraw() {
     assert_eq!(authorized_withdrawer, withdraw_authority.pubkey());
 
     // Withdraw from vote account offline
-    let destination_account = solana_sdk::pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
+    let destination_account = nexis_sdk::pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
     let blockhash = rpc_client.get_latest_blockhash().unwrap();
     let fee_payer_null_signer = NullSigner::new(&default_signer.pubkey());
     config_offline.signers = vec![&fee_payer_null_signer, &withdraw_authority];
@@ -448,7 +448,7 @@ fn test_offline_vote_authorize_and_withdraw() {
 
     // Close vote account offline. Must use WithdrawFromVoteAccount and specify amount, since
     // CloseVoteAccount requires RpcClient
-    let destination_account = solana_sdk::pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
+    let destination_account = nexis_sdk::pubkey::new_rand(); // Send withdrawal to new account to make balance check easy
     config_offline.signers = vec![&fee_payer_null_signer, &withdraw_authority];
     config_offline.command = CliCommand::WithdrawFromVoteAccount {
         vote_account_pubkey,

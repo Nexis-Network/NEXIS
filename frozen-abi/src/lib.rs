@@ -3,8 +3,8 @@
 #![cfg_attr(RUSTC_NEEDS_PROC_MACRO_HYGIENE, feature(proc_macro_hygiene))]
 #![allow(clippy::integer_arithmetic)]
 
-// Allows macro expansion of `use ::solana_frozen_abi::*` to work within this crate
-extern crate self as solana_frozen_abi;
+// Allows macro expansion of `use ::nexis_frozen_abi::*` to work within this crate
+extern crate self as nexis_frozen_abi;
 
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
 pub mod abi_digester;
@@ -15,7 +15,7 @@ mod hash;
 
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
 #[macro_use]
-extern crate solana_frozen_abi_macro;
+extern crate nexis_frozen_abi_macro;
 
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
 #[cfg(test)]

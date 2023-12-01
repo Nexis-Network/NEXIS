@@ -1,10 +1,10 @@
 /// Module responsible for replicating AccountsDb data from its peer to its local AccountsDb in the replica-node
 use {
     log::*,
-    solana_replica_lib::accountsdb_repl_client::{
+    nexis_replica_lib::accountsdb_repl_client::{
         AccountsDbReplClientService, AccountsDbReplClientServiceConfig, ReplicaRpcError,
     },
-    solana_sdk::{clock::Slot, pubkey::Pubkey},
+    nexis_sdk::{clock::Slot, pubkey::Pubkey},
     std::{
         thread::{self, sleep, Builder, JoinHandle},
         time::Duration,

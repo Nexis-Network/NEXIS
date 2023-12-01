@@ -2,7 +2,7 @@
 #![cfg_attr(RUSTC_WITH_SPECIALIZATION, feature(specialization))]
 #![cfg_attr(RUSTC_NEEDS_PROC_MACRO_HYGIENE, feature(proc_macro_hygiene))]
 
-use solana_sdk::declare_id;
+use nexis_sdk::declare_id;
 
 pub mod instruction;
 pub mod processor;

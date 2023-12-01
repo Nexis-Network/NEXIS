@@ -16,7 +16,7 @@ where
 
 #[cfg(test)]
 pub mod tests {
-    use {super::*, solana_program::system_instruction::SystemInstruction};
+    use {super::*, nexis_program::system_instruction::SystemInstruction};
 
     #[test]
     fn test_limited_deserialize_advance_nonce_account() {

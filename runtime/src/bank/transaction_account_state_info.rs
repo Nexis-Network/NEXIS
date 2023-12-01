@@ -3,8 +3,8 @@ use {
         account_rent_state::{check_rent_state, RentState},
         bank::Bank,
     },
-    solana_program_runtime::invoke_context::TransactionAccountRefCell,
-    solana_sdk::{
+    nexis_program_runtime::invoke_context::TransactionAccountRefCell,
+    nexis_sdk::{
         account::ReadableAccount, feature_set, message::SanitizedMessage, native_loader,
         transaction::Result,
     },

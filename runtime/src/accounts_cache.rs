@@ -1,6 +1,6 @@
 use {
     dashmap::DashMap,
-    solana_sdk::{
+    nexis_sdk::{
         account::{AccountSharedData, ReadableAccount},
         clock::Slot,
         hash::Hash,

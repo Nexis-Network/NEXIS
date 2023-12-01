@@ -133,7 +133,7 @@ fn test_bpf_package(config: &Config, target_directory: &Path, package: &cargo_me
         config.generate_child_script_on_failure,
     );
 
-    // Pass --bpf-out-dir along to the solana-program-test crate
+    // Pass --bpf-out-dir along to thenexis-program-test crate
     env::set_var("BPF_OUT_DIR", bpf_out_dir);
 
     cargo_args.insert(0, "test");
@@ -226,7 +226,7 @@ fn main() {
                 .long("bpf-sdk")
                 .value_name("PATH")
                 .takes_value(true)
-                .help("Path to the Solana BPF SDK"),
+                .help("Path to the Nexis BPF SDK"),
         )
         .arg(
             Arg::with_name("features")

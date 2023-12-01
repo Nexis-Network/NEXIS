@@ -6,17 +6,17 @@ use {
     },
     log::info,
     serde_json::json,
-    solana_clap_utils::{
+    nexis_clap_utils::{
         input_parsers::pubkey_of,
         input_validators::{is_slot, is_valid_pubkey},
     },
-    solana_cli_output::{
+    nexis_cli_output::{
         display::println_transaction, CliBlock, CliTransaction, CliTransactionConfirmation,
         OutputFormat,
     },
-    solana_ledger::{blockstore::Blockstore, blockstore_db::AccessType},
-    solana_sdk::{clock::Slot, pubkey::Pubkey, signature::Signature},
-    solana_transaction_status::{
+    nexis_ledger::{blockstore::Blockstore, blockstore_db::AccessType},
+    nexis_sdk::{clock::Slot, pubkey::Pubkey, signature::Signature},
+    nexis_transaction_status::{
         ConfirmedBlockWithOptionalMetadata, EncodedTransaction, UiTransactionEncoding,
     },
     std::{
@@ -37,11 +37,11 @@ mod evm {
         push_not_confirmed: bool,
         force_reupload: bool,
     ) -> Result<Slot, Box<dyn std::error::Error>> {
-        let bigtable = solana_storage_bigtable::LedgerStorage::new(false, None, None)
+        let bigtable = nexis_storage_bigtable::LedgerStorage::new(false, None, None)
             .await
             .map_err(|err| format!("Failed to connect to storage: {:?}", err))?;
 
-        solana_ledger::bigtable_upload::upload_evm_confirmed_blocks(
+        nexis_ledger::bigtable_upload::upload_evm_confirmed_blocks(
             Arc::new(blockstore),
             bigtable,
             starting_block,
@@ -54,7 +54,7 @@ mod evm {
     }
 
     pub async fn first_available_block() -> Result<(), Box<dyn std::error::Error>> {
-        let bigtable = solana_storage_bigtable::LedgerStorage::new(true, None, None).await?;
+        let bigtable = nexis_storage_bigtable::LedgerStorage::new(true, None, None).await?;
         match bigtable.get_evm_first_available_block().await? {
             Some(block) => println!("{}", block),
             None => println!("No blocks available"),
@@ -64,7 +64,7 @@ mod evm {
     }
 
     pub async fn block(block_num: evm_state::BlockNum) -> Result<(), Box<dyn std::error::Error>> {
-        let bigtable = solana_storage_bigtable::LedgerStorage::new(false, None, None)
+        let bigtable = nexis_storage_bigtable::LedgerStorage::new(false, None, None)
             .await
             .map_err(|err| format!("Failed to connect to storage: {:?}", err))?;
 
@@ -78,7 +78,7 @@ mod evm {
         starting_slot: Slot,
         limit: usize,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let bigtable = solana_storage_bigtable::LedgerStorage::new(false, None, None)
+        let bigtable = nexis_storage_bigtable::LedgerStorage::new(false, None, None)
             .await
             .map_err(|err| format!("Failed to connect to storage: {:?}", err))?;
 
@@ -98,11 +98,11 @@ async fn upload(
     ending_slot: Option<Slot>,
     force_reupload: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let bigtable = solana_storage_bigtable::LedgerStorage::new(false, None, None)
+    let bigtable = nexis_storage_bigtable::LedgerStorage::new(false, None, None)
         .await
         .map_err(|err| format!("Failed to connect to storage: {:?}", err))?;
 
-    solana_ledger::bigtable_upload::upload_confirmed_blocks(
+    nexis_ledger::bigtable_upload::upload_confirmed_blocks(
         Arc::new(blockstore),
         bigtable,
         starting_slot,
@@ -115,15 +115,15 @@ async fn upload(
 
 async fn delete_slots(slots: Vec<Slot>, dry_run: bool) -> Result<(), Box<dyn std::error::Error>> {
     let read_only = dry_run;
-    let bigtable = solana_storage_bigtable::LedgerStorage::new(read_only, None, None)
+    let bigtable = nexis_storage_bigtable::LedgerStorage::new(read_only, None, None)
         .await
         .map_err(|err| format!("Failed to connect to storage: {:?}", err))?;
 
-    solana_ledger::bigtable_delete::delete_confirmed_blocks(bigtable, slots, dry_run).await
+    nexis_ledger::bigtable_delete::delete_confirmed_blocks(bigtable, slots, dry_run).await
 }
 
 async fn first_available_block() -> Result<(), Box<dyn std::error::Error>> {
-    let bigtable = solana_storage_bigtable::LedgerStorage::new(true, None, None).await?;
+    let bigtable = nexis_storage_bigtable::LedgerStorage::new(true, None, None).await?;
     match bigtable.get_first_available_block().await? {
         Some(block) => println!("{}", block),
         None => println!("No blocks available"),
@@ -133,7 +133,7 @@ async fn first_available_block() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 async fn block(slot: Slot, output_format: OutputFormat) -> Result<(), Box<dyn std::error::Error>> {
-    let bigtable = solana_storage_bigtable::LedgerStorage::new(false, None, None)
+    let bigtable = nexis_storage_bigtable::LedgerStorage::new(false, None, None)
         .await
         .map_err(|err| format!("Failed to connect to storage: {:?}", err))?;
 
@@ -148,7 +148,7 @@ async fn block(slot: Slot, output_format: OutputFormat) -> Result<(), Box<dyn st
 }
 
 async fn blocks(starting_slot: Slot, limit: usize) -> Result<(), Box<dyn std::error::Error>> {
-    let bigtable = solana_storage_bigtable::LedgerStorage::new(false, None, None)
+    let bigtable = nexis_storage_bigtable::LedgerStorage::new(false, None, None)
         .await
         .map_err(|err| format!("Failed to connect to storage: {:?}", err))?;
 
@@ -166,7 +166,7 @@ async fn compare_blocks(
 ) -> Result<(), Box<dyn std::error::Error>> {
     assert!(!credential_path.is_empty());
 
-    let owned_bigtable = solana_storage_bigtable::LedgerStorage::new(false, None, None)
+    let owned_bigtable = nexis_storage_bigtable::LedgerStorage::new(false, None, None)
         .await
         .map_err(|err| format!("failed to connect to owned bigtable: {:?}", err))?;
     let owned_bigtable_slots = owned_bigtable
@@ -177,7 +177,7 @@ async fn compare_blocks(
         owned_bigtable_slots.len()
     );
     let reference_bigtable =
-        solana_storage_bigtable::LedgerStorage::new(false, None, Some(credential_path))
+        nexis_storage_bigtable::LedgerStorage::new(false, None, Some(credential_path))
             .await
             .map_err(|err| format!("failed to connect to reference bigtable: {:?}", err))?;
 
@@ -207,7 +207,7 @@ async fn confirm(
     verbose: bool,
     output_format: OutputFormat,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let bigtable = solana_storage_bigtable::LedgerStorage::new(false, None, None)
+    let bigtable = nexis_storage_bigtable::LedgerStorage::new(false, None, None)
         .await
         .map_err(|err| format!("Failed to connect to storage: {:?}", err))?;
 
@@ -256,7 +256,7 @@ pub async fn transaction_history(
     show_transactions: bool,
     query_chunk_size: usize,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let bigtable = solana_storage_bigtable::LedgerStorage::new(true, None, None).await?;
+    let bigtable = nexis_storage_bigtable::LedgerStorage::new(true, None, None).await?;
 
     let mut loaded_block: Option<(Slot, ConfirmedBlockWithOptionalMetadata)> = None;
     while limit > 0 {

@@ -1,3 +1,12 @@
+/// This is the main function of the banking-bench program.
+/// It performs various benchmarking operations on a banking system.
+/// The function initializes the necessary components, processes transactions,
+/// and measures the execution time of different operations.
+/// It uses multiple threads and parallel processing to optimize performance.
+/// The benchmarking results are logged and can be used for performance analysis.
+fn main() {
+    // ... rest of the code ...
+}
 #![allow(clippy::integer_arithmetic)]
 use {
     clap::{crate_description, crate_name, value_t, App, Arg},
@@ -5,29 +14,29 @@ use {
     log::*,
     rand::{thread_rng, Rng},
     rayon::prelude::*,
-    solana_core::banking_stage::BankingStage,
-    solana_gossip::cluster_info::{ClusterInfo, Node},
-    solana_ledger::{
+    nexis_core::banking_stage::BankingStage,
+    nexis_gossip::cluster_info::{ClusterInfo, Node},
+    nexis_ledger::{
         blockstore::Blockstore,
         genesis_utils::{create_genesis_config, GenesisConfigInfo},
         get_tmp_ledger_path,
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_measure::measure::Measure,
-    solana_perf::packet::to_packet_batches,
-    solana_poh::poh_recorder::{create_test_recorder, PohRecorder, WorkingBankEntry},
-    solana_runtime::{
+    nexis_measure::measure::Measure,
+    nexis_perf::packet::to_packet_batches,
+    nexis_poh::poh_recorder::{create_test_recorder, PohRecorder, WorkingBankEntry},
+    nexis_runtime::{
         accounts_background_service::AbsRequestSender, bank::Bank, bank_forks::BankForks,
         cost_model::CostModel,
     },
-    solana_sdk::{
+    nexis_sdk::{
         hash::Hash,
         signature::{Keypair, Signature},
         system_transaction,
         timing::{duration_as_us, timestamp},
         transaction::Transaction,
     },
-    solana_streamer::socket::SocketAddrSpace,
+    nexis_streamer::socket::SocketAddrSpace,
     std::{
         sync::{atomic::Ordering, mpsc::Receiver, Arc, Mutex, RwLock},
         thread::sleep,
@@ -71,7 +80,7 @@ fn make_accounts_txs(
     hash: Hash,
     same_payer: bool,
 ) -> Vec<Transaction> {
-    let to_pubkey = solana_sdk::pubkey::new_rand();
+    let to_pubkey = nexis_sdk::pubkey::new_rand();
     let payer_key = Keypair::new();
     let dummy = system_transaction::transfer(&payer_key, &to_pubkey, 1, hash);
     (0..total_num_transactions)
@@ -80,9 +89,9 @@ fn make_accounts_txs(
             let mut new = dummy.clone();
             let sig: Vec<u8> = (0..64).map(|_| thread_rng().gen::<u8>()).collect();
             if !same_payer {
-                new.message.account_keys[0] = solana_sdk::pubkey::new_rand();
+                new.message.account_keys[0] = nexis_sdk::pubkey::new_rand();
             }
-            new.message.account_keys[1] = solana_sdk::pubkey::new_rand();
+            new.message.account_keys[1] = nexis_sdk::pubkey::new_rand();
             new.signatures = vec![Signature::new(&sig[0..64])];
             new
         })
@@ -107,11 +116,11 @@ fn bytes_as_usize(bytes: &[u8]) -> usize {
 
 #[allow(clippy::cognitive_complexity)]
 fn main() {
-    solana_logger::setup();
+    nexis_logger::setup();
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .arg(
             Arg::with_name("num_chunks")
                 .long("num-chunks")
@@ -256,7 +265,7 @@ fn main() {
         let base_tx_count = bank.transaction_count();
         let mut txs_processed = 0;
         let mut root = 1;
-        let collector = solana_sdk::pubkey::new_rand();
+        let collector = nexis_sdk::pubkey::new_rand();
         let config = Config {
             packets_per_batch: packets_per_chunk,
             chunk_len,

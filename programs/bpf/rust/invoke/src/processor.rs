@@ -4,8 +4,8 @@
 #![allow(unreachable_code)]
 
 use crate::instructions::*;
-use solana_bpf_rust_invoked::instructions::*;
-use solana_program::{
+use nexis_bpf_rust_invoked::instructions::*;
+use nexis_program::{
     account_info::AccountInfo,
     entrypoint,
     entrypoint::{ProgramResult, MAX_PERMITTED_DATA_INCREASE},
@@ -69,7 +69,7 @@ fn process_instruction(
                 let from_lamports = accounts[FROM_INDEX].lamports();
                 let to_lamports = accounts[DERIVED_KEY1_INDEX].lamports();
                 assert_eq!(accounts[DERIVED_KEY1_INDEX].data_len(), 0);
-                assert!(solana_program::system_program::check_id(
+                assert!(nexis_program::system_program::check_id(
                     accounts[DERIVED_KEY1_INDEX].owner
                 ));
 

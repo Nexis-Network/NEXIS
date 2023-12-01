@@ -3,26 +3,26 @@
 
 extern crate test;
 #[macro_use]
-extern crate solana_bpf_loader_program;
+extern crate nexis_bpf_loader_program;
 
 use byteorder::{ByteOrder, LittleEndian, WriteBytesExt};
-use solana_bpf_loader_program::{
+use nexis_bpf_loader_program::{
     create_vm, serialization::serialize_parameters, syscalls::register_syscalls, BpfError,
     ThisInstructionMeter,
 };
-use solana_measure::measure::Measure;
-use solana_program_runtime::invoke_context::with_mock_invoke_context;
-use solana_rbpf::{
+use nexis_measure::measure::Measure;
+use nexis_program_runtime::invoke_context::with_mock_invoke_context;
+use nexis_rbpf::{
     elf::Executable,
     vm::{Config, InstructionMeter, SyscallRegistry},
 };
-use solana_runtime::{
+use nexis_runtime::{
     bank::Bank,
     bank_client::BankClient,
     genesis_utils::{create_genesis_config, GenesisConfigInfo},
     loader_utils::load_program,
 };
-use solana_sdk::{
+use nexis_sdk::{
     bpf_loader,
     client::SyncClient,
     entrypoint::SUCCESS,
@@ -170,7 +170,7 @@ fn bench_program_execute_noop(bencher: &mut Bencher) {
         ..
     } = create_genesis_config(50);
     let mut bank = Bank::new_for_benches(&genesis_config);
-    let (name, id, entrypoint) = solana_bpf_loader_program!();
+    let (name, id, entrypoint) = nexis_bpf_loader_program!();
     bank.add_builtin(&name, &id, entrypoint);
     let bank = Arc::new(bank);
     let bank_client = BankClient::new_shared(&bank);

@@ -2,12 +2,12 @@
 
 use {
     rand::{thread_rng, Rng},
-    solana_ledger::{
+    nexis_ledger::{
         blockstore::{Blockstore, PurgeType},
         blockstore_db::Result as BlockstoreResult,
     },
-    solana_measure::measure::Measure,
-    solana_sdk::clock::{Slot, DEFAULT_TICKS_PER_SLOT, TICKS_PER_DAY},
+    nexis_measure::measure::Measure,
+    nexis_sdk::clock::{Slot, DEFAULT_TICKS_PER_SLOT, TICKS_PER_DAY},
     std::{
         string::ToString,
         sync::{
@@ -227,7 +227,7 @@ impl LedgerCleanupService {
             let first_purged_evm_block_cloned = first_purged_evm_block.clone();
             let last_purged_evm_block_cloned = last_purged_evm_block.clone();
             let _t_purge = Builder::new()
-                .name("solana-ledger-purge".to_string())
+                .name("nexis-ledger-purge".to_string())
                 .spawn(move || {
                     let mut slot_update_time = Measure::start("slot_update");
                     *blockstore.lowest_cleanup_slot.write() = lowest_cleanup_slot;
@@ -352,13 +352,13 @@ impl LedgerCleanupService {
 mod tests {
     use {
         super::*,
-        solana_ledger::{blockstore::make_many_slot_entries, get_tmp_ledger_path},
+        nexis_ledger::{blockstore::make_many_slot_entries, get_tmp_ledger_path},
         std::sync::mpsc::channel,
     };
 
     #[test]
     fn test_cleanup1() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let blockstore_path = get_tmp_ledger_path!();
         let blockstore = Blockstore::open(&blockstore_path).unwrap();
         let (shreds, _) = make_many_slot_entries(0, 50, 5);
@@ -412,7 +412,7 @@ mod tests {
 
     #[test]
     fn test_cleanup_speed() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let blockstore_path = get_tmp_ledger_path!();
         let mut blockstore = Blockstore::open(&blockstore_path).unwrap();
         blockstore.set_no_compaction(true);

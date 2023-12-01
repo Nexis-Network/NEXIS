@@ -1,6 +1,6 @@
 use {
     log::*,
-    solana_sdk::clock::Slot,
+    nexis_sdk::clock::Slot,
     std::{net::SocketAddr, sync::Arc},
     tokio::runtime::Runtime,
     tonic::{self, transport::Endpoint, Request},

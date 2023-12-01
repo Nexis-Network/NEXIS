@@ -47,14 +47,14 @@ $ git pull --rebase upstream master
 
 If there are no functional changes, PRs can be very large and that's no
 problem. If, however, your changes are making meaningful changes or additions,
-then about 1,000 lines of changes is about the most you should ask a Solana
+then about 1,000 lines of changes is about the most you should ask a Nexis
 maintainer to review.
 
 ### Should I send small PRs as I develop large, new components?
 
 Add only code to the codebase that is ready to be deployed. If you are building
 a large library, consider developing it in a separate git repository. When it
-is ready to be integrated, the Solana maintainers will work with you to decide
+is ready to be integrated, the Nexis maintainers will work with you to decide
 on a path forward. Smaller libraries may be copied in whereas very large ones
 may be pulled in with a package manager.
 
@@ -178,7 +178,7 @@ when you feel your PR is ready for another pass.
 ## Draft Pull Requests
 
 If you want early feedback on your PR, use GitHub's "Draft Pull Request"
-mechanism. Draft PRs are a convenient way to collaborate with the Solana
+mechanism. Draft PRs are a convenient way to collaborate with the Nexis
 maintainers without triggering notifications as you make changes. When you feel
 your PR is ready for a broader audience, you can transition your draft PR to a
 standard PR with the click of a button.

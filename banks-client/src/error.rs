@@ -1,10 +1,3 @@
-use {
-    solana_sdk::{transaction::TransactionError, transport::TransportError},
-    std::io,
-    tarpc::client::RpcError,
-    thiserror::Error,
-};
-
 /// Errors from BanksClient
 #[derive(Error, Debug)]
 pub enum BanksClientError {
@@ -29,6 +22,7 @@ pub enum BanksClientError {
 }
 
 impl BanksClientError {
+    /// Unwraps the error and returns the underlying `TransactionError`.
     pub fn unwrap(&self) -> TransactionError {
         match self {
             BanksClientError::TransactionError(err)
@@ -39,6 +33,7 @@ impl BanksClientError {
 }
 
 impl From<BanksClientError> for io::Error {
+    /// Converts the `BanksClientError` into an `io::Error`.
     fn from(err: BanksClientError) -> Self {
         match err {
             BanksClientError::ClientError(err) => Self::new(io::ErrorKind::Other, err.to_string()),
@@ -55,6 +50,7 @@ impl From<BanksClientError> for io::Error {
 }
 
 impl From<BanksClientError> for TransportError {
+    /// Converts the `BanksClientError` into a `TransportError`.
     fn from(err: BanksClientError) -> Self {
         match err {
             BanksClientError::ClientError(err) => {

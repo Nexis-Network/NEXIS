@@ -1,3 +1,17 @@
+/// This module contains functions and types related to benchmarking TPS (Transactions Per Second).
+/// It includes functions for funding accounts, creating transactions, and measuring TPS.
+/// The main entry point is the `fund` function, which funds a set of accounts with a specified amount of lamports.
+/// The `create_sampler_thread` function creates a separate thread for sampling TPS at regular intervals.
+/// The `wait_for_target_slots_per_epoch` function waits until the target number of slots per epoch is reached.
+/// The `get_recent_blockhash` function retrieves the most recent blockhash from the client.
+/// The `poll_blockhash` function continuously polls for updates to the blockhash.
+/// The `verify_funding_transfer` function verifies the success of a funding transfer.
+/// The `FundingTransactions` trait defines methods for funding, creating, signing, sending, and verifying transactions.
+/// The `BenchTpsError` enum represents possible errors that can occur during TPS benchmarking.
+/// The `Result` type is a specialized `std::result::Result` type with the `BenchTpsError` as the error variant.
+/// The `SharedTransactions` type is an alias for an `Arc<RwLock<VecDeque<Vec<(Transaction, u64)>>>>`.
+/// The `metrics_submit_lamport_balance` function submits the lamport balance as a metric.
+/// The `get_new_latest_blockhash` function retrieves a new latest blockhash from the client.
 use log::*;
 use rayon::prelude::*;
 use std::{
@@ -12,12 +26,12 @@ use std::{
     time::{Duration, Instant},
 };
 
-use solana_client::perf_utils::{sample_txs, SampleStats};
-use solana_core::gen_keys::GenKeys;
-use solana_faucet::faucet::request_airdrop_transaction;
-use solana_measure::measure::Measure;
-use solana_metrics::{self, datapoint_info};
-use solana_sdk::{
+use nexis_client::perf_utils::{sample_txs, SampleStats};
+use nexis_core::gen_keys::GenKeys;
+use nexis_faucet::faucet::request_airdrop_transaction;
+use nexis_measure::measure::Measure;
+use nexis_metrics::{self, datapoint_info};
+use nexis_sdk::{
     client::Client,
     clock::{DEFAULT_MS_PER_SLOT, DEFAULT_TICKS_PER_SECOND, DEFAULT_TICKS_PER_SLOT, MAX_PROCESSING_AGE},
     commitment_config::CommitmentConfig,
@@ -100,7 +114,7 @@ where
     let maxes = maxes.clone();
     let client = client.clone();
     Builder::new()
-        .name("solana-client-sample".to_string())
+        .name("nexis-client-sample".to_string())
         .spawn(move || {
             sample_txs(&exit_signal, &maxes, sample_period, &client);
         })
@@ -555,7 +569,7 @@ pub fn generate_and_fund_keypairs<T: 'static + Client + Send + Sync>(
     let (mut keypairs, extra) = generate_keypairs(funding_key, keypair_count as u64);
     info!("Get lamports...");
 
-    // Sample the first keypair, to prevent lamport loss on repeated solana-bench-tps executions
+    // Sample the first keypair, to prevent lamport loss on repeatednexis-bench-tps executions
     let first_key = keypairs[0].pubkey();
     let first_keypair_balance = client.get_balance(&first_key).unwrap_or(0);
 
@@ -615,12 +629,12 @@ mod tests {
     use super::*;
     use crate::bench_evm::{do_bench_tps, Peer};
     use crate::cli::Config;
-    use solana_evm_loader_program::scope::evm::FromKey;
-    use solana_runtime::bank::Bank;
-    use solana_runtime::bank_client::BankClient;
-    use solana_sdk::client::SyncClient;
-    use solana_sdk::fee_calculator::FeeRateGovernor;
-    use solana_sdk::genesis_config::create_genesis_config;
+    use nexis_evm_loader_program::scope::evm::FromKey;
+    use nexis_runtime::bank::Bank;
+    use nexis_runtime::bank_client::BankClient;
+    use nexis_sdk::client::SyncClient;
+    use nexis_sdk::fee_calculator::FeeRateGovernor;
+    use nexis_sdk::genesis_config::create_genesis_config;
 
     #[test]
     #[ignore]
@@ -675,7 +689,7 @@ mod tests {
         for (_kp, secret_key) in &keypairs {
             assert_eq!(
                 client.get_evm_balance(&secret_key.to_address()).unwrap(),
-                solana_evm_loader_program::scope::evm::lamports_to_gwei(lamports)
+                nexis_evm_loader_program::scope::evm::lamports_to_gwei(lamports)
             );
         }
     }

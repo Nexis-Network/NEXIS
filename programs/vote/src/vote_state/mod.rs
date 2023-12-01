@@ -5,8 +5,8 @@ use {
     bincode::{deserialize, serialize_into, serialized_size, ErrorKind},
     log::*,
     serde_derive::{Deserialize, Serialize},
-    solana_metrics::datapoint_debug,
-    solana_sdk::{
+    nexis_metrics::datapoint_debug,
+    nexis_sdk::{
         account::{AccountSharedData, ReadableAccount, WritableAccount},
         account_utils::State,
         clock::{Epoch, Slot, UnixTimestamp},
@@ -289,7 +289,7 @@ impl VoteState {
     fn get_max_sized_vote_state() -> VoteState {
         let mut authorized_voters = AuthorizedVoters::default();
         for i in 0..=MAX_LEADER_SCHEDULE_EPOCH_OFFSET {
-            authorized_voters.insert(i, solana_sdk::pubkey::new_rand());
+            authorized_voters.insert(i, nexis_sdk::pubkey::new_rand());
         }
 
         VoteState {
@@ -462,9 +462,9 @@ impl VoteState {
                 if vote.slot <= new_root
                 &&
                 // This check is necessary because
-                // https://github.com/ryoqun/solana/blob/df55bfb46af039cbc597cd60042d49b9d90b5961/core/src/consensus.rs#L120
+                // https://github.com/ryoqun/nexis/blob/df55bfb46af039cbc597cd60042d49b9d90b5961/core/src/consensus.rs#L120
                 // always sets a root for even empty towers, which is then hard unwrapped here
-                // https://github.com/ryoqun/solana/blob/df55bfb46af039cbc597cd60042d49b9d90b5961/core/src/consensus.rs#L776
+                // https://github.com/ryoqun/nexis/blob/df55bfb46af039cbc597cd60042d49b9d90b5961/core/src/consensus.rs#L776
                 new_root != Slot::default()
                 {
                     return Err(VoteError::SlotSmallerThanRoot);
@@ -1051,7 +1051,7 @@ mod tests {
     use {
         super::*,
         crate::vote_state,
-        solana_sdk::{
+        nexis_sdk::{
             account::AccountSharedData,
             account_utils::StateMut,
             hash::hash,
@@ -1066,7 +1066,7 @@ mod tests {
         pub fn new_for_test(auth_pubkey: &Pubkey) -> Self {
             Self::new(
                 &VoteInit {
-                    node_pubkey: solana_sdk::pubkey::new_rand(),
+                    node_pubkey: nexis_sdk::pubkey::new_rand(),
                     authorized_voter: *auth_pubkey,
                     authorized_withdrawer: *auth_pubkey,
                     commission: 0,
@@ -1078,11 +1078,11 @@ mod tests {
 
     #[test]
     fn test_initialize_vote_account() {
-        let vote_account_pubkey = solana_sdk::pubkey::new_rand();
+        let vote_account_pubkey = nexis_sdk::pubkey::new_rand();
         let vote_account = AccountSharedData::new_ref(100, VoteState::size_of(), &id());
         let vote_account = KeyedAccount::new(&vote_account_pubkey, false, &vote_account);
 
-        let node_pubkey = solana_sdk::pubkey::new_rand();
+        let node_pubkey = nexis_sdk::pubkey::new_rand();
         let node_account = RefCell::new(AccountSharedData::default());
         let keyed_accounts = &[];
         let signers: HashSet<Pubkey> = get_signers(keyed_accounts);
@@ -1153,12 +1153,12 @@ mod tests {
     fn create_test_account() -> (Pubkey, RefCell<AccountSharedData>) {
         let rent = Rent::default();
         let balance = VoteState::get_rent_exempt_reserve(&rent);
-        let vote_pubkey = solana_sdk::pubkey::new_rand();
+        let vote_pubkey = nexis_sdk::pubkey::new_rand();
         (
             vote_pubkey,
             RefCell::new(vote_state::create_account(
                 &vote_pubkey,
-                &solana_sdk::pubkey::new_rand(),
+                &nexis_sdk::pubkey::new_rand(),
                 0,
                 balance,
             )),
@@ -1167,16 +1167,16 @@ mod tests {
 
     fn create_test_account_with_authorized() -> (Pubkey, Pubkey, Pubkey, RefCell<AccountSharedData>)
     {
-        let vote_pubkey = solana_sdk::pubkey::new_rand();
-        let authorized_voter = solana_sdk::pubkey::new_rand();
-        let authorized_withdrawer = solana_sdk::pubkey::new_rand();
+        let vote_pubkey = nexis_sdk::pubkey::new_rand();
+        let authorized_voter = nexis_sdk::pubkey::new_rand();
+        let authorized_withdrawer = nexis_sdk::pubkey::new_rand();
 
         (
             vote_pubkey,
             authorized_voter,
             authorized_withdrawer,
             RefCell::new(vote_state::create_account_with_authorized(
-                &solana_sdk::pubkey::new_rand(),
+                &nexis_sdk::pubkey::new_rand(),
                 &authorized_voter,
                 &authorized_withdrawer,
                 0,
@@ -1338,7 +1338,7 @@ mod tests {
         let (vote_pubkey, _authorized_voter, authorized_withdrawer, vote_account) =
             create_test_account_with_authorized();
 
-        let node_pubkey = solana_sdk::pubkey::new_rand();
+        let node_pubkey = nexis_sdk::pubkey::new_rand();
         let node_account = RefCell::new(AccountSharedData::default());
         let authorized_withdrawer_account = RefCell::new(AccountSharedData::default());
 
@@ -1466,7 +1466,7 @@ mod tests {
         // another voter, unsigned
         let keyed_accounts = &[KeyedAccount::new(&vote_pubkey, false, &vote_account)];
         let signers: HashSet<Pubkey> = get_signers(keyed_accounts);
-        let authorized_voter_pubkey = solana_sdk::pubkey::new_rand();
+        let authorized_voter_pubkey = nexis_sdk::pubkey::new_rand();
         let res = authorize(
             &keyed_accounts[0],
             &authorized_voter_pubkey,
@@ -1540,7 +1540,7 @@ mod tests {
         // another voter
         let keyed_accounts = &[KeyedAccount::new(&vote_pubkey, true, &vote_account)];
         let signers: HashSet<Pubkey> = get_signers(keyed_accounts);
-        let authorized_withdrawer_pubkey = solana_sdk::pubkey::new_rand();
+        let authorized_withdrawer_pubkey = nexis_sdk::pubkey::new_rand();
         let res = authorize(
             &keyed_accounts[0],
             &authorized_withdrawer_pubkey,
@@ -1620,7 +1620,7 @@ mod tests {
             KeyedAccount::new(&vote_pubkey, false, &vote_account),
             KeyedAccount::new(&authorized_withdrawer_pubkey, true, &withdrawer_account),
         ];
-        let another_authorized_voter_pubkey = solana_sdk::pubkey::new_rand();
+        let another_authorized_voter_pubkey = nexis_sdk::pubkey::new_rand();
         let signers: HashSet<Pubkey> = get_signers(keyed_accounts);
 
         for (feature_set, expected_res) in [
@@ -1650,7 +1650,7 @@ mod tests {
 
     #[test]
     fn test_vote_without_initialization() {
-        let vote_pubkey = solana_sdk::pubkey::new_rand();
+        let vote_pubkey = nexis_sdk::pubkey::new_rand();
         let vote_account = RefCell::new(AccountSharedData::new(100, VoteState::size_of(), &id()));
 
         let res = simulate_process_vote_unchecked(
@@ -1696,7 +1696,7 @@ mod tests {
 
     #[test]
     fn test_vote_double_lockout_after_expiration() {
-        let voter_pubkey = solana_sdk::pubkey::new_rand();
+        let voter_pubkey = nexis_sdk::pubkey::new_rand();
         let mut vote_state = VoteState::new_for_test(&voter_pubkey);
 
         for i in 0..3 {
@@ -1724,7 +1724,7 @@ mod tests {
 
     #[test]
     fn test_expire_multiple_votes() {
-        let voter_pubkey = solana_sdk::pubkey::new_rand();
+        let voter_pubkey = nexis_sdk::pubkey::new_rand();
         let mut vote_state = VoteState::new_for_test(&voter_pubkey);
 
         for i in 0..3 {
@@ -1755,7 +1755,7 @@ mod tests {
 
     #[test]
     fn test_vote_credits() {
-        let voter_pubkey = solana_sdk::pubkey::new_rand();
+        let voter_pubkey = nexis_sdk::pubkey::new_rand();
         let mut vote_state = VoteState::new_for_test(&voter_pubkey);
 
         for i in 0..MAX_LOCKOUT_HISTORY {
@@ -1774,7 +1774,7 @@ mod tests {
 
     #[test]
     fn test_duplicate_vote() {
-        let voter_pubkey = solana_sdk::pubkey::new_rand();
+        let voter_pubkey = nexis_sdk::pubkey::new_rand();
         let mut vote_state = VoteState::new_for_test(&voter_pubkey);
         vote_state.process_slot_vote_unchecked(0);
         vote_state.process_slot_vote_unchecked(1);
@@ -1786,7 +1786,7 @@ mod tests {
 
     #[test]
     fn test_nth_recent_vote() {
-        let voter_pubkey = solana_sdk::pubkey::new_rand();
+        let voter_pubkey = nexis_sdk::pubkey::new_rand();
         let mut vote_state = VoteState::new_for_test(&voter_pubkey);
         for i in 0..MAX_LOCKOUT_HISTORY {
             vote_state.process_slot_vote_unchecked(i as u64);
@@ -1817,9 +1817,9 @@ mod tests {
     /// check that two accounts with different data can be brought to the same state with one vote submission
     #[test]
     fn test_process_missed_votes() {
-        let account_a = solana_sdk::pubkey::new_rand();
+        let account_a = nexis_sdk::pubkey::new_rand();
         let mut vote_state_a = VoteState::new_for_test(&account_a);
-        let account_b = solana_sdk::pubkey::new_rand();
+        let account_b = nexis_sdk::pubkey::new_rand();
         let mut vote_state_b = VoteState::new_for_test(&account_b);
 
         // process some votes on account a
@@ -1995,7 +1995,7 @@ mod tests {
             &keyed_accounts[0],
             0,
             &KeyedAccount::new(
-                &solana_sdk::pubkey::new_rand(),
+                &nexis_sdk::pubkey::new_rand(),
                 false,
                 &RefCell::new(AccountSharedData::default()),
             ),
@@ -2013,7 +2013,7 @@ mod tests {
             &keyed_accounts[0],
             lamports + 1,
             &KeyedAccount::new(
-                &solana_sdk::pubkey::new_rand(),
+                &nexis_sdk::pubkey::new_rand(),
                 false,
                 &RefCell::new(AccountSharedData::default()),
             ),
@@ -2044,7 +2044,7 @@ mod tests {
                 &keyed_accounts[0],
                 lamports - minimum_balance + 1,
                 &KeyedAccount::new(
-                    &solana_sdk::pubkey::new_rand(),
+                    &nexis_sdk::pubkey::new_rand(),
                     false,
                     &RefCell::new(AccountSharedData::default()),
                 ),
@@ -2076,7 +2076,7 @@ mod tests {
                 &keyed_accounts[0],
                 lamports - minimum_balance + 1,
                 &KeyedAccount::new(
-                    &solana_sdk::pubkey::new_rand(),
+                    &nexis_sdk::pubkey::new_rand(),
                     false,
                     &RefCell::new(AccountSharedData::default()),
                 ),
@@ -2108,7 +2108,7 @@ mod tests {
                 &keyed_accounts[0],
                 lamports - minimum_balance + 1,
                 &KeyedAccount::new(
-                    &solana_sdk::pubkey::new_rand(),
+                    &nexis_sdk::pubkey::new_rand(),
                     false,
                     &RefCell::new(AccountSharedData::default()),
                 ),
@@ -2140,7 +2140,7 @@ mod tests {
                 &keyed_accounts[0],
                 lamports - minimum_balance + 1,
                 &KeyedAccount::new(
-                    &solana_sdk::pubkey::new_rand(),
+                    &nexis_sdk::pubkey::new_rand(),
                     false,
                     &RefCell::new(AccountSharedData::default()),
                 ),
@@ -2172,7 +2172,7 @@ mod tests {
                 &keyed_accounts[0],
                 lamports - minimum_balance + 1,
                 &KeyedAccount::new(
-                    &solana_sdk::pubkey::new_rand(),
+                    &nexis_sdk::pubkey::new_rand(),
                     false,
                     &RefCell::new(AccountSharedData::default()),
                 ),
@@ -2204,7 +2204,7 @@ mod tests {
                 &keyed_accounts[0],
                 lamports - minimum_balance + 1,
                 &KeyedAccount::new(
-                    &solana_sdk::pubkey::new_rand(),
+                    &nexis_sdk::pubkey::new_rand(),
                     false,
                     &RefCell::new(AccountSharedData::default()),
                 ),
@@ -2236,7 +2236,7 @@ mod tests {
                 &keyed_accounts[0],
                 lamports - minimum_balance + 1,
                 &KeyedAccount::new(
-                    &solana_sdk::pubkey::new_rand(),
+                    &nexis_sdk::pubkey::new_rand(),
                     false,
                     &RefCell::new(AccountSharedData::default()),
                 ),
@@ -2268,7 +2268,7 @@ mod tests {
                 &keyed_accounts[0],
                 lamports - minimum_balance + 1,
                 &KeyedAccount::new(
-                    &solana_sdk::pubkey::new_rand(),
+                    &nexis_sdk::pubkey::new_rand(),
                     false,
                     &RefCell::new(AccountSharedData::default()),
                 ),
@@ -2295,7 +2295,7 @@ mod tests {
             let res = withdraw(
                 &keyed_accounts[0],
                 withdraw_lamports,
-                &KeyedAccount::new(&solana_sdk::pubkey::new_rand(), false, &to_account),
+                &KeyedAccount::new(&nexis_sdk::pubkey::new_rand(), false, &to_account),
                 &signers,
                 Some(&rent_sysvar),
                 Some(&Clock::default()),
@@ -2323,7 +2323,7 @@ mod tests {
                     let res = withdraw(
                         &keyed_accounts[0],
                         lamports,
-                        &KeyedAccount::new(&solana_sdk::pubkey::new_rand(), false, &to_account),
+                        &KeyedAccount::new(&nexis_sdk::pubkey::new_rand(), false, &to_account),
                         &signers,
                         rent_sysvar,
                         None,
@@ -2353,7 +2353,7 @@ mod tests {
                 let res = withdraw(
                     &keyed_accounts[0],
                     lamports,
-                    &KeyedAccount::new(&solana_sdk::pubkey::new_rand(), false, &to_account),
+                    &KeyedAccount::new(&nexis_sdk::pubkey::new_rand(), false, &to_account),
                     &signers,
                     rent_sysvar,
                     Some(clock_epoch_3),
@@ -2382,7 +2382,7 @@ mod tests {
                 let res = withdraw(
                     &keyed_accounts[0],
                     lamports,
-                    &KeyedAccount::new(&solana_sdk::pubkey::new_rand(), false, &to_account),
+                    &KeyedAccount::new(&nexis_sdk::pubkey::new_rand(), false, &to_account),
                     &signers,
                     rent_sysvar,
                     Some(clock_epoch_3),
@@ -2397,7 +2397,7 @@ mod tests {
         }
 
         // authorize authorized_withdrawer
-        let authorized_withdrawer_pubkey = solana_sdk::pubkey::new_rand();
+        let authorized_withdrawer_pubkey = nexis_sdk::pubkey::new_rand();
         let keyed_accounts = &[KeyedAccount::new(&vote_pubkey, true, &vote_account)];
         let signers: HashSet<Pubkey> = get_signers(keyed_accounts);
         let res = authorize(
@@ -2541,7 +2541,7 @@ mod tests {
 
     #[test]
     fn test_get_and_update_authorized_voter() {
-        let original_voter = solana_sdk::pubkey::new_rand();
+        let original_voter = nexis_sdk::pubkey::new_rand();
         let mut vote_state = VoteState::new(
             &VoteInit {
                 node_pubkey: original_voter,
@@ -2577,7 +2577,7 @@ mod tests {
         }
 
         // Set an authorized voter change at slot 7
-        let new_authorized_voter = solana_sdk::pubkey::new_rand();
+        let new_authorized_voter = nexis_sdk::pubkey::new_rand();
         vote_state
             .set_new_authorized_voter(&new_authorized_voter, 5, 7, |_| Ok(()))
             .unwrap();
@@ -2601,7 +2601,7 @@ mod tests {
 
     #[test]
     fn test_set_new_authorized_voter() {
-        let original_voter = solana_sdk::pubkey::new_rand();
+        let original_voter = nexis_sdk::pubkey::new_rand();
         let epoch_offset = 15;
         let mut vote_state = VoteState::new(
             &VoteInit {
@@ -2615,7 +2615,7 @@ mod tests {
 
         assert!(vote_state.prior_voters.last().is_none());
 
-        let new_voter = solana_sdk::pubkey::new_rand();
+        let new_voter = nexis_sdk::pubkey::new_rand();
         // Set a new authorized voter
         vote_state
             .set_new_authorized_voter(&new_voter, 0, epoch_offset, |_| Ok(()))
@@ -2639,7 +2639,7 @@ mod tests {
             .unwrap();
 
         // Set a third and fourth authorized voter
-        let new_voter2 = solana_sdk::pubkey::new_rand();
+        let new_voter2 = nexis_sdk::pubkey::new_rand();
         vote_state
             .set_new_authorized_voter(&new_voter2, 3, 3 + epoch_offset, |_| Ok(()))
             .unwrap();
@@ -2649,7 +2649,7 @@ mod tests {
             Some(&(new_voter, epoch_offset, 3 + epoch_offset))
         );
 
-        let new_voter3 = solana_sdk::pubkey::new_rand();
+        let new_voter3 = nexis_sdk::pubkey::new_rand();
         vote_state
             .set_new_authorized_voter(&new_voter3, 6, 6 + epoch_offset, |_| Ok(()))
             .unwrap();
@@ -2700,7 +2700,7 @@ mod tests {
 
     #[test]
     fn test_authorized_voter_is_locked_within_epoch() {
-        let original_voter = solana_sdk::pubkey::new_rand();
+        let original_voter = nexis_sdk::pubkey::new_rand();
         let mut vote_state = VoteState::new(
             &VoteInit {
                 node_pubkey: original_voter,
@@ -2714,7 +2714,7 @@ mod tests {
         // Test that it's not possible to set a new authorized
         // voter within the same epoch, even if none has been
         // explicitly set before
-        let new_voter = solana_sdk::pubkey::new_rand();
+        let new_voter = nexis_sdk::pubkey::new_rand();
         assert_eq!(
             vote_state.set_new_authorized_voter(&new_voter, 1, 1, |_| Ok(())),
             Err(VoteError::TooSoonToReauthorize.into())
@@ -2751,7 +2751,7 @@ mod tests {
         for i in start_current_epoch..start_current_epoch + 2 * MAX_LEADER_SCHEDULE_EPOCH_OFFSET {
             vote_state.as_mut().map(|vote_state| {
                 vote_state.set_new_authorized_voter(
-                    &solana_sdk::pubkey::new_rand(),
+                    &nexis_sdk::pubkey::new_rand(),
                     i,
                     i + MAX_LEADER_SCHEDULE_EPOCH_OFFSET,
                     |_| Ok(()),

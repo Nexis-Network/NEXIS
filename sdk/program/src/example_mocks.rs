@@ -13,7 +13,7 @@
 #![doc(hidden)]
 #![allow(clippy::new_without_default)]
 
-pub mod solana_client {
+pub mod nexis_client {
     pub mod client_error {
         use thiserror::Error;
 
@@ -24,7 +24,7 @@ pub mod solana_client {
     }
 
     pub mod rpc_client {
-        use super::super::solana_sdk::{
+        use super::super::nexis_sdk::{
             hash::Hash, signature::Signature, transaction::Transaction,
         };
         use super::client_error::Result as ClientResult;
@@ -57,12 +57,12 @@ pub mod solana_client {
     }
 }
 
-/// Re-exports and mocks of solana-program modules that mirror those from
-/// solana-program.
+/// Re-exports and mocks ofnexis-program modules that mirror those from
+///nexis-program.
 ///
-/// This lets examples in solana-program appear to be written as client
+/// This lets examples innexis-program appear to be written as client
 /// programs.
-pub mod solana_sdk {
+pub mod nexis_sdk {
     pub use crate::hash;
     pub use crate::instruction;
     pub use crate::message;

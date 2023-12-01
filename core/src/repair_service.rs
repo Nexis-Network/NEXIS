@@ -13,18 +13,18 @@ use {
     },
     crossbeam_channel::{Receiver as CrossbeamReceiver, Sender as CrossbeamSender},
     lru::LruCache,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::{
+    nexis_gossip::cluster_info::ClusterInfo,
+    nexis_ledger::{
         blockstore::Blockstore,
         blockstore_meta::SlotMeta,
         shred::Nonce,
     },
-    solana_measure::measure::Measure,
-    solana_runtime::{bank_forks::BankForks, contains::Contains},
-    solana_sdk::{
+    nexis_measure::measure::Measure,
+    nexis_runtime::{bank_forks::BankForks, contains::Contains},
+    nexis_sdk::{
         clock::Slot, epoch_schedule::EpochSchedule, hash::Hash, pubkey::Pubkey, timing::timestamp,
     },
-    solana_streamer::sendmmsg::{batch_send, SendPktsError},
+    nexis_streamer::sendmmsg::{batch_send, SendPktsError},
     std::{
         collections::{HashMap, HashSet},
         iter::Iterator,
@@ -213,7 +213,7 @@ impl RepairService {
             let exit = exit.clone();
             let repair_info = repair_info.clone();
             Builder::new()
-                .name("solana-repair-service".to_string())
+                .name("nexis-repair-service".to_string())
                 .spawn(move || {
                     Self::run(
                         &blockstore,
@@ -720,16 +720,16 @@ impl RepairService {
 mod test {
     use {
         super::*,
-        solana_gossip::{cluster_info::Node, contact_info::ContactInfo},
-        solana_ledger::{
+        nexis_gossip::{cluster_info::Node, contact_info::ContactInfo},
+        nexis_ledger::{
             blockstore::{
                 make_chaining_slot_entries, make_many_slot_entries, make_slot_entries, Blockstore,
             },
             get_tmp_ledger_path,
             shred::max_ticks_per_n_shreds,
         },
-        solana_sdk::signature::Keypair,
-        solana_streamer::socket::SocketAddrSpace,
+        nexis_sdk::signature::Keypair,
+        nexis_streamer::socket::SocketAddrSpace,
         std::collections::HashSet,
     };
 

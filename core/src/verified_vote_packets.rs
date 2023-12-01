@@ -1,12 +1,12 @@
 use {
     crate::{cluster_info_vote_listener::VerifiedLabelVotePacketsReceiver, result::Result},
-    solana_perf::packet::PacketBatch,
-    solana_runtime::bank::Bank,
-    solana_sdk::{
+    nexis_perf::packet::PacketBatch,
+    nexis_runtime::bank::Bank,
+    nexis_sdk::{
         account::from_account, clock::Slot, hash::Hash, pubkey::Pubkey, signature::Signature,
         slot_hashes::SlotHashes, sysvar,
     },
-    solana_vote_program::vote_state::Vote,
+    nexis_vote_program::vote_state::Vote,
     std::{
         collections::{BTreeMap, HashMap, HashSet},
         sync::Arc,
@@ -179,14 +179,14 @@ mod tests {
         super::*,
         crate::{result::Error, vote_simulator::VoteSimulator},
         crossbeam_channel::unbounded,
-        solana_perf::packet::Packet,
-        solana_sdk::slot_hashes::MAX_ENTRIES,
+        nexis_perf::packet::Packet,
+        nexis_sdk::slot_hashes::MAX_ENTRIES,
     };
 
     #[test]
     fn test_verified_vote_packets_receive_and_process_vote_packets() {
         let (s, r) = unbounded();
-        let vote_account_key = solana_sdk::pubkey::new_rand();
+        let vote_account_key = nexis_sdk::pubkey::new_rand();
 
         // Construct the buffer
         let mut verified_vote_packets = VerifiedVotePackets(HashMap::new());
@@ -289,7 +289,7 @@ mod tests {
     #[test]
     fn test_verified_vote_packets_receive_and_process_vote_packets_max_len() {
         let (s, r) = unbounded();
-        let vote_account_key = solana_sdk::pubkey::new_rand();
+        let vote_account_key = nexis_sdk::pubkey::new_rand();
 
         // Construct the buffer
         let mut verified_vote_packets = VerifiedVotePackets(HashMap::new());

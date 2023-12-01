@@ -9,7 +9,7 @@ pub mod upgradeable_with_jit;
 pub mod with_jit;
 
 #[macro_use]
-extern crate solana_metrics;
+extern crate nexis_metrics;
 
 use {
     crate::{
@@ -17,14 +17,14 @@ use {
         syscalls::SyscallError,
     },
     log::{log_enabled, trace, Level::Trace},
-    solana_measure::measure::Measure,
-    solana_program_runtime::{
+    nexis_measure::measure::Measure,
+    nexis_program_runtime::{
         ic_logger_msg, ic_msg,
         invoke_context::{ComputeMeter, Executor, InvokeContext},
         log_collector::LogCollector,
         stable_log,
     },
-    solana_rbpf::{
+    nexis_rbpf::{
         aligned_memory::AlignedMemory,
         ebpf::HOST_ALIGN,
         elf::Executable,
@@ -33,7 +33,7 @@ use {
         verifier::{self, VerifierError},
         vm::{Config, EbpfVm, InstructionMeter},
     },
-    solana_sdk::{
+    nexis_sdk::{
         account::{ReadableAccount, WritableAccount},
         account_utils::State,
         bpf_loader, bpf_loader_deprecated,
@@ -60,10 +60,10 @@ use {
     thiserror::Error,
 };
 
-solana_sdk::declare_builtin!(
-    solana_sdk::bpf_loader::ID,
-    solana_bpf_loader_program,
-    solana_bpf_loader_program::process_instruction
+nexis_sdk::declare_builtin!(
+    nexis_sdk::bpf_loader::ID,
+    nexis_bpf_loader_program,
+    nexis_bpf_loader_program::process_instruction
 );
 
 /// Errors returned by functions the BPF Loader registers with the VM
@@ -555,7 +555,7 @@ fn process_loader_upgradeable_instruction(
             let signers = [&[new_program_id.as_ref(), &[bump_seed]]]
                 .iter()
                 .map(|seeds| Pubkey::create_program_address(*seeds, caller_program_id))
-                .collect::<Result<Vec<Pubkey>, solana_sdk::pubkey::PubkeyError>>()?;
+                .collect::<Result<Vec<Pubkey>, nexis_sdk::pubkey::PubkeyError>>()?;
             invoke_context.native_invoke(instruction, signers.as_slice())?;
 
             // Load and verify the program bits
@@ -1019,7 +1019,7 @@ pub struct BpfExecutor {
     executable: Pin<Box<Executable<BpfError, ThisInstructionMeter>>>,
 }
 
-// Well, implement Debug for solana_rbpf::vm::Executable in solana-rbpf...
+// Well, implement Debug for nexis_rbpf::vm::Executable innexis-rbpf...
 impl Debug for BpfExecutor {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "BpfExecutor({:p})", self)
@@ -1166,10 +1166,10 @@ mod tests {
     use {
         super::*,
         rand::Rng,
-        solana_program_runtime::invoke_context::mock_process_instruction,
-        solana_rbpf::vm::SyscallRegistry,
-        solana_runtime::{bank::Bank, bank_client::BankClient},
-        solana_sdk::{
+        nexis_program_runtime::invoke_context::mock_process_instruction,
+        nexis_rbpf::vm::SyscallRegistry,
+        nexis_runtime::{bank::Bank, bank_client::BankClient},
+        nexis_sdk::{
             account::{
                 create_account_shared_data_for_test as create_account_for_test, AccountSharedData,
             },
@@ -1180,7 +1180,7 @@ mod tests {
             genesis_config::create_genesis_config,
             instruction::{AccountMeta, Instruction, InstructionError},
             message::Message,
-            native_token::LAMPORTS_PER_XZO,
+            native_token::LAMPORTS_PER_NZT,
             pubkey::Pubkey,
             rent::Rent,
             signature::{Keypair, Signer},
@@ -1243,7 +1243,7 @@ mod tests {
         ];
         let input = &mut [0x00];
         let mut bpf_functions = std::collections::BTreeMap::<u32, (usize, String)>::new();
-        solana_rbpf::elf::register_bpf_function(&mut bpf_functions, 0, "entrypoint", false)
+        nexis_rbpf::elf::register_bpf_function(&mut bpf_functions, 0, "entrypoint", false)
             .unwrap();
         let program = Executable::<BpfError, TestInstructionMeter>::from_text_bytes(
             program,
@@ -1729,7 +1729,7 @@ mod tests {
         let mut bank = Bank::new_for_tests(&genesis_config);
         bank.feature_set = Arc::new(FeatureSet::all_enabled());
         bank.add_builtin(
-            "solana_bpf_loader_upgradeable_program",
+            "nexis_bpf_loader_upgradeable_program",
             &bpf_loader_upgradeable::id(),
             super::process_instruction,
         );
@@ -1790,7 +1790,7 @@ mod tests {
         );
 
         // Test successful deploy
-        let payer_base_balance = LAMPORTS_PER_XZO;
+        let payer_base_balance = LAMPORTS_PER_NZT;
         let deploy_fees = {
             let fee_calculator = genesis_config.fee_rate_governor.create_fee_calculator();
             3 * fee_calculator.lamports_per_signature

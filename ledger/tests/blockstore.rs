@@ -1,10 +1,10 @@
 use {
-    solana_entry::entry,
-    solana_ledger::{
+    nexis_entry::entry,
+    nexis_ledger::{
         blockstore::{self, Blockstore},
         get_tmp_ledger_path_auto_delete,
     },
-    solana_sdk::hash::Hash,
+    nexis_sdk::hash::Hash,
     std::{sync::Arc, thread::Builder},
 };
 

@@ -5,7 +5,7 @@ use {
         *,
     },
     crate::{ancestors::AncestorsForSerialization, stakes::StakesCache},
-    solana_measure::measure::Measure,
+    nexis_measure::measure::Measure,
     std::{cell::RefCell, collections::HashSet, sync::RwLock},
 };
 
@@ -187,7 +187,7 @@ impl<'a> From<crate::bank::BankFieldsToSerialize<'a>> for SerializableVersionedB
 }
 
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
-impl<'a> solana_frozen_abi::abi_example::IgnoreAsHelper for SerializableVersionedBank<'a> {}
+impl<'a> nexis_frozen_abi::abi_example::IgnoreAsHelper for SerializableVersionedBank<'a> {}
 
 pub(super) struct Context {}
 

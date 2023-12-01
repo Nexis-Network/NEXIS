@@ -4,14 +4,14 @@ use {
         geyser_plugin_manager::GeyserPluginManager,
     },
     log::*,
-    solana_geyser_plugin_interface::geyser_plugin_interface::{
+    nexis_geyser_plugin_interface::geyser_plugin_interface::{
         ReplicaBlockInfo, ReplicaBlockInfoVersions,
     },
-    solana_measure::measure::Measure,
-    solana_metrics::*,
-    solana_runtime::bank::RewardInfo,
-    solana_sdk::{clock::UnixTimestamp, pubkey::Pubkey},
-    solana_transaction_status::{Reward, Rewards},
+    nexis_measure::measure::Measure,
+    nexis_metrics::*,
+    nexis_runtime::bank::RewardInfo,
+    nexis_sdk::{clock::UnixTimestamp, pubkey::Pubkey},
+    nexis_transaction_status::{Reward, Rewards},
     std::sync::{Arc, RwLock},
 };
 

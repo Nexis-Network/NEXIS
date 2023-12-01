@@ -2,7 +2,7 @@ use std::path::Path;
 
 use anyhow::*;
 use evm_state::Block;
-use solana_storage_bigtable::LedgerStorage;
+use nexis_storage_bigtable::LedgerStorage;
 
 use super::write_blocks_collection;
 

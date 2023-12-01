@@ -1,14 +1,14 @@
 use {
     crate::leader_schedule::LeaderSchedule,
-    solana_runtime::bank::Bank,
-    solana_sdk::{
+    nexis_runtime::bank::Bank,
+    nexis_sdk::{
         clock::{Epoch, Slot, NUM_CONSECUTIVE_LEADER_SLOTS},
         pubkey::Pubkey,
     },
     std::collections::HashMap,
 };
 
-pub use solana_vote_program::{
+pub use nexis_vote_program::{
     MIN_STAKERS_TO_BE_MAJORITY, NUM_MAJOR_STAKERS_FOR_FILTERING,
 };
 
@@ -101,14 +101,14 @@ fn retain_major_stakers(stakes: &mut Vec<(Pubkey, u64)>) {
 mod tests {
     use {
         super::*,
-        solana_runtime::genesis_utils::{
+        nexis_runtime::genesis_utils::{
             bootstrap_validator_stake_lamports, create_genesis_config_with_leader,
         },
     };
 
     #[test]
     fn test_leader_schedule_via_bank() {
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
         let genesis_config =
             create_genesis_config_with_leader(0, &pubkey, bootstrap_validator_stake_lamports())
                 .genesis_config;
@@ -134,7 +134,7 @@ mod tests {
 
     #[test]
     fn test_leader_scheduler1_basic() {
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
         let genesis_config =
             create_genesis_config_with_leader(42, &pubkey, bootstrap_validator_stake_lamports())
                 .genesis_config;
@@ -144,8 +144,8 @@ mod tests {
 
     #[test]
     fn test_sort_stakes_basic() {
-        let pubkey0 = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = nexis_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
         let mut stakes = vec![(pubkey0, 1), (pubkey1, 2)];
         sort_stakes(&mut stakes);
         assert_eq!(stakes, vec![(pubkey1, 2), (pubkey0, 1)]);
@@ -153,8 +153,8 @@ mod tests {
 
     #[test]
     fn test_sort_stakes_with_dup() {
-        let pubkey0 = solana_sdk::pubkey::new_rand();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = nexis_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
         let mut stakes = vec![(pubkey0, 1), (pubkey1, 2), (pubkey0, 1)];
         sort_stakes(&mut stakes);
         assert_eq!(stakes, vec![(pubkey1, 2), (pubkey0, 1)]);
@@ -163,7 +163,7 @@ mod tests {
     #[test]
     fn test_sort_stakes_with_equal_stakes() {
         let pubkey0 = Pubkey::default();
-        let pubkey1 = solana_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
         let mut stakes = vec![(pubkey0, 1), (pubkey1, 1)];
         sort_stakes(&mut stakes);
         assert_eq!(stakes, vec![(pubkey1, 1), (pubkey0, 1)]);

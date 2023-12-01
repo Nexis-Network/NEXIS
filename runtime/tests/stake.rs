@@ -1,11 +1,11 @@
 #![allow(clippy::integer_arithmetic)]
 use {
-    solana_runtime::{
+    nexis_runtime::{
         bank::Bank,
         bank_client::BankClient,
         genesis_utils::{create_genesis_config_with_leader, GenesisConfigInfo},
     },
-    solana_sdk::{
+    nexis_sdk::{
         account::from_account,
         account_utils::StateMut,
         client::SyncClient,
@@ -18,8 +18,8 @@ use {
         },
         sysvar::{self, stake_history::StakeHistory},
     },
-    solana_stake_program::stake_state,
-    solana_vote_program::{
+    nexis_stake_program::stake_state,
+    nexis_vote_program::{
         vote_instruction,
         vote_state::{Vote, VoteInit, VoteState, VoteStateVersions},
     },
@@ -102,7 +102,7 @@ fn get_staked(bank: &Bank, stake_pubkey: &Pubkey) -> u64 {
 
 #[test]
 fn test_stake_create_and_split_single_signature() {
-    solana_logger::setup();
+    nexis_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -110,7 +110,7 @@ fn test_stake_create_and_split_single_signature() {
         ..
     } = create_genesis_config_with_leader(
         100_000_000_000,
-        &solana_sdk::pubkey::new_rand(),
+        &nexis_sdk::pubkey::new_rand(),
         1_000_000,
     );
 
@@ -172,7 +172,7 @@ fn test_stake_create_and_split_to_existing_system_account() {
     // Ensure stake-split allows the user to promote an existing system account into
     // a stake account.
 
-    solana_logger::setup();
+    nexis_logger::setup();
 
     let GenesisConfigInfo {
         genesis_config,
@@ -180,7 +180,7 @@ fn test_stake_create_and_split_to_existing_system_account() {
         ..
     } = create_genesis_config_with_leader(
         100_000_000_000,
-        &solana_sdk::pubkey::new_rand(),
+        &nexis_sdk::pubkey::new_rand(),
         1_000_000,
     );
 
@@ -262,7 +262,7 @@ fn test_stake_account_lifetime() {
         ..
     } = create_genesis_config_with_leader(
         100_000_000_000,
-        &solana_sdk::pubkey::new_rand(),
+        &nexis_sdk::pubkey::new_rand(),
         1_000_000,
     );
     let bank = Bank::new_for_tests(&genesis_config);
@@ -320,7 +320,7 @@ fn test_stake_account_lifetime() {
         &[stake_instruction::withdraw(
             &stake_pubkey,
             &stake_pubkey,
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             1,
             None,
         )],
@@ -415,7 +415,7 @@ fn test_stake_account_lifetime() {
         &[stake_instruction::withdraw(
             &split_stake_pubkey,
             &stake_pubkey,
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             lamports / 2 - split_staked + 1,
             None,
         )],
@@ -437,7 +437,7 @@ fn test_stake_account_lifetime() {
         &[stake_instruction::withdraw(
             &split_stake_pubkey,
             &stake_pubkey,
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             lamports / 2,
             None,
         )],
@@ -453,7 +453,7 @@ fn test_stake_account_lifetime() {
         &[stake_instruction::withdraw(
             &split_stake_pubkey,
             &stake_pubkey,
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             lamports / 2 - split_staked,
             None,
         )],
@@ -478,7 +478,7 @@ fn test_stake_account_lifetime() {
         &[stake_instruction::withdraw(
             &split_stake_pubkey,
             &stake_pubkey,
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             split_staked,
             None,
         )],
@@ -506,7 +506,7 @@ fn test_create_stake_account_from_seed() {
         ..
     } = create_genesis_config_with_leader(
         100_000_000_000,
-        &solana_sdk::pubkey::new_rand(),
+        &nexis_sdk::pubkey::new_rand(),
         1_000_000,
     );
     let bank = Bank::new_for_tests(&genesis_config);

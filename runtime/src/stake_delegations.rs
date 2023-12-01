@@ -3,7 +3,7 @@
 //! This module implements clone-on-write semantics for `StakeDelegations` to reduce unnecessary
 //! cloning of the underlying map.
 use {
-    solana_sdk::{pubkey::Pubkey, stake::state::Delegation},
+    nexis_sdk::{pubkey::Pubkey, stake::state::Delegation},
     std::{
         collections::HashMap,
         ops::{Deref, DerefMut},

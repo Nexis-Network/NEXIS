@@ -1,6 +1,6 @@
 use {
-    solana_measure::measure::Measure,
-    solana_runtime::bank::Bank,
+    nexis_measure::measure::Measure,
+    nexis_runtime::bank::Bank,
     std::{
         sync::{mpsc::Receiver, Arc},
         thread::{self, Builder, JoinHandle},

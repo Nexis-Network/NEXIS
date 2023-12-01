@@ -1,12 +1,12 @@
 [package]
-name = "solana-keygen"
+name = "nexis-keygen"
 version = "1.9.29"
-description = "Solana key generation utility"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "Nexis key generation utility"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-keygen"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-keygen"
 edition = "2021"
 
 [dependencies]
@@ -14,15 +14,15 @@ bs58 = "0.4.0"
 clap = "2.33"
 dirs-next = "2.0.0"
 num_cpus = "1.13.1"
-solana-clap-utils = { path = "../clap-utils", version = "=1.9.29" }
-solana-cli-config = { path = "../cli-config", version = "=1.9.29" }
-solana-remote-wallet = { path = "../remote-wallet", version = "=1.9.29" }
-solana-sdk = { path = "../sdk", version = "=1.9.29" }
-solana-version = { path = "../version", version = "=0.6.3" }
+nexis-clap-utils = { path = "../clap-utils", version = "=1.9.29" }
+nexis-cli-config = { path = "../cli-config", version = "=1.9.29" }
+nexis-remote-wallet = { path = "../remote-wallet", version = "=1.9.29" }
+nexis-sdk = { path = "../sdk", version = "=1.9.29" }
+nexis-version = { path = "../version", version = "=0.6.3" }
 tiny-bip39 = "0.8.2"
 
 [[bin]]
-name = "exzo-keygen"
+name = "nexis-keygen"
 path = "src/keygen.rs"
 
 [package.metadata.docs.rs]

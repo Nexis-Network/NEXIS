@@ -104,7 +104,7 @@ function launch_testnet() {
 
   execution_step "Fetch reusable testnet keypairs"
   if [[ ! -d "${REPO_ROOT}"/net/keypairs ]]; then
-    git clone git@github.com:solana-labs/testnet-keypairs.git "${REPO_ROOT}"/net/keypairs
+    git clone git@github.com:nexis-labs/testnet-keypairs.git "${REPO_ROOT}"/net/keypairs
     # If we have provider-specific keys (CoLo*, GCE*, etc) use them instead of generic val*
     if [[ -d "${REPO_ROOT}"/net/keypairs/"${CLOUD_PROVIDER}" ]]; then
       cp "${REPO_ROOT}"/net/keypairs/"${CLOUD_PROVIDER}"/* "${REPO_ROOT}"/net/keypairs/
@@ -119,7 +119,7 @@ function launch_testnet() {
   execution_step "Starting bootstrap node and ${NUMBER_OF_VALIDATOR_NODES} validator nodes"
 
   declare -g version_args
-  get_net_launch_software_version_launch_args "$CHANNEL" "solana-release" version_args
+  get_net_launch_software_version_launch_args "$CHANNEL" "nexis-release" version_args
 
   declare maybeWarpSlot
   if [[ -n "$WARP_SLOT" ]]; then
@@ -246,7 +246,7 @@ STEP=
 execution_step "Initialize Environment"
 
 [[ -n $TESTNET_TAG ]] || TESTNET_TAG=${CLOUD_PROVIDER}-testnet-automation
-[[ -n $INFLUX_HOST ]] || INFLUX_HOST=https://metrics.solana.com:8086
+[[ -n $INFLUX_HOST ]] || INFLUX_HOST=https://metrics.nexis.network:8086
 [[ -n $BOOTSTRAP_VALIDATOR_MAX_STAKE_THRESHOLD ]] || BOOTSTRAP_VALIDATOR_MAX_STAKE_THRESHOLD=66
 [[ -n $SKIP_PERF_RESULTS ]] || SKIP_PERF_RESULTS=false
 
@@ -269,14 +269,14 @@ if [[ -z $NUMBER_OF_CLIENT_NODES ]]; then
   exit 1
 fi
 
-if [[ -z $SOLANA_METRICS_CONFIG ]]; then
-  if [[ -z $SOLANA_METRICS_PARTIAL_CONFIG ]]; then
-    echo SOLANA_METRICS_PARTIAL_CONFIG not defined
+if [[ -z $NZT_METRICS_CONFIG ]]; then
+  if [[ -z $NZT_METRICS_PARTIAL_CONFIG ]]; then
+    echo NZT_METRICS_PARTIAL_CONFIG not defined
     exit 1
   fi
-  export SOLANA_METRICS_CONFIG="db=$TESTNET_TAG,host=$INFLUX_HOST,$SOLANA_METRICS_PARTIAL_CONFIG"
+  export NZT_METRICS_CONFIG="db=$TESTNET_TAG,host=$INFLUX_HOST,$NZT_METRICS_PARTIAL_CONFIG"
 fi
-echo "SOLANA_METRICS_CONFIG: $SOLANA_METRICS_CONFIG"
+echo "NZT_METRICS_CONFIG: $NZT_METRICS_CONFIG"
 
 if [[ -z $ALLOW_BOOT_FAILURES ]]; then
   ALLOW_BOOT_FAILURES=false

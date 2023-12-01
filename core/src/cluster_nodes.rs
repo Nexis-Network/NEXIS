@@ -4,21 +4,21 @@ use {
     lru::LruCache,
     rand::SeedableRng,
     rand_chacha::ChaChaRng,
-    solana_gossip::{
+    nexis_gossip::{
         cluster_info::{compute_retransmit_peers, ClusterInfo},
         contact_info::ContactInfo,
         crds_gossip_pull::CRDS_GOSSIP_PULL_CRDS_TIMEOUT_MS,
         weighted_shuffle::WeightedShuffle,
     },
-    solana_ledger::shred::Shred,
-    solana_runtime::bank::Bank,
-    solana_sdk::{
+    nexis_ledger::shred::Shred,
+    nexis_runtime::bank::Bank,
+    nexis_sdk::{
         clock::{Epoch, Slot},
         feature_set,
         pubkey::Pubkey,
         timing::timestamp,
     },
-    solana_streamer::socket::SocketAddrSpace,
+    nexis_streamer::socket::SocketAddrSpace,
     std::{
         any::TypeId,
         cmp::Reverse,
@@ -431,12 +431,12 @@ mod tests {
     use {
         super::*,
         rand::{seq::SliceRandom, Rng},
-        solana_gossip::{
+        nexis_gossip::{
             crds::GossipRoute,
             crds_value::{CrdsData, CrdsValue},
         },
-        solana_sdk::{signature::Keypair, timing::timestamp},
-        solana_streamer::socket::SocketAddrSpace,
+        nexis_sdk::{signature::Keypair, timing::timestamp},
+        nexis_streamer::socket::SocketAddrSpace,
         std::{iter::repeat_with, sync::Arc},
     };
 

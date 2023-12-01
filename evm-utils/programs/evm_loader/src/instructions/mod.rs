@@ -35,7 +35,7 @@ impl FeePayerType {
     }
 }
 
-/// Solana blockchain limit amount of data that transaction can have.
+/// Nexis blockchain limit amount of data that transaction can have.
 /// To get around this limitation, we use design that is similar to LoaderInstruction in sdk.
 
 #[derive(
@@ -521,7 +521,7 @@ mod test {
                 input: b"test".to_vec(),
             },
             crate::evm_address_for_program(
-                solana_sdk::pubkey::Pubkey::from_str(
+                nexis_sdk::pubkey::Pubkey::from_str(
                     "BTpMi82Q9SNKUJPmZjRg2TpAoGH26nLYPn6X1YhWRi1p",
                 )
                 .unwrap(),

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-declare -r SOLANA_LOCK_FILE="/home/solana/.solana.lock"
+declare -r NZT_LOCK_FILE="/home/nexis/.nexis.lock"
 
 __colo_here="$(dirname "${BASH_SOURCE[0]}")"
 
@@ -78,7 +78,7 @@ colo_instance_run() {
   declare CMD="${2}"
   declare OUT
   set +e
-  OUT=$(ssh -l solana -o "StrictHostKeyChecking=no" -o "ConnectTimeout=3" -n "${IP}" "${CMD}" 2>&1)
+  OUT=$(ssh -l nexis-o "StrictHostKeyChecking=no" -o "ConnectTimeout=3" -n "${IP}" "${CMD}" 2>&1)
   declare RC=$?
   set -e
   while read -r LINE; do
@@ -111,38 +111,38 @@ colo_instance_run_foreach() {
 }
 
 colo_whoami() {
-  declare ME LINE SOL_USER EOL
+  declare ME LINE NZT_USER EOL
   while read -r LINE; do
     declare IP RC
-    IFS=$'\x1f' read -r IP RC SOL_USER EOL <<< "${LINE}"
+    IFS=$'\x1f' read -r IP RC NZT_USER EOL <<< "${LINE}"
     if [ "${RC}" -eq 0 ]; then
       [[ "${EOL}" = "EOL" ]] || echo "${FUNCNAME[0]}: Unexpected input \"${LINE}\"" 1>&2
-      if [ -z "${ME}" ] || [ "${ME}" = "${SOL_USER}" ]; then
-        ME="${SOL_USER}"
+      if [ -z "${ME}" ] || [ "${ME}" = "${NZT_USER}" ]; then
+        ME="${NZT_USER}"
       else
-        echo "Found conflicting username \"${SOL_USER}\" on ${IP}, expected \"${ME}\"" 1>&2
+        echo "Found conflicting username \"${NZT_USER}\" on ${IP}, expected \"${ME}\"" 1>&2
       fi
     fi
-  done < <(colo_instance_run_foreach "[ -n \"\${SOLANA_USER}\" ] && echo -e \"\${SOLANA_USER}\\x1fEOL\"")
+  done < <(colo_instance_run_foreach "[ -n \"\${NZT_USER}\" ] && echo -e \"\${NZT_USER}\\x1fEOL\"")
   echo "${ME}"
 }
 
-COLO_XZOANA_USER=""
-colo_get_solana_user() {
-  if [ -z "${COLO_XZOANA_USER}" ]; then
-    COLO_XZOANA_USER=$(colo_whoami)
+COLO_NZTANA_USER=""
+colo_get_nexis_user() {
+  if [ -z "${COLO_NZTANA_USER}" ]; then
+    COLO_NZTANA_USER=$(colo_whoami)
   fi
-  echo "${COLO_XZOANA_USER}"
+  echo "${COLO_NZTANA_USER}"
 }
 
 __colo_node_status_script() {
   cat <<EOF
   exec 3>&2
   exec 2>/dev/null  # Suppress stderr as the next call to exec fails most of
-                    # the time due to ${SOLANA_LOCK_FILE} not existing and is running from a
+                    # the time due to ${NZT_LOCK_FILE} not existing and is running from a
                     # subshell where normal redirection doesn't work
-  exec 9<"${SOLANA_LOCK_FILE}" && flock -s 9 && . "${SOLANA_LOCK_FILE}" && exec 9>&-
-  echo -e "\${SOLANA_LOCK_USER}\\x1f\${SOLANA_LOCK_INSTANCENAME}\\x1f\${PREEMPTIBLE}\\x1fEOL"
+  exec 9<"${NZT_LOCK_FILE}" && flock -s 9 && . "${NZT_LOCK_FILE}" && exec 9>&-
+  echo -e "\${NZT_LOCK_USER}\\x1f\${NZT_LOCK_INSTANCENAME}\\x1f\${PREEMPTIBLE}\\x1fEOL"
   exec 2>&3 # Restore stderr
 EOF
 }
@@ -195,10 +195,10 @@ colo_node_requisition() {
   declare RC=false
 
   colo_instance_run "${IP}" "$(cat <<EOF
-SOLANA_LOCK_FILE="${SOLANA_LOCK_FILE}"
+NZT_LOCK_FILE="${NZT_LOCK_FILE}"
 INSTANCE_NAME="${INSTANCE_NAME}"
 PREEMPTIBLE="${PREEMPTIBLE}"
-SSH_AUTHORIZED_KEYS='$("${__colo_here}"/add-datacenter-solana-user-authorized_keys.sh 2> /dev/null)'
+SSH_AUTHORIZED_KEYS='$("${__colo_here}"/add-datacenter-nexis-user-authorized_keys.sh 2> /dev/null)'
 SSH_PRIVATE_KEY_TEXT="$(<"${SSH_PRIVATE_KEY}")"
 SSH_PUBLIC_KEY_TEXT="$(<"${SSH_PRIVATE_KEY}.pub")"
 NETWORK_INFO="$(printNetworkInfo 2>/dev/null)"
@@ -242,9 +242,9 @@ colo_node_free() {
   declare IP=${1}
   declare FORCE_DELETE=${2}
   colo_instance_run "${IP}" "$(cat <<EOF
-SOLANA_LOCK_FILE="${SOLANA_LOCK_FILE}"
+NZT_LOCK_FILE="${NZT_LOCK_FILE}"
 SECONDARY_DISK_MOUNT_POINT="${SECONDARY_DISK_MOUNT_POINT}"
-SSH_AUTHORIZED_KEYS='$("${__colo_here}"/add-datacenter-solana-user-authorized_keys.sh 2> /dev/null)'
+SSH_AUTHORIZED_KEYS='$("${__colo_here}"/add-datacenter-nexis-user-authorized_keys.sh 2> /dev/null)'
 FORCE_DELETE="${FORCE_DELETE}"
 $(<"${__colo_here}"/colo-node-onfree.sh)
 EOF

@@ -1,10 +1,10 @@
 /// Partial SPL Token declarations inlined to avoid an external dependency on the spl-token crate
-use solana_sdk::pubkey::{Pubkey, PUBKEY_BYTES};
+use nexis_sdk::pubkey::{Pubkey, PUBKEY_BYTES};
 
-solana_sdk::declare_id!("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+nexis_sdk::declare_id!("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
 
 pub(crate) mod new_token_program {
-    solana_sdk::declare_id!("nTok2oJvx1CgbYA2SznfJLmnKLEL6sYdh2ypZms2nhm");
+    nexis_sdk::declare_id!("nTok2oJvx1CgbYA2SznfJLmnKLEL6sYdh2ypZms2nhm");
 }
 
 /*
@@ -72,7 +72,7 @@ impl GenericTokenAccount for Account {
 }
 
 pub mod native_mint {
-    solana_sdk::declare_id!("So11111111111111111111111111111111111111112");
+    nexis_sdk::declare_id!("So11111111111111111111111111111111111111112");
 
     /*
         Mint {

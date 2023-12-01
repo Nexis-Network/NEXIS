@@ -1,6 +1,6 @@
 //! Example Rust-based BPF realloc test program
 
-use solana_program::{
+use nexis_program::{
     instruction::{AccountMeta, Instruction},
     pubkey::Pubkey,
 };

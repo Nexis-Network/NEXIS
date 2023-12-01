@@ -6,8 +6,8 @@ use {
     },
     itertools::Itertools,
     log::*,
-    solana_runtime::bank::Bank,
-    solana_sdk::{
+    nexis_runtime::bank::Bank,
+    nexis_sdk::{
         clock::{Epoch, Slot},
         epoch_schedule::EpochSchedule,
         pubkey::Pubkey,
@@ -261,8 +261,8 @@ mod tests {
             get_tmp_ledger_path_auto_delete,
             staking_utils::tests::setup_vote_and_stake_accounts,
         },
-        solana_runtime::bank::Bank,
-        solana_sdk::{
+        nexis_runtime::bank::Bank,
+        nexis_sdk::{
             clock::NUM_CONSECUTIVE_LEADER_SLOTS,
             epoch_schedule::{
                 EpochSchedule, DEFAULT_LEADER_SCHEDULE_SLOT_OFFSET, DEFAULT_SLOTS_PER_EPOCH,
@@ -379,7 +379,7 @@ mod tests {
 
     #[test]
     fn test_next_leader_slot() {
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
         let mut genesis_config =
             create_genesis_config_with_leader(42, &pubkey, bootstrap_validator_stake_lamports())
                 .genesis_config;
@@ -417,7 +417,7 @@ mod tests {
 
         assert_eq!(
             cache.next_leader_slot(
-                &solana_sdk::pubkey::new_rand(), // not in leader_schedule
+                &nexis_sdk::pubkey::new_rand(), // not in leader_schedule
                 0,
                 &bank,
                 None,
@@ -429,7 +429,7 @@ mod tests {
 
     #[test]
     fn test_next_leader_slot_blockstore() {
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
         let mut genesis_config =
             create_genesis_config_with_leader(42, &pubkey, bootstrap_validator_stake_lamports())
                 .genesis_config;
@@ -494,7 +494,7 @@ mod tests {
 
         assert_eq!(
             cache.next_leader_slot(
-                &solana_sdk::pubkey::new_rand(), // not in leader_schedule
+                &nexis_sdk::pubkey::new_rand(), // not in leader_schedule
                 0,
                 &bank,
                 Some(&blockstore),
@@ -596,7 +596,7 @@ mod tests {
         assert_eq!(bank.get_epoch_and_slot_index(96).0, 2);
         assert!(cache.slot_leader_at(96, Some(&bank)).is_none());
 
-        let bank2 = Bank::new_from_parent(&bank, &solana_sdk::pubkey::new_rand(), 95);
+        let bank2 = Bank::new_from_parent(&bank, &nexis_sdk::pubkey::new_rand(), 95);
         assert!(bank2.epoch_vote_accounts(2).is_some());
 
         // Set root for a slot in epoch 1, so that epoch 2 is now confirmed

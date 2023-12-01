@@ -17,7 +17,7 @@ pub use upload::upload;
 use anyhow::*;
 
 async fn write_blocks_collection(
-    ledger: &solana_storage_bigtable::LedgerStorage,
+    ledger: &nexis_storage_bigtable::LedgerStorage,
     blocks: Vec<evm_state::Block>,
 ) -> Result<()> {
     for block in blocks {

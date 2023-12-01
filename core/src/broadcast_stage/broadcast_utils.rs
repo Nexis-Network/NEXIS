@@ -1,10 +1,10 @@
 use {
     crate::result::Result,
-    solana_entry::entry::Entry,
-    solana_ledger::shred::Shred,
-    solana_poh::poh_recorder::WorkingBankEntry,
-    solana_runtime::bank::Bank,
-    solana_sdk::clock::Slot,
+    nexis_entry::entry::Entry,
+    nexis_ledger::shred::Shred,
+    nexis_poh::poh_recorder::WorkingBankEntry,
+    nexis_runtime::bank::Bank,
+    nexis_sdk::clock::Slot,
     std::{
         sync::{mpsc::Receiver, Arc},
         time::{Duration, Instant},
@@ -84,8 +84,8 @@ pub(super) fn recv_slot_entries(receiver: &Receiver<WorkingBankEntry>) -> Result
 mod tests {
     use {
         super::*,
-        solana_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
-        solana_sdk::{
+        nexis_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
+        nexis_sdk::{
             genesis_config::GenesisConfig, pubkey::Pubkey, system_transaction,
             transaction::Transaction,
         },
@@ -101,7 +101,7 @@ mod tests {
         let bank0 = Arc::new(Bank::new_for_tests(&genesis_config));
         let tx = system_transaction::transfer(
             &mint_keypair,
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             1,
             genesis_config.hash(),
         );

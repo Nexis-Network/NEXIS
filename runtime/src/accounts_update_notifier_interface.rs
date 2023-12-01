@@ -1,6 +1,6 @@
 use {
     crate::append_vec::{StoredAccountMeta, StoredMeta},
-    solana_sdk::{account::AccountSharedData, clock::Slot},
+    nexis_sdk::{account::AccountSharedData, clock::Slot},
     std::sync::{Arc, RwLock},
 };
 

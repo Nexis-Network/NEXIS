@@ -1,11 +1,11 @@
 #![allow(clippy::integer_arithmetic)]
 use {
     bincode::deserialize,
-    solana_banks_client::BanksClient,
-    solana_program_test::{
+    nexis_banks_client::BanksClient,
+    nexis_program_test::{
         processor, ProgramTest, ProgramTestBanksClientExt, ProgramTestContext, ProgramTestError,
     },
-    solana_sdk::{
+    nexis_sdk::{
         account_info::{next_account_info, AccountInfo},
         clock::Clock,
         entrypoint::ProgramResult,
@@ -26,7 +26,7 @@ use {
         },
         transaction::{Transaction, TransactionError},
     },
-    solana_vote_program::{
+    nexis_vote_program::{
         vote_instruction,
         vote_state::{VoteInit, VoteState},
     },

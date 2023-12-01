@@ -25,7 +25,7 @@ pub struct GithubRelease {
 impl GithubRelease {
     pub fn download_url(&self, target: &str) -> String {
         format!(
-            "https://github.com/ExzoNetwork/Exzo-Network-Blockchain/releases/download/{}/exzo-release-{}.tar.bz2",
+            "https://github.com/ExzoNetwork/Exzo-Network-Blockchain/releases/download/{}/nexis-release-{}.tar.bz2",
             self.tag_name, target
         )
     }
@@ -41,7 +41,7 @@ impl GithubReleases {
         let github_releases = reqwest::Url::parse(crate::defaults::GITHUB_RELEASES_URL).unwrap();
 
         let client = reqwest::blocking::Client::builder()
-            .user_agent("exzo-install")
+            .user_agent("nexis-install")
             .build()?;
 
         let request = client

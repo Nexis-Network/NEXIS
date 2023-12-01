@@ -5,12 +5,12 @@ use {
     jsonrpc_ipc_server::{RequestContext, ServerBuilder},
     jsonrpc_server_utils::tokio,
     log::*,
-    solana_core::{
+    nexis_core::{
         consensus::Tower, tower_storage::TowerStorage, validator::ValidatorStartProgress,
     },
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_runtime::bank_forks::BankForks,
-    solana_sdk::{
+    nexis_gossip::cluster_info::ClusterInfo,
+    nexis_runtime::bank_forks::BankForks,
+    nexis_sdk::{
         exit::Exit,
         pubkey::Pubkey,
         signature::{read_keypair_file, Keypair, Signer},
@@ -129,7 +129,7 @@ impl AdminRpc for AdminRpcImpl {
 
     fn set_log_filter(&self, filter: String) -> Result<()> {
         debug!("set_log_filter admin rpc request received");
-        solana_logger::setup_with(&filter);
+        nexis_logger::setup_with(&filter);
         Ok(())
     }
 
@@ -247,7 +247,7 @@ impl AdminRpc for AdminRpcImpl {
                     })?;
             }
 
-            solana_metrics::set_host_id(identity_keypair.pubkey().to_string());
+            nexis_metrics::set_host_id(identity_keypair.pubkey().to_string());
             post_init
                 .cluster_info
                 .set_keypair(Arc::new(identity_keypair));
@@ -268,7 +268,7 @@ pub fn run(ledger_path: &Path, metadata: AdminRpcRequestMetadata) {
         .unwrap();
 
     Builder::new()
-        .name("solana-adminrpc".to_string())
+        .name("nexis-adminrpc".to_string())
         .spawn(move || {
             let mut io = MetaIoHandler::default();
             io.extend_with(AdminRpcImpl.to_delegate());

@@ -1,5 +1,5 @@
 use {
-    solana_sdk::{
+    nexis_sdk::{
     account::{Account, AccountSharedData},
         feature::{self, Feature},
         feature_set::FeatureSet,
@@ -11,8 +11,8 @@ use {
         stake::state::StakeState,
         system_program,
     },
-    solana_stake_program::stake_state,
-    solana_vote_program::vote_state,
+    nexis_stake_program::stake_state,
+    nexis_vote_program::vote_state,
     std::borrow::Borrow,
 };
 
@@ -56,7 +56,7 @@ pub struct GenesisConfigInfo {
 }
 
 pub fn create_genesis_config(mint_lamports: u64) -> GenesisConfigInfo {
-    create_genesis_config_with_leader(mint_lamports, &solana_sdk::pubkey::new_rand(), 0)
+    create_genesis_config_with_leader(mint_lamports, &nexis_sdk::pubkey::new_rand(), 0)
 }
 
 pub fn create_genesis_config_with_vote_accounts(
@@ -148,7 +148,7 @@ pub fn create_genesis_config_with_leader(
         &mint_keypair.pubkey(),
         validator_pubkey,
         &voting_keypair.pubkey(),
-        &solana_sdk::pubkey::new_rand(),
+        &nexis_sdk::pubkey::new_rand(),
         validator_stake_lamports,
         VALIDATOR_LAMPORTS,
         FeeRateGovernor::new(0, 0), // most tests can't handle transaction fees
@@ -166,7 +166,7 @@ pub fn create_genesis_config_with_leader(
 }
 
 pub fn activate_exzo_features_on_prod(genesis_config: &mut GenesisConfig) {
-    for feature_id in (*solana_sdk::feature_set::FEATURE_NAMES_BEFORE_MAINNET).keys() {
+    for feature_id in (*nexis_sdk::feature_set::FEATURE_NAMES_BEFORE_MAINNET).keys() {
         genesis_config.accounts.insert(
             *feature_id,
             Account::from(feature::create_account(
@@ -246,7 +246,7 @@ pub fn create_genesis_config_with_leader_ex(
         ..GenesisConfig::default()
     };
 
-    solana_stake_program::add_genesis_accounts(&mut genesis_config);
+    nexis_stake_program::add_genesis_accounts(&mut genesis_config);
     if genesis_config.cluster_type == ClusterType::Development {
         activate_all_features(&mut genesis_config);
     }

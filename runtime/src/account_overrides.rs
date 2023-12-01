@@ -1,4 +1,4 @@
-use solana_sdk::{account::AccountSharedData, pubkey::Pubkey, sysvar};
+use nexis_sdk::{account::AccountSharedData, pubkey::Pubkey, sysvar};
 
 /// Encapsulates overridden accounts, typically used for transaction simulations
 #[derive(Default)]

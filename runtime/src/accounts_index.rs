@@ -14,8 +14,8 @@ use {
     log::*,
     ouroboros::self_referencing,
     rand::{thread_rng, Rng},
-    solana_measure::measure::Measure,
-    solana_sdk::{
+    nexis_measure::measure::Measure,
+    nexis_sdk::{
         clock::{BankId, Slot},
         pubkey::Pubkey,
     },
@@ -873,7 +873,7 @@ pub struct AccountsIndex<T: IndexValue> {
 impl<T: IndexValue> AccountsIndex<T> {
     pub fn default_for_tests() -> Self {
         let mut config = ACCOUNTS_INDEX_CONFIG_FOR_TESTING;
-        if let Ok(limit) = std::env::var("SOLANA_TEST_ACCOUNTS_INDEX_MEMORY_LIMIT_MB") {
+        if let Ok(limit) = std::env::var("NZT_TEST_ACCOUNTS_INDEX_MEMORY_LIMIT_MB") {
             // allocate with disk buckets
             config.index_limit_mb = Some(limit.parse::<usize>().unwrap());
         }
@@ -2126,7 +2126,7 @@ pub mod tests {
     use {
         super::*,
         crate::inline_spl_token::*,
-        solana_sdk::{
+        nexis_sdk::{
             pubkey::PUBKEY_BYTES,
             signature::{Keypair, Signer},
         },
@@ -2229,7 +2229,7 @@ pub mod tests {
 
     #[test]
     fn test_bitfield_delete_non_excess() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let len = 16;
         let mut bitfield = RollingBitField::new(len);
         assert_eq!(bitfield.min(), None);
@@ -2273,7 +2273,7 @@ pub mod tests {
 
     #[test]
     fn test_bitfield_insert_excess() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let len = 16;
         let mut bitfield = RollingBitField::new(len);
 
@@ -2305,7 +2305,7 @@ pub mod tests {
 
     #[test]
     fn test_bitfield_permutations() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let mut bitfield = RollingBitField::new(2097152);
         let mut hash = HashSet::new();
 
@@ -2405,7 +2405,7 @@ pub mod tests {
 
     #[test]
     fn test_bitfield_insert_wide() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let width = 16;
         let start = 0;
         let mut tester = setup_wide(width, start);
@@ -2424,7 +2424,7 @@ pub mod tests {
 
     #[test]
     fn test_bitfield_insert_wide_before() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let width = 16;
         let start = 100;
         let mut bitfield = setup_wide(width, start).bitfield;
@@ -2439,7 +2439,7 @@ pub mod tests {
 
     #[test]
     fn test_bitfield_insert_wide_before_ok() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let width = 16;
         let start = 100;
         let mut bitfield = setup_wide(width, start).bitfield;
@@ -2490,7 +2490,7 @@ pub mod tests {
 
     #[test]
     fn test_bitfield_excess2() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let width = 16;
         let mut tester = setup_empty(width);
         let slot = 100;
@@ -2524,7 +2524,7 @@ pub mod tests {
 
     #[test]
     fn test_bitfield_excess() {
-        solana_logger::setup();
+        nexis_logger::setup();
         // start at slot 0 or a separate, higher slot
         for width in [16, 4194304].iter() {
             let width = *width;
@@ -2656,7 +2656,7 @@ pub mod tests {
 
     #[test]
     fn test_bitfield_functionality() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         // bitfield sizes are powers of 2, cycle through values of 1, 2, 4, .. 2^9
         for power in 0..10 {
@@ -2819,7 +2819,7 @@ pub mod tests {
     #[test]
     fn test_bitfield_smaller() {
         // smaller bitfield, fewer entries, including 0
-        solana_logger::setup();
+        nexis_logger::setup();
 
         for width in 0..34 {
             let mut bitfield = RollingBitField::new(4096);
@@ -3355,7 +3355,7 @@ pub mod tests {
         let root_slot = 0;
 
         let mut pubkeys: Vec<Pubkey> = std::iter::repeat_with(|| {
-            let new_pubkey = solana_sdk::pubkey::new_rand();
+            let new_pubkey = nexis_sdk::pubkey::new_rand();
             index.upsert(
                 root_slot,
                 &new_pubkey,
@@ -3518,7 +3518,7 @@ pub mod tests {
         let mut gc = vec![];
         index.upsert(
             0,
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             &Pubkey::default(),
             &[],
             &AccountSecondaryIndexes::default(),
@@ -3690,7 +3690,7 @@ pub mod tests {
 
     #[test]
     fn test_update_new_slot() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let key = Keypair::new();
         let index = AccountsIndex::<bool>::default_for_tests();
         let ancestors = vec![(0, 0)].into_iter().collect();

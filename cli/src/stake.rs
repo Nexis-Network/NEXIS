@@ -10,7 +10,7 @@ use {
         spend_utils::{resolve_spend_tx_and_check_account_balances, SpendAmount},
     },
     clap::{value_t, App, Arg, ArgGroup, ArgMatches, SubCommand},
-    solana_clap_utils::{
+    nexis_clap_utils::{
         fee_payer::{fee_payer_arg, FEE_PAYER_ARG},
         input_parsers::*,
         input_validators::*,
@@ -20,16 +20,16 @@ use {
         offline::*,
         ArgConstant,
     },
-    solana_cli_output::{
+    nexis_cli_output::{
     return_signers_with_config, CliEpochReward, CliStakeHistory, CliStakeHistoryEntry,
     CliStakeState, CliStakeType, OutputFormat, ReturnSignersConfig,
     },
-    solana_client::{
+    nexis_client::{
     blockhash_query::BlockhashQuery, nonce_utils, rpc_client::RpcClient,
     rpc_request::DELINQUENT_VALIDATOR_SLOT_DISTANCE, rpc_response::RpcInflationReward,
     },
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_sdk::{
+    nexis_remote_wallet::remote_wallet::RemoteWalletManager,
+    nexis_sdk::{
         account::from_account,
         account_utils::StateMut,
     clock::{Clock, UnixTimestamp, SECONDS_PER_DAY},
@@ -47,7 +47,7 @@ use {
         sysvar::{clock, stake_history},
         transaction::Transaction,
     },
-    solana_vote_program::vote_state::VoteState,
+    nexis_vote_program::vote_state::VoteState,
     std::{ops::Deref, sync::Arc},
 };
 
@@ -214,7 +214,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .validator(is_amount_or_all)
                         .required(true)
-                        .help("The amount to send to the stake account, in SOL; accepts keyword ALL")
+                        .help("The amount to send to the stake account, in NZT; accepts keyword ALL")
                 )
                 .arg(
                     Arg::with_name("seed")
@@ -411,7 +411,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .validator(is_amount)
                         .required(true)
-                        .help("The amount to move into the new stake account, in XZO")
+                        .help("The amount to move into the new stake account, in NZT")
                 )
                 .arg(
                     Arg::with_name("seed")
@@ -453,7 +453,7 @@ impl StakeSubCommands for App<'_, '_> {
         )
         .subcommand(
             SubCommand::with_name("withdraw-stake")
-                .about("Withdraw the unstaked XZO from the stake account")
+                .about("Withdraw the unstaked NZT from the stake account")
                 .arg(
                     pubkey!(Arg::with_name("stake_account_pubkey")
                         .index(1)
@@ -466,7 +466,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .index(2)
                         .value_name("RECIPIENT_ADDRESS")
                         .required(true),
-                        "Recipient of withdrawn XZO")
+                        "Recipient of withdrawn NZT")
                 )
                 .arg(
                     Arg::with_name("amount")
@@ -475,7 +475,7 @@ impl StakeSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .validator(is_amount_or_all)
                         .required(true)
-                        .help("The amount to withdraw from the stake account, in XZO")
+                        .help("The amount to withdraw from the stake account, in NZT")
                 )
                 .arg(
                     Arg::with_name("seed")
@@ -605,7 +605,7 @@ impl StakeSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of XZO")
+                        .help("Display balance in lamports instead of NZT")
                 )
                 .arg(
                     Arg::with_name("with_rewards")
@@ -632,7 +632,7 @@ impl StakeSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of XZO")
+                        .help("Display balance in lamports instead of NZT")
                 )
                 .arg(
                     Arg::with_name("limit")
@@ -902,7 +902,7 @@ pub fn parse_split_stake(
         pubkey_of_signer(matches, "stake_account_pubkey", wallet_manager)?.unwrap();
     let (split_stake_account, split_stake_account_pubkey) =
         signer_of(matches, "split_stake_account", wallet_manager)?;
-    let lamports = lamports_of_sol(matches, "amount").unwrap();
+    let lamports = lamports_of_nzt(matches, "amount").unwrap();
     let seed = matches.value_of("seed").map(|s| s.to_string());
 
     let sign_only = matches.is_present(SIGN_ONLY_ARG.name);
@@ -2434,8 +2434,8 @@ mod tests {
     use {
         super::*,
         crate::{clap_app::get_clap_app, cli::parse_command},
-        solana_client::blockhash_query,
-        solana_sdk::{
+        nexis_client::blockhash_query,
+        nexis_sdk::{
             hash::Hash,
             signature::{
                 keypair_from_seed, read_keypair_file, write_keypair, Keypair, Presigner, Signer,
@@ -3528,9 +3528,9 @@ mod tests {
         );
 
         // Test CreateStakeAccount SubCommand
-        let custodian = solana_sdk::pubkey::new_rand();
+        let custodian = nexis_sdk::pubkey::new_rand();
         let custodian_string = format!("{}", custodian);
-        let authorized = solana_sdk::pubkey::new_rand();
+        let authorized = nexis_sdk::pubkey::new_rand();
         let authorized_string = format!("{}", authorized);
         let test_create_stake_account = test_commands.clone().get_matches_from(vec![
             "test",
@@ -3729,7 +3729,7 @@ mod tests {
         );
 
         // Test DelegateStake Subcommand
-        let vote_account_pubkey = solana_sdk::pubkey::new_rand();
+        let vote_account_pubkey = nexis_sdk::pubkey::new_rand();
         let vote_account_string = vote_account_pubkey.to_string();
         let test_delegate_stake = test_commands.clone().get_matches_from(vec![
             "test",
@@ -3758,7 +3758,7 @@ mod tests {
         );
 
         // Test DelegateStake Subcommand w/ authority
-        let vote_account_pubkey = solana_sdk::pubkey::new_rand();
+        let vote_account_pubkey = nexis_sdk::pubkey::new_rand();
         let vote_account_string = vote_account_pubkey.to_string();
         let test_delegate_stake = test_commands.clone().get_matches_from(vec![
             "test",
@@ -3885,7 +3885,7 @@ mod tests {
         );
 
         // Test Delegate Subcommand w/ absent fee payer
-        let key1 = solana_sdk::pubkey::new_rand();
+        let key1 = nexis_sdk::pubkey::new_rand();
         let sig1 = Keypair::new().sign_message(&[0u8]);
         let signer1 = format!("{}={}", key1, sig1);
         let test_delegate_stake = test_commands.clone().get_matches_from(vec![
@@ -3927,7 +3927,7 @@ mod tests {
         );
 
         // Test Delegate Subcommand w/ absent fee payer and absent nonce authority
-        let key2 = solana_sdk::pubkey::new_rand();
+        let key2 = nexis_sdk::pubkey::new_rand();
         let sig2 = Keypair::new().sign_message(&[0u8]);
         let signer2 = format!("{}={}", key2, sig2);
         let test_delegate_stake = test_commands.clone().get_matches_from(vec![
@@ -4283,7 +4283,7 @@ mod tests {
         );
 
         // Test Deactivate Subcommand w/ absent fee payer
-        let key1 = solana_sdk::pubkey::new_rand();
+        let key1 = nexis_sdk::pubkey::new_rand();
         let sig1 = Keypair::new().sign_message(&[0u8]);
         let signer1 = format!("{}={}", key1, sig1);
         let test_deactivate_stake = test_commands.clone().get_matches_from(vec![
@@ -4323,7 +4323,7 @@ mod tests {
         );
 
         // Test Deactivate Subcommand w/ absent fee payer and nonce authority
-        let key2 = solana_sdk::pubkey::new_rand();
+        let key2 = nexis_sdk::pubkey::new_rand();
         let sig2 = Keypair::new().sign_message(&[0u8]);
         let signer2 = format!("{}={}", key2, sig2);
         let test_deactivate_stake = test_commands.clone().get_matches_from(vec![
@@ -4512,7 +4512,7 @@ mod tests {
         let stake_account_keypair = Keypair::new();
         write_keypair(&stake_account_keypair, tmp_file.as_file_mut()).unwrap();
 
-        let source_stake_account_pubkey = solana_sdk::pubkey::new_rand();
+        let source_stake_account_pubkey = nexis_sdk::pubkey::new_rand();
         let test_merge_stake_account = test_commands.clone().get_matches_from(vec![
             "test",
             "merge-stake",

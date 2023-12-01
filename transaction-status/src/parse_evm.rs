@@ -4,8 +4,8 @@ use crate::parse_instruction::{
 use bincode::deserialize;
 use evm_rpc::RPCTransaction;
 use serde_json::json;
-use solana_evm_loader_program::instructions::{EvmBigTransaction, EvmInstruction, ExecuteTransaction};
-use solana_sdk::{instruction::CompiledInstruction, pubkey::Pubkey};
+use nexis_evm_loader_program::instructions::{EvmBigTransaction, EvmInstruction, ExecuteTransaction};
+use nexis_sdk::{instruction::CompiledInstruction, pubkey::Pubkey};
 
 pub fn parse_evm(
     instruction: &CompiledInstruction,

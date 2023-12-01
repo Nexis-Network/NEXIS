@@ -1,8 +1,8 @@
 use anyhow::{bail, Context, Result};
 use evm_state::Block;
-use solana_sdk::hash::Hash;
-use solana_storage_bigtable::LedgerStorage;
-use solana_transaction_status::{
+use nexis_sdk::hash::Hash;
+use nexis_storage_bigtable::LedgerStorage;
+use nexis_transaction_status::{
     ConfirmedBlock, ConfirmedBlockWithOptionalMetadata, TransactionWithMetadata,
     TransactionWithOptionalMetadata,
 };

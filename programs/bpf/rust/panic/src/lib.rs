@@ -4,12 +4,12 @@
 #[no_mangle]
 fn custom_panic(info: &core::panic::PanicInfo<'_>) {
     // Note: Full panic reporting is included here for testing purposes
-    solana_program::msg!("program custom panic enabled");
-    solana_program::msg!(&format!("{}", info));
+    nexis_program::msg!("program custom panic enabled");
+    nexis_program::msg!(&format!("{}", info));
 }
 
-extern crate solana_program;
-use solana_program::{
+extern crate nexis_program;
+use nexis_program::{
     account_info::AccountInfo, entrypoint, entrypoint::ProgramResult, pubkey::Pubkey,
 };
 

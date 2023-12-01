@@ -1,10 +1,10 @@
 use {
     crate::cli::CliError,
-    solana_client::{
+    nexis_client::{
         client_error::{ClientError, Result as ClientResult},
         rpc_client::RpcClient,
     },
-    solana_sdk::{
+    nexis_sdk::{
         commitment_config::CommitmentConfig, message::Message, native_token::lamports_to_sol,
         pubkey::Pubkey,
     },
@@ -78,13 +78,13 @@ pub fn check_account_for_spend_multiple_fees_with_commitment(
     {
         if balance > 0 {
             return Err(CliError::InsufficientFundsForSpendAndFee(
-                lamports_to_sol(balance),
-                lamports_to_sol(fee),
+                lamports_to_nzt(balance),
+                lamports_to_nzt(fee),
                 *account_pubkey,
             ));
         } else {
             return Err(CliError::InsufficientFundsForFee(
-                lamports_to_sol(fee),
+                lamports_to_nzt(fee),
                 *account_pubkey,
             ));
         }
@@ -151,11 +151,11 @@ mod tests {
     use {
         super::*,
         serde_json::json,
-        solana_client::{
+        nexis_client::{
             rpc_request::RpcRequest,
             rpc_response::{Response, RpcResponseContext},
         },
-        solana_sdk::system_instruction,
+        nexis_sdk::system_instruction,
         std::collections::HashMap,
     };
 
@@ -166,7 +166,7 @@ mod tests {
             context: RpcResponseContext { slot: 1 },
             value: json!(account_balance),
         });
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
 
         let pubkey0 = Pubkey::new(&[0; 32]);
         let pubkey1 = Pubkey::new(&[1; 32]);
@@ -230,7 +230,7 @@ mod tests {
             context: RpcResponseContext { slot: 1 },
             value: json!(account_balance),
         });
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
 
         let mut mocks = HashMap::new();
         mocks.insert(RpcRequest::GetBalance, account_balance_response);
@@ -278,9 +278,9 @@ mod tests {
 
     #[test]
     fn test_check_unique_pubkeys() {
-        let pubkey0 = solana_sdk::pubkey::new_rand();
+        let pubkey0 = nexis_sdk::pubkey::new_rand();
         let pubkey_clone = pubkey0;
-        let pubkey1 = solana_sdk::pubkey::new_rand();
+        let pubkey1 = nexis_sdk::pubkey::new_rand();
 
         check_unique_pubkeys((&pubkey0, "foo".to_string()), (&pubkey1, "bar".to_string()))
             .expect("unexpected result");

@@ -4,22 +4,22 @@ extern crate log;
 
 use {
     rayon::iter::*,
-    solana_gossip::{
+    nexis_gossip::{
         cluster_info::{ClusterInfo, Node},
         crds::Cursor,
         gossip_service::GossipService,
     },
-    solana_perf::packet::Packet,
-    solana_runtime::bank_forks::BankForks,
-    solana_sdk::{
+    nexis_perf::packet::Packet,
+    nexis_runtime::bank_forks::BankForks,
+    nexis_sdk::{
         hash::Hash,
         pubkey::Pubkey,
         signature::{Keypair, Signer},
         timing::timestamp,
         transaction::Transaction,
     },
-    solana_streamer::socket::SocketAddrSpace,
-    solana_vote_program::{vote_instruction, vote_state::Vote},
+    nexis_streamer::socket::SocketAddrSpace,
+    nexis_vote_program::{vote_instruction, vote_state::Vote},
     std::{
         net::UdpSocket,
         sync::{
@@ -114,7 +114,7 @@ where
 /// ring a -> b -> c -> d -> e -> a
 #[test]
 fn gossip_ring() {
-    solana_logger::setup();
+    nexis_logger::setup();
     run_gossip_topo(50, |listen| {
         let num = listen.len();
         for n in 0..num {
@@ -132,7 +132,7 @@ fn gossip_ring() {
 #[test]
 #[ignore]
 fn gossip_ring_large() {
-    solana_logger::setup();
+    nexis_logger::setup();
     run_gossip_topo(600, |listen| {
         let num = listen.len();
         for n in 0..num {
@@ -148,7 +148,7 @@ fn gossip_ring_large() {
 /// star a -> (b,c,d,e)
 #[test]
 fn gossip_star() {
-    solana_logger::setup();
+    nexis_logger::setup();
     run_gossip_topo(10, |listen| {
         let num = listen.len();
         for n in 0..(num - 1) {
@@ -167,7 +167,7 @@ fn gossip_star() {
 /// rstar a <- (b,c,d,e)
 #[test]
 fn gossip_rstar() {
-    solana_logger::setup();
+    nexis_logger::setup();
     run_gossip_topo(10, |listen| {
         let num = listen.len();
         let xd = {
@@ -186,7 +186,7 @@ fn gossip_rstar() {
 
 #[test]
 pub fn cluster_info_retransmit() {
-    solana_logger::setup();
+    nexis_logger::setup();
     let exit = Arc::new(AtomicBool::new(false));
     trace!("c1:");
     let (c1, dr1, tn1) = test_node(&exit);
@@ -247,14 +247,14 @@ pub fn cluster_info_retransmit() {
 #[ignore]
 pub fn cluster_info_scale() {
     use {
-        solana_measure::measure::Measure,
-        solana_perf::test_tx::test_tx,
-        solana_runtime::{
+        nexis_measure::measure::Measure,
+        nexis_perf::test_tx::test_tx,
+        nexis_runtime::{
             bank::Bank,
             genesis_utils::{create_genesis_config_with_vote_accounts, ValidatorVoteKeypairs},
         },
     };
-    solana_logger::setup();
+    nexis_logger::setup();
     let exit = Arc::new(AtomicBool::new(false));
     let num_nodes: usize = std::env::var("NUM_NODES")
         .unwrap_or_else(|_| "10".to_string())

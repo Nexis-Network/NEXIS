@@ -3,9 +3,9 @@ use {
         heaviest_subtree_fork_choice::HeaviestSubtreeForkChoice, repair_service::RepairService,
         serve_repair::ShredRepairType, tree_diff::TreeDiff,
     },
-    solana_ledger::{blockstore::Blockstore, blockstore_meta::SlotMeta},
-    solana_runtime::contains::Contains,
-    solana_sdk::{clock::Slot, hash::Hash},
+    nexis_ledger::{blockstore::Blockstore, blockstore_meta::SlotMeta},
+    nexis_runtime::contains::Contains,
+    nexis_sdk::{clock::Slot, hash::Hash},
     std::collections::{HashMap, HashSet},
 };
 
@@ -140,9 +140,9 @@ pub fn get_best_repair_shreds<'a>(
 pub mod test {
     use {
         super::*,
-        solana_ledger::{get_tmp_ledger_path, shred::Shred},
-        solana_runtime::bank_utils,
-        solana_sdk::hash::Hash,
+        nexis_ledger::{get_tmp_ledger_path, shred::Shred},
+        nexis_runtime::bank_utils,
+        nexis_sdk::hash::Hash,
         trees::tr,
     };
 

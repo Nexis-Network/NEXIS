@@ -2,9 +2,9 @@
 
 #![cfg(feature = "program")]
 
-extern crate solana_program;
+extern crate nexis_program;
 use crate::instructions::*;
-use solana_program::{
+use nexis_program::{
     account_info::AccountInfo, entrypoint, entrypoint::ProgramResult,
     entrypoint::MAX_PERMITTED_DATA_INCREASE, msg, program::invoke, pubkey::Pubkey,
     system_instruction, system_program,

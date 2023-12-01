@@ -49,7 +49,7 @@ BPF_C_FLAGS := \
   $(C_FLAGS) \
   -target bpf \
   -fPIC \
-  -march=bpfel+solana
+  -march=bpfel+nexis
 
 BPF_CXX_FLAGS := \
   $(CXX_FLAGS) \
@@ -59,7 +59,7 @@ BPF_CXX_FLAGS := \
   -fno-exceptions \
   -fno-asynchronous-unwind-tables \
   -fno-unwind-tables \
-  -march=bpfel+solana
+  -march=bpfel+nexis
 
 BPF_LLD_FLAGS := \
   -z notext \
@@ -79,7 +79,7 @@ READ_ELF_FLAGS := \
 
 TESTFRAMEWORK_RPATH := $(abspath $(LOCAL_PATH)../dependencies/criterion/lib)
 TESTFRAMEWORK_FLAGS := \
-  -DSOL_TEST \
+  -DNZT_TEST \
   -isystem $(LOCAL_PATH)../dependencies/criterion/include \
   -L $(LOCAL_PATH)../dependencies/criterion/lib \
   -rpath $(TESTFRAMEWORK_RPATH) \
@@ -196,7 +196,7 @@ ifeq (,$(wildcard $(subst .so,-keypair.json,$1)))
 	$(_@)exzo-keygen new --no-passphrase --silent -o $(subst .so,-keypair.json,$1)
 endif
 	@echo To deploy this program:
-	@echo $$$$ solana program deploy $(abspath $1)
+	@echo $$$$ nexisprogram deploy $(abspath $1)
 endef
 
 define TEST_C_RULE

@@ -1,11 +1,11 @@
 #![allow(clippy::integer_arithmetic)]
 use {
-    solana_entry::entry::Entry,
-    solana_ledger::shred::{
+    nexis_entry::entry::Entry,
+    nexis_ledger::shred::{
         max_entries_per_n_shred, verify_test_data_shred, Shred, Shredder,
         MAX_DATA_SHREDS_PER_FEC_BLOCK, SIZE_OF_DATA_SHRED_PAYLOAD,
     },
-    solana_sdk::{
+    nexis_sdk::{
         clock::Slot,
         hash::Hash,
         signature::{Keypair, Signer},

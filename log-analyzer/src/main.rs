@@ -194,11 +194,11 @@ fn analyze_logs(matches: &ArgMatches) {
 }
 
 fn main() {
-    solana_logger::setup();
+    nexis_logger::setup();
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .subcommand(
             SubCommand::with_name("iftop")
                 .about("Process iftop log file")

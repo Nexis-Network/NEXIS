@@ -3,9 +3,9 @@ use std::convert::TryFrom;
 use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
 use serde::{Deserialize, Serialize};
 
-use solana_sdk::pubkey::Pubkey;
+use nexis_sdk::pubkey::Pubkey;
 
-solana_sdk::declare_id!("VAcccHVjpknkW5N5R9sfRppQxYJrJYVV7QJGKchkQj5");
+nexis_sdk::declare_id!("VAcccHVjpknkW5N5R9sfRppQxYJrJYVV7QJGKchkQj5");
 
 /// A wrapper enum for consistency across programs
 #[derive(Debug, PartialEq)]
@@ -146,7 +146,7 @@ mod tests {
     fn it_checks_account_len() {
         assert_eq!(std::mem::size_of::<VAccountInfo>(), ACCOUNT_LEN);
         assert_eq!(
-            solana_sdk::borsh::get_packed_len::<VAccountInfo>(),
+            nexis_sdk::borsh::get_packed_len::<VAccountInfo>(),
             ACCOUNT_LEN
         )
     }

@@ -9,8 +9,8 @@ use {
         spend_utils::{resolve_spend_tx_and_check_account_balances, SpendAmount},
     },
     clap::{value_t_or_exit, App, Arg, ArgMatches, SubCommand},
-    solana_account_decoder::{UiAccount, UiAccountEncoding},
-    solana_clap_utils::{
+    nexis_account_decoder::{UiAccount, UiAccountEncoding},
+    nexis_clap_utils::{
         fee_payer::*,
         input_parsers::*,
         input_validators::*,
@@ -19,17 +19,17 @@ use {
         nonce::*,
         offline::*,
     },
-    solana_cli_output::{
+    nexis_cli_output::{
         display::build_balance_message, return_signers_with_config, CliAccount,
         CliSignatureVerificationStatus, CliTransaction, CliTransactionConfirmation, OutputFormat,
         ReturnSignersConfig,
     },
-    solana_client::{
+    nexis_client::{
         blockhash_query::BlockhashQuery, nonce_utils, rpc_client::RpcClient,
         rpc_config::RpcTransactionConfig, rpc_response::RpcKeyedAccount,
     },
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_sdk::{
+    nexis_remote_wallet::remote_wallet::RemoteWalletManager,
+    nexis_sdk::{
         commitment_config::CommitmentConfig,
         message::Message,
         pubkey::Pubkey,
@@ -39,7 +39,7 @@ use {
         system_program,
         transaction::Transaction,
     },
-    solana_transaction_status::{EncodedTransaction, UiTransactionEncoding},
+    nexis_transaction_status::{EncodedTransaction, UiTransactionEncoding},
     std::{fmt::Write as FmtWrite, fs::File, io::Write, sync::Arc},
 };
 
@@ -72,7 +72,7 @@ impl WalletSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of NZT"),
                 ),
         )
         .subcommand(
@@ -87,7 +87,7 @@ impl WalletSubCommands for App<'_, '_> {
         )
         .subcommand(
             SubCommand::with_name("airdrop")
-                .about("Request SOL from a faucet")
+                .about("Request NZT from a faucet")
                 .arg(
                     Arg::with_name("amount")
                         .index(1)
@@ -95,7 +95,7 @@ impl WalletSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .validator(is_amount)
                         .required(true)
-                        .help("The airdrop amount to request, in SOL"),
+                        .help("The airdrop amount to request, in NZT"),
                 )
                 .arg(
                     pubkey!(Arg::with_name("to")
@@ -117,7 +117,7 @@ impl WalletSubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of SOL"),
+                        .help("Display balance in lamports instead of NZT"),
                 ),
         )
         .subcommand(
@@ -227,7 +227,7 @@ impl WalletSubCommands for App<'_, '_> {
                         .takes_value(true)
                         .validator(is_amount_or_all)
                         .required(true)
-                        .help("The amount to send, in SOL; accepts keyword ALL"),
+                        .help("The amount to send, in NZT; accepts keyword ALL"),
                 )
                 .arg(
                     pubkey!(Arg::with_name("from")
@@ -276,7 +276,7 @@ fn resolve_derived_address_program_id(matches: &ArgMatches<'_>, arg_name: &str) 
     matches.value_of(arg_name).and_then(|v| match v {
         "NONCE" => Some(system_program::id()),
         "STAKE" => Some(stake::program::id()),
-        "VOTE" => Some(solana_vote_program::id()),
+        "VOTE" => Some(nexis_vote_program::id()),
         _ => pubkey_of(matches, arg_name),
     })
 }
@@ -309,7 +309,7 @@ pub fn parse_airdrop(
     } else {
         vec![default_signer.signer_from_path(matches, wallet_manager)?]
     };
-    let lamports = lamports_of_sol(matches, "amount").unwrap();
+    let lamports = lamports_of_nzt(matches, "amount").unwrap();
     Ok(CliCommandInfo {
         command: CliCommand::Airdrop { pubkey, lamports },
         signers,
@@ -515,7 +515,7 @@ pub fn process_airdrop(
 
         if current_balance < pre_balance.saturating_add(lamports) {
             println!("Balance unchanged");
-            println!("Run `solana confirm -v {:?}` for more info", signature);
+            println!("Run `nexisconfirm -v {:?}` for more info", signature);
             Ok("".to_string())
         } else {
             Ok(build_balance_message(current_balance, false, true))

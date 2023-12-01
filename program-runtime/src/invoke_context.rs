@@ -10,8 +10,8 @@ use {
         sysvar_cache::SysvarCache,
         timings::{ExecuteDetailsTimings, ExecuteTimings},
     },
-    solana_measure::measure::Measure,
-    solana_sdk::{
+    nexis_measure::measure::Measure,
+    nexis_sdk::{
         account::{AccountSharedData, ReadableAccount},
         account_utils::StateMut,
         bpf_loader_upgradeable::{self, UpgradeableLoaderState},
@@ -854,7 +854,7 @@ impl<'a> InvokeContext<'a> {
             .map_err(|_| InstructionError::UnsupportedProgramId)?;
         let root_id = root_account.unsigned_key();
         let owner_id = &root_account.owner()?;
-        if solana_sdk::native_loader::check_id(owner_id) {
+        if nexis_sdk::native_loader::check_id(owner_id) {
             for entry in self.builtin_programs {
                 if entry.program_id == *root_id {
                     // Call the builtin program
@@ -1100,7 +1100,7 @@ pub fn with_mock_invoke_context<R, F: FnMut(&mut InvokeContext) -> R>(
             false,
             false,
             loader_id,
-            AccountSharedData::new_ref(0, 0, &solana_sdk::native_loader::id()),
+            AccountSharedData::new_ref(0, 0, &nexis_sdk::native_loader::id()),
         ),
         (
             false,
@@ -1138,7 +1138,7 @@ pub fn mock_process_instruction_with_sysvars(
 ) -> Result<(), InstructionError> {
     let mut preparation =
         prepare_mock_invoke_context(&program_indices, instruction_data, keyed_accounts);
-    let processor_account = AccountSharedData::new_ref(0, 0, &solana_sdk::native_loader::id());
+    let processor_account = AccountSharedData::new_ref(0, 0, &nexis_sdk::native_loader::id());
     program_indices.insert(0, preparation.accounts.len());
     preparation.accounts.push((*loader_id, processor_account));
     let mut invoke_context = InvokeContext::new_mock(&preparation.accounts, &[]);
@@ -1175,7 +1175,7 @@ mod tests {
         super::*,
         crate::compute_budget,
         serde::{Deserialize, Serialize},
-        solana_sdk::{
+        nexis_sdk::{
             account::{ReadableAccount, WritableAccount},
             instruction::{AccountMeta, Instruction, InstructionError},
             message::Message,
@@ -1219,11 +1219,11 @@ mod tests {
         }
         let builtin_programs = &[
             BuiltinProgram {
-                program_id: solana_sdk::pubkey::new_rand(),
+                program_id: nexis_sdk::pubkey::new_rand(),
                 process_instruction: mock_process_instruction,
             },
             BuiltinProgram {
-                program_id: solana_sdk::pubkey::new_rand(),
+                program_id: nexis_sdk::pubkey::new_rand(),
                 process_instruction: mock_ix_processor,
             },
         ];
@@ -1297,9 +1297,9 @@ mod tests {
         let mut accounts = vec![];
         let mut metas = vec![];
         for i in 0..MAX_DEPTH {
-            invoke_stack.push(solana_sdk::pubkey::new_rand());
+            invoke_stack.push(nexis_sdk::pubkey::new_rand());
             accounts.push((
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(AccountSharedData::new(
                     i as u64,
                     1,
@@ -1314,7 +1314,7 @@ mod tests {
                 Rc::new(RefCell::new(AccountSharedData::new(
                     1,
                     1,
-                    &solana_sdk::pubkey::Pubkey::default(),
+                    &nexis_sdk::pubkey::Pubkey::default(),
                 ))),
             ));
             metas.push(AccountMeta::new(*program_id, false));
@@ -1401,7 +1401,7 @@ mod tests {
     #[test]
     fn test_invoke_context_verify() {
         let accounts = vec![(
-            solana_sdk::pubkey::new_rand(),
+            nexis_sdk::pubkey::new_rand(),
             Rc::new(RefCell::new(AccountSharedData::default())),
         )];
         let message = SanitizedMessage::Legacy(Message::new(
@@ -1429,27 +1429,27 @@ mod tests {
 
     #[test]
     fn test_process_cross_program() {
-        let caller_program_id = solana_sdk::pubkey::new_rand();
-        let callee_program_id = solana_sdk::pubkey::new_rand();
+        let caller_program_id = nexis_sdk::pubkey::new_rand();
+        let callee_program_id = nexis_sdk::pubkey::new_rand();
 
         let owned_account = AccountSharedData::new(42, 1, &callee_program_id);
-        let not_owned_account = AccountSharedData::new(84, 1, &solana_sdk::pubkey::new_rand());
-        let readonly_account = AccountSharedData::new(168, 1, &solana_sdk::pubkey::new_rand());
+        let not_owned_account = AccountSharedData::new(84, 1, &nexis_sdk::pubkey::new_rand());
+        let readonly_account = AccountSharedData::new(168, 1, &nexis_sdk::pubkey::new_rand());
         let loader_account = AccountSharedData::new(0, 0, &native_loader::id());
         let mut program_account = AccountSharedData::new(1, 0, &native_loader::id());
         program_account.set_executable(true);
 
         let accounts = vec![
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(owned_account)),
             ),
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(not_owned_account)),
             ),
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(readonly_account)),
             ),
             (caller_program_id, Rc::new(RefCell::new(loader_account))),
@@ -1582,27 +1582,27 @@ mod tests {
 
     #[test]
     fn test_native_invoke() {
-        let caller_program_id = solana_sdk::pubkey::new_rand();
-        let callee_program_id = solana_sdk::pubkey::new_rand();
+        let caller_program_id = nexis_sdk::pubkey::new_rand();
+        let callee_program_id = nexis_sdk::pubkey::new_rand();
 
         let owned_account = AccountSharedData::new(42, 1, &callee_program_id);
-        let not_owned_account = AccountSharedData::new(84, 1, &solana_sdk::pubkey::new_rand());
-        let readonly_account = AccountSharedData::new(168, 1, &solana_sdk::pubkey::new_rand());
+        let not_owned_account = AccountSharedData::new(84, 1, &nexis_sdk::pubkey::new_rand());
+        let readonly_account = AccountSharedData::new(168, 1, &nexis_sdk::pubkey::new_rand());
         let loader_account = AccountSharedData::new(0, 0, &native_loader::id());
         let mut program_account = AccountSharedData::new(1, 0, &native_loader::id());
         program_account.set_executable(true);
 
         let accounts = vec![
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(owned_account)),
             ),
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(not_owned_account)),
             ),
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(readonly_account)),
             ),
             (caller_program_id, Rc::new(RefCell::new(loader_account))),
@@ -1688,7 +1688,7 @@ mod tests {
     fn test_invoke_context_compute_budget() {
         let accounts = vec![
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(AccountSharedData::default())),
             ),
             (
@@ -1756,26 +1756,26 @@ mod tests {
 
     #[test]
     fn test_process_instruction_compute_budget() {
-        let caller_program_id = solana_sdk::pubkey::new_rand();
-        let callee_program_id = solana_sdk::pubkey::new_rand();
+        let caller_program_id = nexis_sdk::pubkey::new_rand();
+        let callee_program_id = nexis_sdk::pubkey::new_rand();
         let owned_account = AccountSharedData::new(42, 1, &callee_program_id);
-        let not_owned_account = AccountSharedData::new(84, 1, &solana_sdk::pubkey::new_rand());
-        let readonly_account = AccountSharedData::new(168, 1, &solana_sdk::pubkey::new_rand());
+        let not_owned_account = AccountSharedData::new(84, 1, &nexis_sdk::pubkey::new_rand());
+        let readonly_account = AccountSharedData::new(168, 1, &nexis_sdk::pubkey::new_rand());
         let loader_account = AccountSharedData::new(0, 0, &native_loader::id());
         let mut program_account = AccountSharedData::new(1, 0, &native_loader::id());
         program_account.set_executable(true);
 
         let accounts = vec![
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(owned_account)),
             ),
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(not_owned_account)),
             ),
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(readonly_account)),
             ),
             (caller_program_id, Rc::new(RefCell::new(loader_account))),
@@ -1967,7 +1967,7 @@ mod tests {
             assert!(result.is_err());
             assert!(matches!(
                 result,
-                Err(solana_sdk::instruction::InstructionError::MaxAccountsDataSizeExceeded)
+                Err(nexis_sdk::instruction::InstructionError::MaxAccountsDataSizeExceeded)
             ));
             assert_eq!(invoke_context.accounts_data_meter.remaining(), 0);
         }

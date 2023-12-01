@@ -2,19 +2,19 @@ use {
     clap::{crate_version, App, Arg},
     serde::{Deserialize, Serialize},
     serde_json::Result,
-    solana_bpf_loader_program::{
+    nexis_bpf_loader_program::{
         create_vm, serialization::serialize_parameters, syscalls::register_syscalls, BpfError,
         ThisInstructionMeter,
     },
-    solana_program_runtime::invoke_context::{prepare_mock_invoke_context, InvokeContext},
-    solana_rbpf::{
+    nexis_program_runtime::invoke_context::{prepare_mock_invoke_context, InvokeContext},
+    nexis_rbpf::{
         assembler::assemble,
         elf::Executable,
         static_analysis::Analysis,
         verifier::check,
         vm::{Config, DynamicAnalysis},
     },
-    solana_sdk::{account::AccountSharedData, bpf_loader, pubkey::Pubkey},
+    nexis_sdk::{account::AccountSharedData, bpf_loader, pubkey::Pubkey},
     std::{
         fs::File,
         io::{Read, Seek, SeekFrom},
@@ -48,10 +48,10 @@ fn load_accounts(path: &Path) -> Result<Input> {
 }
 
 fn main() {
-    solana_logger::setup();
-    let matches = App::new("Solana BPF CLI")
+    nexis_logger::setup();
+    let matches = App::new("Nexis BPF CLI")
         .version(crate_version!())
-        .author("Solana Maintainers <maintainers@solana.foundation>")
+        .author("Nexis Maintainers <maintainers@nexis.foundation>")
         .help(
             r##"CLI to test and analyze eBPF programs.
 
@@ -167,7 +167,7 @@ native machine code before execting it in the virtual machine.",
             false,
             false,
             loader_id,
-            AccountSharedData::new_ref(0, 0, &solana_sdk::native_loader::id()),
+            AccountSharedData::new_ref(0, 0, &nexis_sdk::native_loader::id()),
         ),
         (
             false,

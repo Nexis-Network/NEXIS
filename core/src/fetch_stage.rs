@@ -5,14 +5,14 @@ use {
         banking_stage::HOLD_TRANSACTIONS_SLOT_OFFSET,
         result::{Error, Result},
     },
-    solana_metrics::{inc_new_counter_debug, inc_new_counter_info},
-    solana_perf::{packet::PacketBatchRecycler, recycler::Recycler},
-    solana_poh::poh_recorder::PohRecorder,
-    solana_sdk::{
+    nexis_metrics::{inc_new_counter_debug, inc_new_counter_info},
+    nexis_perf::{packet::PacketBatchRecycler, recycler::Recycler},
+    nexis_poh::poh_recorder::PohRecorder,
+    nexis_sdk::{
         clock::DEFAULT_TICKS_PER_SLOT,
         packet::{Packet, PacketFlags},
     },
-    solana_streamer::streamer::{
+    nexis_streamer::streamer::{
         self, PacketBatchReceiver, PacketBatchSender, StreamerReceiveStats,
     },
     std::{
@@ -198,7 +198,7 @@ impl FetchStage {
         let poh_recorder = poh_recorder.clone();
 
         let fwd_thread_hdl = Builder::new()
-            .name("solana-fetch-stage-fwd-rcvr".to_string())
+            .name("nexis-fetch-stage-fwd-rcvr".to_string())
             .spawn(move || loop {
                 if let Err(e) =
                     Self::handle_forwarded_packets(&forward_receiver, &sender, &poh_recorder)
@@ -216,7 +216,7 @@ impl FetchStage {
 
         let exit = exit.clone();
         let metrics_thread_hdl = Builder::new()
-            .name("solana-fetch-stage-metrics".to_string())
+            .name("nexis-fetch-stage-metrics".to_string())
             .spawn(move || loop {
                 sleep(Duration::from_secs(1));
 

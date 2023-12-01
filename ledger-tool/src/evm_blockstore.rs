@@ -1,9 +1,9 @@
 /// The `bigtable` subcommand
 use clap::{value_t, value_t_or_exit, App, AppSettings, Arg, ArgMatches, SubCommand};
-use solana_clap_utils::input_validators::is_slot;
+use nexis_clap_utils::input_validators::is_slot;
 
-use solana_ledger::{blockstore::Blockstore, blockstore_db::AccessType};
-use solana_sdk::clock::Slot;
+use nexis_ledger::{blockstore::Blockstore, blockstore_db::AccessType};
+use nexis_sdk::clock::Slot;
 use std::{path::Path, process::exit, result::Result};
 
 pub fn modify_block(

@@ -1,20 +1,25 @@
+/**
+ * This file contains the Cargo.toml configuration for the `nexis-bench-streamer` package.
+ * It specifies the package metadata, dependencies, and other configuration options.
+ */
+
 [package]
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
 edition = "2021"
-name = "solana-bench-streamer"
+name = "nexis-bench-streamer"
 version = "1.9.29"
-repository = "https://github.com/solana-labs/solana"
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
+homepage = "https://nexis.network/"
 publish = false
 
 [dependencies]
 clap = "2.33.1"
-solana-clap-utils = { path = "../clap-utils", version = "=1.9.29" }
-solana-streamer = { path = "../streamer", version = "=1.9.29" }
-solana-logger = { path = "../logger", version = "=1.9.29" }
-solana-net-utils = { path = "../net-utils", version = "=1.9.29" }
-solana-version = { path = "../version", version = "=0.6.3" }
+nexis-clap-utils = { path = "../clap-utils", version = "=1.9.29" }
+nexis-streamer = { path = "../streamer", version = "=1.9.29" }
+nexis-logger = { path = "../logger", version = "=1.9.29" }
+nexis-net-utils = { path = "../net-utils", version = "=1.9.29" }
+nexis-version = { path = "../version", version = "=0.6.3" }
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

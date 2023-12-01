@@ -109,7 +109,7 @@ impl Session {
 
 #[cfg(test)]
 pub mod test {
-    use {super::*, log::*, solana_sdk::clock::Slot};
+    use {super::*, log::*, nexis_sdk::clock::Slot};
 
     /// Specifies the contents of a 16-data-shred and 4-coding-shred erasure set
     /// Exists to be passed to `generate_blockstore_with_coding`

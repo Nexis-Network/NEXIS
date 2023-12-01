@@ -1780,7 +1780,7 @@ dependencies = [
 [[package]]
 name = "evm"
 version = "0.35.0"
-source = "git+https://github.com/velas/evm?tag=v0.35-with-traces#90a980bb9d7ccbb21b2897e71b889847f7beeade"
+source = "git+https://github.com/Nexis-Network/evm?tag=v0.35-with-traces#90a980bb9d7ccbb21b2897e71b889847f7beeade"
 dependencies = [
  "auto_impl",
  "environmental",
@@ -1813,11 +1813,11 @@ dependencies = [
  "log 0.4.17",
  "serde",
  "serde_json",
- "solana-client",
- "solana-evm-loader-program",
- "solana-sdk",
- "solana-storage-bigtable",
- "solana-transaction-status",
+ "nexis-client",
+ "nexis-evm-loader-program",
+ "nexis-sdk",
+ "nexis-storage-bigtable",
+ "nexis-transaction-status",
  "tokio",
 ]
 
@@ -1855,17 +1855,17 @@ dependencies = [
  "serde_json",
  "sha3 0.9.1",
  "snafu",
- "solana-account-decoder",
- "solana-cli-config",
- "solana-client",
- "solana-core",
- "solana-evm-loader-program",
- "solana-logger 1.9.29",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-transaction-status",
- "solana-version",
+ "nexis-account-decompiler",
+ "nexis-cli-config",
+ "nexis-client",
+ "nexis-core",
+ "nexis-evm-loader-program",
+ "nexis-logger 1.9.29",
+ "nexis-rpc",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-transaction-status",
+ "nexis-version",
  "structopt",
  "tokio",
  "tracing",
@@ -1878,7 +1878,7 @@ dependencies = [
 [[package]]
 name = "evm-core"
 version = "0.35.0"
-source = "git+https://github.com/velas/evm?tag=v0.35-with-traces#90a980bb9d7ccbb21b2897e71b889847f7beeade"
+source = "git+https://github.com/Nexis-Network/evm?tag=v0.35-with-traces#90a980bb9d7ccbb21b2897e71b889847f7beeade"
 dependencies = [
  "parity-scale-codec",
  "primitive-types",
@@ -1889,7 +1889,7 @@ dependencies = [
 [[package]]
 name = "evm-gasometer"
 version = "0.35.0"
-source = "git+https://github.com/velas/evm?tag=v0.35-with-traces#90a980bb9d7ccbb21b2897e71b889847f7beeade"
+source = "git+https://github.com/Nexis-Network/evm?tag=v0.35-with-traces#90a980bb9d7ccbb21b2897e71b889847f7beeade"
 dependencies = [
  "environmental",
  "evm-core",
@@ -1925,7 +1925,7 @@ dependencies = [
 [[package]]
 name = "evm-runtime"
 version = "0.35.0"
-source = "git+https://github.com/velas/evm?tag=v0.35-with-traces#90a980bb9d7ccbb21b2897e71b889847f7beeade"
+source = "git+https://github.com/Nexis-Network/evm?tag=v0.35-with-traces#90a980bb9d7ccbb21b2897e71b889847f7beeade"
 dependencies = [
  "auto_impl",
  "environmental",
@@ -2078,7 +2078,7 @@ dependencies = [
 [[package]]
 name = "fixed-hash"
 version = "0.7.0"
-source = "git+https://github.com/velas/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
+source = "git+https://github.com/Nexis-Network/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
 dependencies = [
  "byteorder",
  "rand 0.8.5",
@@ -2759,7 +2759,7 @@ checksum = "9007da9cacbd3e6343da136e98b0d2df013f553d35bdec8b518f07bea768e19c"
 [[package]]
 name = "impl-borsh"
 version = "0.1.0"
-source = "git+https://github.com/velas/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
+source = "git+https://github.com/Nexis-Network/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
 dependencies = [
  "borsh",
 ]
@@ -2776,7 +2776,7 @@ dependencies = [
 [[package]]
 name = "impl-codec"
 version = "0.6.0"
-source = "git+https://github.com/velas/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
+source = "git+https://github.com/Nexis-Network/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
 dependencies = [
  "parity-scale-codec",
 ]
@@ -2793,7 +2793,7 @@ dependencies = [
 [[package]]
 name = "impl-rlp"
 version = "0.3.0"
-source = "git+https://github.com/velas/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
+source = "git+https://github.com/Nexis-Network/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
 dependencies = [
  "rlp",
 ]
@@ -2810,7 +2810,7 @@ dependencies = [
 [[package]]
 name = "impl-serde"
 version = "0.3.2"
-source = "git+https://github.com/velas/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
+source = "git+https://github.com/Nexis-Network/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
 dependencies = [
  "serde",
 ]
@@ -3188,7 +3188,7 @@ checksum = "292a948cd991e376cf75541fe5b97a1081d713c618b4f1b9500f8844e49eb565"
 [[package]]
 name = "librocksdb-sys"
 version = "0.8.0+7.4.4"
-source = "git+https://github.com/velas/rust-rocksdb#1aa044a51b31929f91841a7cb05c0dea7a41dfac"
+source = "git+https://github.com/Nexis-Network/rust-rocksdb#1aa044a51b31929f91841a7cb05c0dea7a41dfac"
 dependencies = [
  "bindgen",
  "bzip2-sys",
@@ -4237,13 +4237,13 @@ dependencies = [
 [[package]]
 name = "primitive-types"
 version = "0.11.1"
-source = "git+https://github.com/velas/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
+source = "git+https://github.com/Nexis-Network/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
 dependencies = [
- "fixed-hash 0.7.0 (git+https://github.com/velas/parity-common?tag=primitive-types-v0.11-with-borsh-support)",
+ "fixed-hash 0.7.0 (git+https://github.com/Nexis-Network/parity-common?tag=primitive-types-v0.11-with-borsh-support)",
  "impl-borsh",
- "impl-codec 0.6.0 (git+https://github.com/velas/parity-common?tag=primitive-types-v0.11-with-borsh-support)",
- "impl-rlp 0.3.0 (git+https://github.com/velas/parity-common?tag=primitive-types-v0.11-with-borsh-support)",
- "impl-serde 0.3.2 (git+https://github.com/velas/parity-common?tag=primitive-types-v0.11-with-borsh-support)",
+ "impl-codec 0.6.0 (git+https://github.com/Nexis-Network/parity-common?tag=primitive-types-v0.11-with-borsh-support)",
+ "impl-rlp 0.3.0 (git+https://github.com/Nexis-Network/parity-common?tag=primitive-types-v0.11-with-borsh-support)",
+ "impl-serde 0.3.2 (git+https://github.com/Nexis-Network/parity-common?tag=primitive-types-v0.11-with-borsh-support)",
  "scale-info",
  "uint",
 ]
@@ -4806,11 +4806,11 @@ dependencies = [
  "clap 3.2.17",
  "serde",
  "serde_json",
- "solana-bpf-loader-program",
- "solana-logger 1.9.29",
- "solana-program-runtime",
- "solana-sdk",
- "solana_rbpf",
+ "nexis-bpf-loader-program",
+ "nexis-logger 1.9.29",
+ "nexis-program-runtime",
+ "nexis-sdk",
+ "nexis_rbpf",
  "time 0.3.13",
 ]
 
@@ -5005,7 +5005,7 @@ dependencies = [
 [[package]]
 name = "rocksdb"
 version = "0.19.0"
-source = "git+https://github.com/velas/rust-rocksdb#1aa044a51b31929f91841a7cb05c0dea7a41dfac"
+source = "git+https://github.com/Nexis-Network/rust-rocksdb#1aa044a51b31929f91841a7cb05c0dea7a41dfac"
 dependencies = [
  "libc",
  "librocksdb-sys",
@@ -5707,7 +5707,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-account-decoder"
+name = "nexis-account-decompiler"
 version = "1.9.29"
 dependencies = [
  "Inflector",
@@ -5719,59 +5719,59 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "solana-config-program",
- "solana-sdk",
- "solana-vote-program",
+ "nexis-config-program",
+ "nexis-sdk",
+ "nexis-vote-program",
  "spl-token",
  "thiserror",
- "exzo-account-program",
- "exzo-relying-party-program",
+ "nexis-account-program",
+ "nexis-relying-party-program",
  "zstd",
 ]
 
 [[package]]
-name = "solana-accounts-bench"
+name = "nexis-accounts-benchmark"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
  "log 0.4.17",
  "rayon",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-runtime",
- "solana-sdk",
- "solana-version",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-version",
 ]
 
 [[package]]
-name = "solana-accounts-cluster-bench"
+name = "nexis-accounts-cluster-bench"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
  "log 0.4.17",
  "rand 0.7.3",
  "rayon",
- "solana-account-decoder",
- "solana-clap-utils",
- "solana-client",
- "solana-core",
- "solana-faucet",
- "solana-gossip",
- "solana-local-cluster",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-net-utils",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-test-validator",
- "solana-transaction-status",
- "solana-version",
+ "nexis-account-decompiler",
+ "nexis-clap-utils",
+ "nexis-client",
+ "nexis-core",
+ "nexis-faucet",
+ "nexis-gossip",
+ "nexis-local-cluster",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-net-utils",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-streamer",
+ "nexis-test-validator",
+ "nexis-transaction-status",
+ "nexis-version",
  "spl-token",
 ]
 
 [[package]]
-name = "solana-address-lookup-table-program"
+name = "nexis-address-lookup-table-program"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -5781,26 +5781,26 @@ dependencies = [
  "num-traits",
  "rustc_version 0.4.0",
  "serde",
- "solana-frozen-abi 1.9.29",
- "solana-frozen-abi-macro 1.9.29",
- "solana-program-runtime",
- "solana-sdk",
+ "nexis-frozen-abi 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-program-runtime",
+ "nexis-sdk",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-address-lookup-table-program-tests"
+name = "nexis-address-lookup-table-program-tests"
 version = "1.9.29"
 dependencies = [
  "assert_matches",
  "bincode",
- "solana-address-lookup-table-program",
- "solana-program-test",
- "solana-sdk",
+ "nexis-address-lookup-table-program",
+ "nexis-program-test",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-banking-bench"
+name = "nexis-banking-bench"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
@@ -5808,30 +5808,30 @@ dependencies = [
  "log 0.4.17",
  "rand 0.7.3",
  "rayon",
- "solana-core",
- "solana-gossip",
- "solana-ledger",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-perf",
- "solana-poh",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-version",
+ "nexis-core",
+ "nexis-gossip",
+ "nexis-ledger",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-perf",
+ "nexis-poh",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-streamer",
+ "nexis-version",
 ]
 
 [[package]]
-name = "solana-banks-client"
+name = "nexis-banks-client"
 version = "1.9.29"
 dependencies = [
  "borsh",
  "futures 0.3.23",
- "solana-banks-interface",
- "solana-banks-server",
- "solana-program 1.9.29",
- "solana-runtime",
- "solana-sdk",
+ "nexis-banks-interface",
+ "nexis-banks-server",
+ "nexis-program 1.9.29",
+ "nexis-runtime",
+ "nexis-sdk",
  "tarpc",
  "thiserror",
  "tokio",
@@ -5839,24 +5839,24 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-banks-interface"
+name = "nexis-banks-interface"
 version = "1.9.29"
 dependencies = [
  "serde",
- "solana-sdk",
+ "nexis-sdk",
  "tarpc",
 ]
 
 [[package]]
-name = "solana-banks-server"
+name = "nexis-banks-server"
 version = "1.9.29"
 dependencies = [
  "bincode",
  "futures 0.3.23",
- "solana-banks-interface",
- "solana-runtime",
- "solana-sdk",
- "solana-send-transaction-service",
+ "nexis-banks-interface",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-send-transaction-service",
  "tarpc",
  "tokio",
  "tokio-serde",
@@ -5864,19 +5864,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-bench-streamer"
+name = "nexis-bench-streamer"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
- "solana-clap-utils",
- "solana-logger 1.9.29",
- "solana-net-utils",
- "solana-streamer",
- "solana-version",
+ "nexis-clap-utils",
+ "nexis-logger 1.9.29",
+ "nexis-net-utils",
+ "nexis-streamer",
+ "nexis-version",
 ]
 
 [[package]]
-name = "solana-bench-tps"
+name = "nexis-bench-tps"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
@@ -5885,24 +5885,24 @@ dependencies = [
  "serde_json",
  "serde_yaml",
  "serial_test 0.5.1",
- "solana-client",
- "solana-core",
- "solana-faucet",
- "solana-genesis",
- "solana-gossip",
- "solana-local-cluster",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-metrics",
- "solana-net-utils",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-version",
+ "nexis-client",
+ "nexis-core",
+ "nexis-faucet",
+ "nexis-genesis",
+ "nexis-gossip",
+ "nexis-local-cluster",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-metrics",
+ "nexis-net-utils",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-streamer",
+ "nexis-version",
 ]
 
 [[package]]
-name = "solana-bench-tps-evm"
+name = "nexis-bench-tps-evm"
 version = "1.0.0"
 dependencies = [
  "bincode",
@@ -5915,26 +5915,26 @@ dependencies = [
  "serial_test 0.4.0",
  "serial_test_derive 0.4.0",
  "simple_logger",
- "solana-clap-utils",
- "solana-client",
- "solana-core",
- "solana-evm-loader-program",
- "solana-faucet",
- "solana-genesis",
- "solana-gossip",
- "solana-local-cluster",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-metrics",
- "solana-net-utils",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-version",
+ "nexis-clap-utils",
+ "nexis-client",
+ "nexis-core",
+ "nexis-evm-loader-program",
+ "nexis-faucet",
+ "nexis-genesis",
+ "nexis-gossip",
+ "nexis-local-cluster",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-metrics",
+ "nexis-net-utils",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-streamer",
+ "nexis-version",
 ]
 
 [[package]]
-name = "solana-bloom"
+name = "nexis-bloom"
 version = "1.9.29"
 dependencies = [
  "bv",
@@ -5945,13 +5945,13 @@ dependencies = [
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-frozen-abi 1.9.29",
- "solana-frozen-abi-macro 1.9.29",
- "solana-sdk",
+ "nexis-frozen-abi 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-bpf-loader-program"
+name = "nexis-bpf-loader-program"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -5959,17 +5959,17 @@ dependencies = [
  "libsecp256k1",
  "log 0.4.17",
  "rand 0.7.3",
- "solana-measure",
- "solana-metrics",
- "solana-program-runtime",
- "solana-runtime",
- "solana-sdk",
- "solana_rbpf",
+ "nexis-measure",
+ "nexis-metrics",
+ "nexis-program-runtime",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis_rbpf",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-bucket-map"
+name = "nexis-bucket-map"
 version = "1.9.29"
 dependencies = [
  "fs_extra",
@@ -5977,14 +5977,14 @@ dependencies = [
  "memmap2",
  "rand 0.7.3",
  "rayon",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-sdk",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-sdk",
  "tempfile",
 ]
 
 [[package]]
-name = "solana-cargo-build-bpf"
+name = "nexis-cargo-build-bpf"
 version = "1.9.29"
 dependencies = [
  "bzip2",
@@ -5992,13 +5992,13 @@ dependencies = [
  "clap 2.34.0",
  "regex",
  "serial_test 0.9.0",
- "solana-download-utils",
- "solana-sdk",
+ "nexis-download-utils",
+ "nexis-sdk",
  "tar",
 ]
 
 [[package]]
-name = "solana-cargo-test-bpf"
+name = "nexis-cargo-test-bpf"
 version = "1.9.29"
 dependencies = [
  "cargo_metadata",
@@ -6006,15 +6006,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-clap-utils"
+name = "nexis-clap-utils"
 version = "1.9.29"
 dependencies = [
  "chrono",
  "clap 2.34.0",
  "rpassword",
- "solana-perf",
- "solana-remote-wallet",
- "solana-sdk",
+ "nexis-perf",
+ "nexis-remote-wallet",
+ "nexis-sdk",
  "tempfile",
  "thiserror",
  "tiny-bip39",
@@ -6023,7 +6023,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-cli"
+name = "nexis-cli"
 version = "1.9.29"
 dependencies = [
  "anyhow",
@@ -6046,25 +6046,25 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "solana-account-decoder",
- "solana-bpf-loader-program",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-cli-output",
- "solana-client",
- "solana-config-program",
- "solana-evm-loader-program",
- "solana-faucet",
- "solana-logger 1.9.29",
- "solana-program-runtime",
- "solana-remote-wallet",
- "solana-sdk",
- "solana-streamer",
- "solana-test-validator",
- "solana-transaction-status",
- "solana-version",
- "solana-vote-program",
- "solana_rbpf",
+ "nexis-account-decompiler",
+ "nexis-bpf-loader-program",
+ "nexis-clap-utils",
+ "nexis-cli-config",
+ "nexis-cli-output",
+ "nexis-client",
+ "nexis-config-program",
+ "nexis-evm-loader-program",
+ "nexis-faucet",
+ "nexis-logger 1.9.29",
+ "nexis-program-runtime",
+ "nexis-remote-wallet",
+ "nexis-sdk",
+ "nexis-streamer",
+ "nexis-test-validator",
+ "nexis-transaction-status",
+ "nexis-version",
+ "nexis-vote-program",
+ "nexis_rbpf",
  "spl-memo",
  "tempfile",
  "thiserror",
@@ -6072,7 +6072,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-cli-config"
+name = "nexis-cli-config"
 version = "1.9.29"
 dependencies = [
  "anyhow",
@@ -6085,7 +6085,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-cli-output"
+name = "nexis-cli-output"
 version = "1.9.29"
 dependencies = [
  "Inflector",
@@ -6098,17 +6098,17 @@ dependencies = [
  "semver 1.0.13",
  "serde",
  "serde_json",
- "solana-account-decoder",
- "solana-clap-utils",
- "solana-client",
- "solana-sdk",
- "solana-transaction-status",
- "solana-vote-program",
+ "nexis-account-decompiler",
+ "nexis-clap-utils",
+ "nexis-client",
+ "nexis-sdk",
+ "nexis-transaction-status",
+ "nexis-vote-program",
  "spl-memo",
 ]
 
 [[package]]
-name = "solana-client"
+name = "nexis-client"
 version = "1.9.29"
 dependencies = [
  "assert_matches",
@@ -6129,16 +6129,16 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "solana-account-decoder",
- "solana-clap-utils",
- "solana-faucet",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-net-utils",
- "solana-sdk",
- "solana-transaction-status",
- "solana-version",
- "solana-vote-program",
+ "nexis-account-decompiler",
+ "nexis-clap-utils",
+ "nexis-faucet",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-net-utils",
+ "nexis-sdk",
+ "nexis-transaction-status",
+ "nexis-version",
+ "nexis-vote-program",
  "thiserror",
  "tokio",
  "tungstenite",
@@ -6146,52 +6146,52 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-client-test"
+name = "nexis-client-test"
 version = "1.9.29"
 dependencies = [
  "serde_json",
  "serial_test 0.5.1",
- "solana-client",
- "solana-ledger",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-merkle-tree",
- "solana-metrics",
- "solana-perf",
- "solana-rayon-threadlimit",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-test-validator",
- "solana-transaction-status",
- "solana-version",
+ "nexis-client",
+ "nexis-ledger",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-merkle-tree",
+ "nexis-metrics",
+ "nexis-perf",
+ "nexis-rayon-threadlimit",
+ "nexis-rpc",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-streamer",
+ "nexis-test-validator",
+ "nexis-transaction-status",
+ "nexis-version",
  "systemstat",
 ]
 
 [[package]]
-name = "solana-compute-budget-program"
+name = "nexis-compute-budget-program"
 version = "1.9.29"
 dependencies = [
- "solana-program-runtime",
- "solana-sdk",
+ "nexis-program-runtime",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-config-program"
+name = "nexis-config-program"
 version = "1.9.29"
 dependencies = [
  "bincode",
  "chrono",
  "serde",
  "serde_derive",
- "solana-logger 1.9.29",
- "solana-program-runtime",
- "solana-sdk",
+ "nexis-logger 1.9.29",
+ "nexis-program-runtime",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-core"
+name = "nexis-core"
 version = "1.9.29"
 dependencies = [
  "ahash",
@@ -6232,33 +6232,33 @@ dependencies = [
  "serial_test 0.5.1",
  "sha3 0.9.1",
  "snafu",
- "solana-bloom",
- "solana-client",
- "solana-entry",
- "solana-evm-loader-program",
- "solana-frozen-abi 1.9.29",
- "solana-frozen-abi-macro 1.9.29",
- "solana-geyser-plugin-manager",
- "solana-gossip",
- "solana-ledger",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-metrics",
- "solana-net-utils",
- "solana-perf",
- "solana-poh",
- "solana-program-runtime",
- "solana-rayon-threadlimit",
- "solana-replica-lib",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-send-transaction-service",
- "solana-stake-program",
- "solana-streamer",
- "solana-transaction-status",
- "solana-version",
- "solana-vote-program",
+ "nexis-bloom",
+ "nexis-client",
+ "nexis-entry",
+ "nexis-evm-loader-program",
+ "nexis-frozen-abi 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-geyser-plugin-manager",
+ "nexis-gossip",
+ "nexis-ledger",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-metrics",
+ "nexis-net-utils",
+ "nexis-perf",
+ "nexis-poh",
+ "nexis-program-runtime",
+ "nexis-rayon-threadlimit",
+ "nexis-replica-lib",
+ "nexis-rpc",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-send-transaction-service",
+ "nexis-stake-program",
+ "nexis-streamer",
+ "nexis-transaction-status",
+ "nexis-version",
+ "nexis-vote-program",
  "static_assertions",
  "sys-info",
  "systemstat",
@@ -6266,54 +6266,54 @@ dependencies = [
  "thiserror",
  "tokio",
  "trees",
- "exzo-account-program",
- "exzo-relying-party-program",
+ "nexis-account-program",
+ "nexis-relying-party-program",
 ]
 
 [[package]]
-name = "solana-dos"
+name = "nexis-dos"
 version = "1.9.29"
 dependencies = [
  "bincode",
  "clap 2.34.0",
  "log 0.4.17",
  "rand 0.7.3",
- "solana-client",
- "solana-core",
- "solana-gossip",
- "solana-logger 1.9.29",
- "solana-net-utils",
- "solana-perf",
- "solana-sdk",
- "solana-streamer",
- "solana-version",
+ "nexis-client",
+ "nexis-core",
+ "nexis-gossip",
+ "nexis-logger 1.9.29",
+ "nexis-net-utils",
+ "nexis-perf",
+ "nexis-sdk",
+ "nexis-streamer",
+ "nexis-version",
 ]
 
 [[package]]
-name = "solana-download-utils"
+name = "nexis-download-utils"
 version = "1.9.29"
 dependencies = [
  "console 0.15.1",
  "indicatif 0.16.2",
  "log 0.4.17",
  "reqwest",
- "solana-runtime",
- "solana-sdk",
+ "nexis-runtime",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-ed25519-program-tests"
+name = "nexis-ed25519-program-tests"
 version = "1.9.29"
 dependencies = [
  "assert_matches",
  "ed25519-dalek",
  "rand 0.7.3",
- "solana-program-test",
- "solana-sdk",
+ "nexis-program-test",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-entry"
+name = "nexis-entry"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -6324,17 +6324,17 @@ dependencies = [
  "rand 0.7.3",
  "rayon",
  "serde",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-merkle-tree",
- "solana-metrics",
- "solana-perf",
- "solana-rayon-threadlimit",
- "solana-sdk",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-merkle-tree",
+ "nexis-metrics",
+ "nexis-perf",
+ "nexis-rayon-threadlimit",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-evm-loader-program"
+name = "nexis-evm-loader-program"
 version = "0.1.0"
 dependencies = [
  "assert_matches",
@@ -6361,14 +6361,14 @@ dependencies = [
  "sha3 0.9.1",
  "simple_logger",
  "snafu",
- "solana-logger 1.9.29",
- "solana-program-runtime",
- "solana-sdk",
+ "nexis-logger 1.9.29",
+ "nexis-program-runtime",
+ "nexis-sdk",
  "substrate-bn",
 ]
 
 [[package]]
-name = "solana-faucet"
+name = "nexis-faucet"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -6377,19 +6377,19 @@ dependencies = [
  "log 0.4.17",
  "serde",
  "serde_derive",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-logger 1.9.29",
- "solana-metrics",
- "solana-sdk",
- "solana-version",
+ "nexis-clap-utils",
+ "nexis-cli-config",
+ "nexis-logger 1.9.29",
+ "nexis-metrics",
+ "nexis-sdk",
+ "nexis-version",
  "spl-memo",
  "thiserror",
  "tokio",
 ]
 
 [[package]]
-name = "solana-frozen-abi"
+name = "nexis-frozen-abi"
 version = "1.9.29"
 dependencies = [
  "bs58",
@@ -6401,13 +6401,13 @@ dependencies = [
  "serde",
  "serde_derive",
  "sha2",
- "solana-frozen-abi-macro 1.9.29",
- "solana-logger 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-logger 1.9.29",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-frozen-abi"
+name = "nexis-frozen-abi"
 version = "1.9.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2d4fcb89eb3d0f30bd4b4a31ad1825c9d95cd638509acead00969d7601713288"
@@ -6421,13 +6421,13 @@ dependencies = [
  "serde",
  "serde_derive",
  "sha2",
- "solana-frozen-abi-macro 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
- "solana-logger 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nexis-frozen-abi-macro 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nexis-logger 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-frozen-abi-macro"
+name = "nexis-frozen-abi-macro"
 version = "1.9.29"
 dependencies = [
  "proc-macro2 1.0.43",
@@ -6437,7 +6437,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-frozen-abi-macro"
+name = "nexis-frozen-abi-macro"
 version = "1.9.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d63ab101db88ecccd8da34065b9097b88367e0744fdfd05cb7de87b4ede3717f"
@@ -6449,7 +6449,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-genesis"
+name = "nexis-genesis"
 version = "1.9.29"
 dependencies = [
  "base64 0.12.3",
@@ -6461,41 +6461,41 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-entry",
- "solana-evm-loader-program",
- "solana-ledger",
- "solana-logger 1.9.29",
- "solana-runtime",
- "solana-sdk",
- "solana-stake-program",
- "solana-version",
- "solana-vote-program",
+ "nexis-clap-utils",
+ "nexis-cli-config",
+ "nexis-entry",
+ "nexis-evm-loader-program",
+ "nexis-ledger",
+ "nexis-logger 1.9.29",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-stake-program",
+ "nexis-version",
+ "nexis-vote-program",
  "tempfile",
 ]
 
 [[package]]
-name = "solana-genesis-utils"
+name = "nexis-genesis-utils"
 version = "1.9.29"
 dependencies = [
- "solana-download-utils",
- "solana-runtime",
- "solana-sdk",
+ "nexis-download-utils",
+ "nexis-runtime",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-geyser-plugin-interface"
+name = "nexis-geyser-plugin-interface"
 version = "1.9.29"
 dependencies = [
  "log 0.4.17",
- "solana-sdk",
- "solana-transaction-status",
+ "nexis-sdk",
+ "nexis-transaction-status",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-geyser-plugin-manager"
+name = "nexis-geyser-plugin-manager"
 version = "1.9.29"
 dependencies = [
  "bs58",
@@ -6505,19 +6505,19 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "solana-geyser-plugin-interface",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-metrics",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-transaction-status",
+ "nexis-geyser-plugin-interface",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-metrics",
+ "nexis-rpc",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-transaction-status",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-gossip"
+name = "nexis-gossip"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -6539,45 +6539,45 @@ dependencies = [
  "serde_bytes",
  "serde_derive",
  "serial_test 0.5.1",
- "solana-bloom",
- "solana-clap-utils",
- "solana-client",
- "solana-entry",
- "solana-frozen-abi 1.9.29",
- "solana-frozen-abi-macro 1.9.29",
- "solana-ledger",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-metrics",
- "solana-net-utils",
- "solana-perf",
- "solana-rayon-threadlimit",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-version",
- "solana-vote-program",
+ "nexis-bloom",
+ "nexis-clap-utils",
+ "nexis-client",
+ "nexis-entry",
+ "nexis-frozen-abi 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-ledger",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-metrics",
+ "nexis-net-utils",
+ "nexis-perf",
+ "nexis-rayon-threadlimit",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-streamer",
+ "nexis-version",
+ "nexis-vote-program",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-keygen"
+name = "nexis-keygen"
 version = "1.9.29"
 dependencies = [
  "bs58",
  "clap 2.34.0",
  "dirs-next",
  "num_cpus",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-remote-wallet",
- "solana-sdk",
- "solana-version",
+ "nexis-clap-utils",
+ "nexis-cli-config",
+ "nexis-remote-wallet",
+ "nexis-sdk",
+ "nexis-version",
  "tiny-bip39",
 ]
 
 [[package]]
-name = "solana-ledger"
+name = "nexis-ledger"
 version = "1.9.29"
 dependencies = [
  "assert_matches",
@@ -6607,23 +6607,23 @@ dependencies = [
  "serde",
  "serde_bytes",
  "sha2",
- "solana-account-decoder",
- "solana-bpf-loader-program",
- "solana-entry",
- "solana-frozen-abi 1.9.29",
- "solana-frozen-abi-macro 1.9.29",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-metrics",
- "solana-perf",
- "solana-program-runtime",
- "solana-rayon-threadlimit",
- "solana-runtime",
- "solana-sdk",
- "solana-storage-bigtable",
- "solana-storage-proto",
- "solana-transaction-status",
- "solana-vote-program",
+ "nexis-account-decompiler",
+ "nexis-bpf-loader-program",
+ "nexis-entry",
+ "nexis-frozen-abi 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-metrics",
+ "nexis-perf",
+ "nexis-program-runtime",
+ "nexis-rayon-threadlimit",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-storage-bigtable",
+ "nexis-storage-proto",
+ "nexis-transaction-status",
+ "nexis-vote-program",
  "tempfile",
  "thiserror",
  "tokio",
@@ -6632,7 +6632,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-ledger-tool"
+name = "nexis-ledger-tool"
 version = "1.9.29"
 dependencies = [
  "anyhow",
@@ -6656,28 +6656,28 @@ dependencies = [
  "serde_json",
  "serde_yaml",
  "signal-hook",
- "solana-clap-utils",
- "solana-cli-output",
- "solana-core",
- "solana-entry",
- "solana-evm-loader-program",
- "solana-ledger",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-runtime",
- "solana-sdk",
- "solana-stake-program",
- "solana-storage-bigtable",
- "solana-transaction-status",
- "solana-version",
- "solana-vote-program",
+ "nexis-clap-utils",
+ "nexis-cli-output",
+ "nexis-core",
+ "nexis-entry",
+ "nexis-evm-loader-program",
+ "nexis-ledger",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-stake-program",
+ "nexis-storage-bigtable",
+ "nexis-transaction-status",
+ "nexis-version",
+ "nexis-vote-program",
  "tikv-jemallocator",
  "tokio",
  "triedb",
 ]
 
 [[package]]
-name = "solana-local-cluster"
+name = "nexis-local-cluster"
 version = "1.9.29"
 dependencies = [
  "assert_matches",
@@ -6689,36 +6689,36 @@ dependencies = [
  "rand 0.7.3",
  "rayon",
  "serial_test 0.5.1",
- "solana-client",
- "solana-config-program",
- "solana-core",
- "solana-download-utils",
- "solana-entry",
- "solana-gossip",
- "solana-ledger",
- "solana-logger 1.9.29",
- "solana-runtime",
- "solana-sdk",
- "solana-stake-program",
- "solana-streamer",
- "solana-vote-program",
+ "nexis-client",
+ "nexis-config-program",
+ "nexis-core",
+ "nexis-download-utils",
+ "nexis-entry",
+ "nexis-gossip",
+ "nexis-ledger",
+ "nexis-logger 1.9.29",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-stake-program",
+ "nexis-streamer",
+ "nexis-vote-program",
  "tempfile",
 ]
 
 [[package]]
-name = "solana-log-analyzer"
+name = "nexis-log-analyzer"
 version = "1.9.29"
 dependencies = [
  "byte-unit",
  "clap 2.34.0",
  "serde",
  "serde_json",
- "solana-logger 1.9.29",
- "solana-version",
+ "nexis-logger 1.9.29",
+ "nexis-version",
 ]
 
 [[package]]
-name = "solana-logger"
+name = "nexis-logger"
 version = "1.9.29"
 dependencies = [
  "env_logger 0.9.0",
@@ -6727,7 +6727,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-logger"
+name = "nexis-logger"
 version = "1.9.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9ce1805d52fc8277a84c4803c7850c8f41471b57fb0dec7750338955ad6e43e2"
@@ -6738,38 +6738,38 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-measure"
+name = "nexis-measure"
 version = "1.9.29"
 dependencies = [
  "log 0.4.17",
- "solana-sdk",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-merkle-root-bench"
+name = "nexis-merkle-root-bench"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
  "log 0.4.17",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-runtime",
- "solana-sdk",
- "solana-version",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-version",
 ]
 
 [[package]]
-name = "solana-merkle-tree"
+name = "nexis-merkle-tree"
 version = "1.9.29"
 dependencies = [
  "fast-math",
  "hex",
  "matches",
- "solana-program 1.9.29",
+ "nexis-program 1.9.29",
 ]
 
 [[package]]
-name = "solana-metrics"
+name = "nexis-metrics"
 version = "1.9.29"
 dependencies = [
  "env_logger 0.9.0",
@@ -6779,23 +6779,23 @@ dependencies = [
  "rand 0.7.3",
  "reqwest",
  "serial_test 0.5.1",
- "solana-sdk",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-net-shaper"
+name = "nexis-net-shaper"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
  "rand 0.7.3",
  "serde",
  "serde_json",
- "solana-clap-utils",
- "solana-logger 1.9.29",
+ "nexis-clap-utils",
+ "nexis-logger 1.9.29",
 ]
 
 [[package]]
-name = "solana-net-utils"
+name = "nexis-net-utils"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -6806,15 +6806,15 @@ dependencies = [
  "serde",
  "serde_derive",
  "socket2",
- "solana-logger 1.9.29",
- "solana-sdk",
- "solana-version",
+ "nexis-logger 1.9.29",
+ "nexis-sdk",
+ "nexis-version",
  "tokio",
  "url 2.2.2",
 ]
 
 [[package]]
-name = "solana-notifier"
+name = "nexis-notifier"
 version = "1.9.29"
 dependencies = [
  "log 0.4.17",
@@ -6823,7 +6823,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-perf"
+name = "nexis-perf"
 version = "1.9.29"
 dependencies = [
  "ahash",
@@ -6842,16 +6842,16 @@ dependencies = [
  "rand 0.7.3",
  "rayon",
  "serde",
- "solana-bloom",
- "solana-logger 1.9.29",
- "solana-metrics",
- "solana-rayon-threadlimit",
- "solana-sdk",
- "solana-vote-program",
+ "nexis-bloom",
+ "nexis-logger 1.9.29",
+ "nexis-metrics",
+ "nexis-rayon-threadlimit",
+ "nexis-sdk",
+ "nexis-vote-program",
 ]
 
 [[package]]
-name = "solana-poh"
+name = "nexis-poh"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -6860,36 +6860,36 @@ dependencies = [
  "log 0.4.17",
  "matches",
  "rand 0.7.3",
- "solana-entry",
- "solana-ledger",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-metrics",
- "solana-perf",
- "solana-runtime",
- "solana-sdk",
- "solana-sys-tuner",
+ "nexis-entry",
+ "nexis-ledger",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-metrics",
+ "nexis-perf",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-sys-tuner",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-poh-bench"
+name = "nexis-poh-bench"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
  "log 0.4.17",
  "rand 0.7.3",
  "rayon",
- "solana-entry",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-perf",
- "solana-sdk",
- "solana-version",
+ "nexis-entry",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-perf",
+ "nexis-sdk",
+ "nexis-version",
 ]
 
 [[package]]
-name = "solana-program"
+name = "nexis-program"
 version = "1.9.29"
 dependencies = [
  "anyhow",
@@ -6924,17 +6924,17 @@ dependencies = [
  "serde_json",
  "sha2",
  "sha3 0.9.1",
- "solana-frozen-abi 1.9.29",
- "solana-frozen-abi-macro 1.9.29",
- "solana-logger 1.9.29",
- "solana-sdk-macro 1.9.29",
+ "nexis-frozen-abi 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-logger 1.9.29",
+ "nexis-sdk-macro 1.9.29",
  "static_assertions",
  "thiserror",
  "wasm-bindgen",
 ]
 
 [[package]]
-name = "solana-program"
+name = "nexis-program"
 version = "1.9.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f5deafc4902425d40197f74166640300dd20b078e4ffd518c1bb56ceb7e01680"
@@ -6968,16 +6968,16 @@ dependencies = [
  "serde_derive",
  "sha2",
  "sha3 0.9.1",
- "solana-frozen-abi 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
- "solana-frozen-abi-macro 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
- "solana-logger 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
- "solana-sdk-macro 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nexis-frozen-abi 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nexis-frozen-abi-macro 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nexis-logger 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nexis-sdk-macro 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
  "thiserror",
  "wasm-bindgen",
 ]
 
 [[package]]
-name = "solana-program-runtime"
+name = "nexis-program-runtime"
 version = "1.9.29"
 dependencies = [
  "base64 0.13.0",
@@ -6991,16 +6991,16 @@ dependencies = [
  "num-traits",
  "rustc_version 0.4.0",
  "serde",
- "solana-frozen-abi 1.9.29",
- "solana-frozen-abi-macro 1.9.29",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-sdk",
+ "nexis-frozen-abi 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-sdk",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-program-test"
+name = "nexis-program-test"
 version = "1.9.29"
 dependencies = [
  "assert_matches",
@@ -7010,20 +7010,20 @@ dependencies = [
  "chrono-humanize",
  "log 0.4.17",
  "serde",
- "solana-banks-client",
- "solana-banks-server",
- "solana-bpf-loader-program",
- "solana-logger 1.9.29",
- "solana-program-runtime",
- "solana-runtime",
- "solana-sdk",
- "solana-vote-program",
+ "nexis-banks-client",
+ "nexis-banks-server",
+ "nexis-bpf-loader-program",
+ "nexis-logger 1.9.29",
+ "nexis-program-runtime",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-vote-program",
  "thiserror",
  "tokio",
 ]
 
 [[package]]
-name = "solana-rayon-threadlimit"
+name = "nexis-rayon-threadlimit"
 version = "1.9.29"
 dependencies = [
  "lazy_static",
@@ -7031,7 +7031,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-remote-wallet"
+name = "nexis-remote-wallet"
 version = "1.9.29"
 dependencies = [
  "base32",
@@ -7044,29 +7044,29 @@ dependencies = [
  "parking_lot 0.11.2",
  "qstring",
  "semver 1.0.13",
- "solana-sdk",
+ "nexis-sdk",
  "thiserror",
  "uriparse",
 ]
 
 [[package]]
-name = "solana-replica-lib"
+name = "nexis-replica-lib"
 version = "1.9.29"
 dependencies = [
  "crossbeam-channel",
  "futures-util",
  "log 0.4.17",
  "prost 0.11.0",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
+ "nexis-rpc",
+ "nexis-runtime",
+ "nexis-sdk",
  "tokio",
  "tonic 0.8.1",
  "tonic-build 0.8.0",
 ]
 
 [[package]]
-name = "solana-replica-node"
+name = "nexis-replica-node"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
@@ -7074,29 +7074,29 @@ dependencies = [
  "log 0.4.17",
  "rand 0.7.3",
  "serial_test 0.5.1",
- "solana-clap-utils",
- "solana-core",
- "solana-download-utils",
- "solana-genesis-utils",
- "solana-gossip",
- "solana-ledger",
- "solana-local-cluster",
- "solana-logger 1.9.29",
- "solana-net-utils",
- "solana-replica-lib",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-send-transaction-service",
- "solana-streamer",
- "solana-version",
+ "nexis-clap-utils",
+ "nexis-core",
+ "nexis-download-utils",
+ "nexis-genesis-utils",
+ "nexis-gossip",
+ "nexis-ledger",
+ "nexis-local-cluster",
+ "nexis-logger 1.9.29",
+ "nexis-net-utils",
+ "nexis-replica-lib",
+ "nexis-rpc",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-send-transaction-service",
+ "nexis-streamer",
+ "nexis-version",
  "tempfile",
  "tonic-build 0.8.0",
- "exzo-validator",
+ "nexis-validator",
 ]
 
 [[package]]
-name = "solana-rpc"
+name = "nexis-rpc"
 version = "1.9.29"
 dependencies = [
  "base64 0.12.3",
@@ -7126,28 +7126,28 @@ dependencies = [
  "sha3 0.10.2",
  "snafu",
  "soketto",
- "solana-account-decoder",
- "solana-client",
- "solana-entry",
- "solana-evm-loader-program",
- "solana-faucet",
- "solana-gossip",
- "solana-ledger",
- "solana-measure",
- "solana-metrics",
- "solana-net-utils",
- "solana-perf",
- "solana-poh",
- "solana-rayon-threadlimit",
- "solana-runtime",
- "solana-sdk",
- "solana-send-transaction-service",
- "solana-stake-program",
- "solana-storage-bigtable",
- "solana-streamer",
- "solana-transaction-status",
- "solana-version",
- "solana-vote-program",
+ "nexis-account-decompiler",
+ "nexis-client",
+ "nexis-entry",
+ "nexis-evm-loader-program",
+ "nexis-faucet",
+ "nexis-gossip",
+ "nexis-ledger",
+ "nexis-measure",
+ "nexis-metrics",
+ "nexis-net-utils",
+ "nexis-perf",
+ "nexis-poh",
+ "nexis-rayon-threadlimit",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-send-transaction-service",
+ "nexis-stake-program",
+ "nexis-storage-bigtable",
+ "nexis-streamer",
+ "nexis-transaction-status",
+ "nexis-version",
+ "nexis-vote-program",
  "spl-token",
  "stream-cancel",
  "symlink",
@@ -7158,12 +7158,12 @@ dependencies = [
  "tracing-attributes",
  "tracing-opentelemetry 0.16.0",
  "tracing-subscriber 0.3.15",
- "exzo-account-program",
- "exzo-relying-party-program",
+ "nexis-account-program",
+ "nexis-relying-party-program",
 ]
 
 [[package]]
-name = "solana-rpc-test"
+name = "nexis-rpc-test"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -7178,20 +7178,20 @@ dependencies = [
  "reqwest",
  "serde",
  "serde_json",
- "solana-account-decoder",
- "solana-client",
- "solana-evm-loader-program",
- "solana-logger 1.9.29",
- "solana-rpc",
- "solana-sdk",
- "solana-streamer",
- "solana-test-validator",
- "solana-transaction-status",
+ "nexis-account-decompiler",
+ "nexis-client",
+ "nexis-evm-loader-program",
+ "nexis-logger 1.9.29",
+ "nexis-rpc",
+ "nexis-sdk",
+ "nexis-streamer",
+ "nexis-test-validator",
+ "nexis-transaction-status",
  "tokio",
 ]
 
 [[package]]
-name = "solana-runtime"
+name = "nexis-runtime"
 version = "1.9.29"
 dependencies = [
  "anyhow",
@@ -7227,34 +7227,34 @@ dependencies = [
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-address-lookup-table-program",
- "solana-bloom",
- "solana-bucket-map",
- "solana-compute-budget-program",
- "solana-config-program",
- "solana-evm-loader-program",
- "solana-frozen-abi 1.9.29",
- "solana-frozen-abi-macro 1.9.29",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-metrics",
- "solana-program-runtime",
- "solana-rayon-threadlimit",
- "solana-sdk",
- "solana-stake-program",
- "solana-vote-program",
+ "nexis-address-lookup-table-program",
+ "nexis-bloom",
+ "nexis-bucket-map",
+ "nexis-compute-budget-program",
+ "nexis-config-program",
+ "nexis-evm-loader-program",
+ "nexis-frozen-abi 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-metrics",
+ "nexis-program-runtime",
+ "nexis-rayon-threadlimit",
+ "nexis-sdk",
+ "nexis-stake-program",
+ "nexis-vote-program",
  "symlink",
  "tar",
  "tempfile",
  "thiserror",
- "exzo-account-program",
- "exzo-relying-party-program",
+ "nexis-account-program",
+ "nexis-relying-party-program",
  "walkdir",
  "zstd",
 ]
 
 [[package]]
-name = "solana-sdk"
+name = "nexis-sdk"
 version = "1.9.29"
 dependencies = [
  "anyhow",
@@ -7300,11 +7300,11 @@ dependencies = [
  "serde_json",
  "sha2",
  "sha3 0.9.1",
- "solana-frozen-abi 1.9.29",
- "solana-frozen-abi-macro 1.9.29",
- "solana-logger 1.9.29",
- "solana-program 1.9.29",
- "solana-sdk-macro 1.9.29",
+ "nexis-frozen-abi 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-logger 1.9.29",
+ "nexis-program 1.9.29",
+ "nexis-sdk-macro 1.9.29",
  "tempfile",
  "thiserror",
  "tiny-bip39",
@@ -7314,7 +7314,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-sdk-macro"
+name = "nexis-sdk-macro"
 version = "1.9.29"
 dependencies = [
  "bs58",
@@ -7325,7 +7325,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-sdk-macro"
+name = "nexis-sdk-macro"
 version = "1.9.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3db4c93bd43c91290ad54fe6ff86179a859954f196507c4789a4876d38a62f17"
@@ -7338,43 +7338,43 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-send-transaction-service"
+name = "nexis-send-transaction-service"
 version = "1.9.29"
 dependencies = [
  "log 0.4.17",
- "solana-logger 1.9.29",
- "solana-metrics",
- "solana-runtime",
- "solana-sdk",
+ "nexis-logger 1.9.29",
+ "nexis-metrics",
+ "nexis-runtime",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-sleep-program"
+name = "nexis-sleep-program"
 version = "1.5.14"
 dependencies = [
  "byteorder",
  "log 0.4.17",
- "solana-logger 1.9.29",
- "solana-program-runtime",
- "solana-sdk",
+ "nexis-logger 1.9.29",
+ "nexis-program-runtime",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-stake-accounts"
+name = "nexis-stake-accounts"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-client",
- "solana-remote-wallet",
- "solana-runtime",
- "solana-sdk",
- "solana-stake-program",
+ "nexis-clap-utils",
+ "nexis-cli-config",
+ "nexis-client",
+ "nexis-remote-wallet",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-stake-program",
 ]
 
 [[package]]
-name = "solana-stake-program"
+name = "nexis-stake-program"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -7385,19 +7385,19 @@ dependencies = [
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-config-program",
- "solana-frozen-abi 1.9.29",
- "solana-frozen-abi-macro 1.9.29",
- "solana-logger 1.9.29",
- "solana-metrics",
- "solana-program-runtime",
- "solana-sdk",
- "solana-vote-program",
+ "nexis-config-program",
+ "nexis-frozen-abi 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-logger 1.9.29",
+ "nexis-metrics",
+ "nexis-program-runtime",
+ "nexis-sdk",
+ "nexis-vote-program",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-storage-bigtable"
+name = "nexis-storage-bigtable"
 version = "1.9.29"
 dependencies = [
  "backoff",
@@ -7415,17 +7415,17 @@ dependencies = [
  "serde",
  "serde_derive",
  "smpl_jwt",
- "solana-metrics",
- "solana-sdk",
- "solana-storage-proto",
- "solana-transaction-status",
+ "nexis-metrics",
+ "nexis-sdk",
+ "nexis-storage-proto",
+ "nexis-transaction-status",
  "thiserror",
  "tonic 0.8.1",
  "zstd",
 ]
 
 [[package]]
-name = "solana-storage-proto"
+name = "nexis-storage-proto"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -7435,25 +7435,25 @@ dependencies = [
  "prost 0.11.0",
  "rlp",
  "serde",
- "solana-account-decoder",
- "solana-sdk",
- "solana-transaction-status",
+ "nexis-account-decompiler",
+ "nexis-sdk",
+ "nexis-transaction-status",
  "tonic-build 0.8.0",
 ]
 
 [[package]]
-name = "solana-store-tool"
+name = "nexis-store-tool"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
  "log 0.4.17",
- "solana-logger 1.9.29",
- "solana-runtime",
- "solana-version",
+ "nexis-logger 1.9.29",
+ "nexis-runtime",
+ "nexis-version",
 ]
 
 [[package]]
-name = "solana-streamer"
+name = "nexis-streamer"
 version = "1.9.29"
 dependencies = [
  "crossbeam-channel",
@@ -7469,31 +7469,31 @@ dependencies = [
  "rand 0.7.3",
  "rcgen",
  "rustls 0.20.6",
- "solana-logger 1.9.29",
- "solana-metrics",
- "solana-perf",
- "solana-sdk",
+ "nexis-logger 1.9.29",
+ "nexis-metrics",
+ "nexis-perf",
+ "nexis-sdk",
  "thiserror",
  "tokio",
 ]
 
 [[package]]
-name = "solana-sys-tuner"
+name = "nexis-sys-tuner"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
  "libc",
  "log 0.4.17",
  "nix 0.23.1",
- "solana-logger 1.9.29",
- "solana-version",
+ "nexis-logger 1.9.29",
+ "nexis-version",
  "sysctl",
  "unix_socket2",
  "users",
 ]
 
 [[package]]
-name = "solana-test-validator"
+name = "nexis-test-validator"
 version = "1.9.29"
 dependencies = [
  "base64 0.12.3",
@@ -7501,22 +7501,22 @@ dependencies = [
  "log 0.4.17",
  "serde_derive",
  "serde_json",
- "solana-cli-output",
- "solana-client",
- "solana-core",
- "solana-gossip",
- "solana-ledger",
- "solana-logger 1.9.29",
- "solana-net-utils",
- "solana-program-test",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
+ "nexis-cli-output",
+ "nexis-client",
+ "nexis-core",
+ "nexis-gossip",
+ "nexis-ledger",
+ "nexis-logger 1.9.29",
+ "nexis-net-utils",
+ "nexis-program-test",
+ "nexis-rpc",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-streamer",
 ]
 
 [[package]]
-name = "solana-tokens"
+name = "nexis-tokens"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -7530,20 +7530,20 @@ dependencies = [
  "indicatif 0.15.0",
  "pickledb",
  "serde",
- "solana-account-decoder",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-client",
- "solana-core",
- "solana-logger 1.9.29",
- "solana-remote-wallet",
- "solana-runtime",
- "solana-sdk",
- "solana-stake-program",
- "solana-streamer",
- "solana-test-validator",
- "solana-transaction-status",
- "solana-version",
+ "nexis-account-decompiler",
+ "nexis-clap-utils",
+ "nexis-cli-config",
+ "nexis-client",
+ "nexis-core",
+ "nexis-logger 1.9.29",
+ "nexis-remote-wallet",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-stake-program",
+ "nexis-streamer",
+ "nexis-test-validator",
+ "nexis-transaction-status",
+ "nexis-version",
  "spl-associated-token-account",
  "spl-token",
  "tempfile",
@@ -7551,7 +7551,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-transaction-dos"
+name = "nexis-transaction-dos"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -7559,25 +7559,25 @@ dependencies = [
  "log 0.4.17",
  "rand 0.7.3",
  "rayon",
- "solana-clap-utils",
- "solana-cli",
- "solana-client",
- "solana-core",
- "solana-faucet",
- "solana-gossip",
- "solana-local-cluster",
- "solana-logger 1.9.29",
- "solana-measure",
- "solana-net-utils",
- "solana-runtime",
- "solana-sdk",
- "solana-streamer",
- "solana-transaction-status",
- "solana-version",
+ "nexis-clap-utils",
+ "nexis-cli",
+ "nexis-client",
+ "nexis-core",
+ "nexis-faucet",
+ "nexis-gossip",
+ "nexis-local-cluster",
+ "nexis-logger 1.9.29",
+ "nexis-measure",
+ "nexis-net-utils",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-streamer",
+ "nexis-transaction-status",
+ "nexis-version",
 ]
 
 [[package]]
-name = "solana-transaction-status"
+name = "nexis-transaction-status"
 version = "1.9.29"
 dependencies = [
  "Inflector",
@@ -7591,13 +7591,13 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "solana-account-decoder",
- "solana-evm-loader-program",
- "solana-measure",
- "solana-metrics",
- "solana-runtime",
- "solana-sdk",
- "solana-vote-program",
+ "nexis-account-decompiler",
+ "nexis-evm-loader-program",
+ "nexis-measure",
+ "nexis-metrics",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-vote-program",
  "spl-associated-token-account",
  "spl-memo",
  "spl-token",
@@ -7605,28 +7605,28 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-upload-perf"
+name = "nexis-upload-perf"
 version = "1.9.29"
 dependencies = [
  "serde_json",
- "solana-metrics",
+ "nexis-metrics",
 ]
 
 [[package]]
-name = "solana-version"
+name = "nexis-version"
 version = "0.6.3"
 dependencies = [
  "log 0.4.17",
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-frozen-abi 1.9.29",
- "solana-frozen-abi-macro 1.9.29",
- "solana-sdk",
+ "nexis-frozen-abi 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "solana-vote-program"
+name = "nexis-vote-program"
 version = "1.9.29"
 dependencies = [
  "bincode",
@@ -7636,35 +7636,35 @@ dependencies = [
  "rustc_version 0.4.0",
  "serde",
  "serde_derive",
- "solana-frozen-abi 1.9.29",
- "solana-frozen-abi-macro 1.9.29",
- "solana-logger 1.9.29",
- "solana-metrics",
- "solana-program-runtime",
- "solana-sdk",
+ "nexis-frozen-abi 1.9.29",
+ "nexis-frozen-abi-macro 1.9.29",
+ "nexis-logger 1.9.29",
+ "nexis-metrics",
+ "nexis-program-runtime",
+ "nexis-sdk",
  "thiserror",
 ]
 
 [[package]]
-name = "solana-watchtower"
+name = "nexis-watchtower"
 version = "1.9.29"
 dependencies = [
  "clap 2.34.0",
  "humantime",
  "log 0.4.17",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-cli-output",
- "solana-client",
- "solana-logger 1.9.29",
- "solana-metrics",
- "solana-notifier",
- "solana-sdk",
- "solana-version",
+ "nexis-clap-utils",
+ "nexis-cli-config",
+ "nexis-cli-output",
+ "nexis-client",
+ "nexis-logger 1.9.29",
+ "nexis-metrics",
+ "nexis-notifier",
+ "nexis-sdk",
+ "nexis-version",
 ]
 
 [[package]]
-name = "solana_rbpf"
+name = "nexis_rbpf"
 version = "0.2.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "41e138f6d6d4eb6a65f8e9f01ca620bc9907d79648d5038a69dd3f07b6ed3f1f"
@@ -7710,16 +7710,16 @@ version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "393e2240d521c3dd770806bff25c2c00d761ac962be106e14e22dd912007f428"
 dependencies = [
- "solana-program 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nexis-program 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
  "spl-token",
 ]
 
 [[package]]
 name = "spl-memo"
 version = "3.0.1"
-source = "git+https://github.com/velas/spl-memo?branch=solana-1.9.29#42c429457ba14691cbafd216a921c34f09adaefc"
+source = "git+https://github.com/Nexis-Network/spl-memo?branch=nexis-1.9.29#42c429457ba14691cbafd216a921c34f09adaefc"
 dependencies = [
- "solana-program 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nexis-program 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -7732,7 +7732,7 @@ dependencies = [
  "num-derive",
  "num-traits",
  "num_enum",
- "solana-program 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nexis-program 1.9.29 (registry+https://github.com/rust-lang/crates.io-index)",
  "thiserror",
 ]
 
@@ -8764,7 +8764,7 @@ checksum = "0de5f738ceab88e2491a94ddc33c3feeadfa95fedc60363ef110845df12f3878"
 [[package]]
 name = "triedb"
 version = "0.5.0"
-source = "git+https://github.com/velas/triedb?tag=rocksdb-v0.19#753477ba91ae88c2b928c7edddec86548504d360"
+source = "git+https://github.com/Nexis-Network/triedb?tag=rocksdb-v0.19#753477ba91ae88c2b928c7edddec86548504d360"
 dependencies = [
  "anyhow",
  "dashmap 4.0.2",
@@ -8818,7 +8818,7 @@ dependencies = [
 [[package]]
 name = "txpool"
 version = "1.0.0-alpha"
-source = "git+https://github.com/velas/transaction-pool?tag=v1.0.0-alpha#2f532dd0c1f7db02bea86e5d492d0eb428fcfe00"
+source = "git+https://github.com/Nexis-Network/transaction-pool?tag=v1.0.0-alpha#2f532dd0c1f7db02bea86e5d492d0eb428fcfe00"
 dependencies = [
  "log 0.4.17",
  "smallvec 0.6.14",
@@ -8840,7 +8840,7 @@ checksum = "dcf81ac59edc17cc8697ff311e8f5ef2d99fcbd9817b34cec66f90b6c3dfd987"
 [[package]]
 name = "uint"
 version = "0.9.3"
-source = "git+https://github.com/velas/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
+source = "git+https://github.com/Nexis-Network/parity-common?tag=primitive-types-v0.11-with-borsh-support#974f23ebc1956239cd8150e0ae80517343d82836"
 dependencies = [
  "byteorder",
  "crunchy",
@@ -9009,18 +9009,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
 
 [[package]]
-name = "exzo-account-program"
+name = "nexis-account-program"
 version = "0.0.1"
 dependencies = [
  "base64 0.13.0",
  "borsh",
  "borsh-derive",
  "serde",
- "solana-sdk",
+ "nexis-sdk",
 ]
 
 [[package]]
-name = "exzo-install"
+name = "nexis-install"
 version = "1.9.29"
 dependencies = [
  "atty",
@@ -9040,12 +9040,12 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
- "solana-clap-utils",
- "solana-client",
- "solana-config-program",
- "solana-logger 1.9.29",
- "solana-sdk",
- "solana-version",
+ "nexis-clap-utils",
+ "nexis-client",
+ "nexis-config-program",
+ "nexis-logger 1.9.29",
+ "nexis-sdk",
+ "nexis-version",
  "tempfile",
  "url 2.2.2",
  "winapi 0.3.9",
@@ -9053,18 +9053,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "exzo-relying-party-program"
+name = "nexis-relying-party-program"
 version = "0.0.1"
 dependencies = [
  "borsh",
  "borsh-derive",
  "serde",
  "serde_with",
- "solana-program 1.9.29",
+ "nexis-program 1.9.29",
 ]
 
 [[package]]
-name = "exzo-validator"
+name = "nexis-validator"
 version = "1.9.29"
 dependencies = [
  "chrono",
@@ -9084,30 +9084,30 @@ dependencies = [
  "num_cpus",
  "rand 0.7.3",
  "signal-hook",
- "solana-clap-utils",
- "solana-cli-config",
- "solana-client",
- "solana-core",
- "solana-download-utils",
- "solana-entry",
- "solana-faucet",
- "solana-genesis-utils",
- "solana-gossip",
- "solana-ledger",
- "solana-logger 1.9.29",
- "solana-metrics",
- "solana-net-utils",
- "solana-perf",
- "solana-poh",
- "solana-replica-lib",
- "solana-rpc",
- "solana-runtime",
- "solana-sdk",
- "solana-send-transaction-service",
- "solana-streamer",
- "solana-test-validator",
- "solana-version",
- "solana-vote-program",
+ "nexis-clap-utils",
+ "nexis-cli-config",
+ "nexis-client",
+ "nexis-core",
+ "nexis-download-utils",
+ "nexis-entry",
+ "nexis-faucet",
+ "nexis-genesis-utils",
+ "nexis-gossip",
+ "nexis-ledger",
+ "nexis-logger 1.9.29",
+ "nexis-metrics",
+ "nexis-net-utils",
+ "nexis-perf",
+ "nexis-poh",
+ "nexis-replica-lib",
+ "nexis-rpc",
+ "nexis-runtime",
+ "nexis-sdk",
+ "nexis-send-transaction-service",
+ "nexis-streamer",
+ "nexis-test-validator",
+ "nexis-version",
+ "nexis-vote-program",
  "symlink",
  "sysctl",
  "tempfile",

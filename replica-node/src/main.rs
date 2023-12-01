@@ -7,23 +7,23 @@ use {
     clap::{crate_description, crate_name, value_t, values_t, App, AppSettings, Arg},
     log::*,
     rand::{seq::SliceRandom, thread_rng},
-    solana_clap_utils::{
+    nexis_clap_utils::{
         input_parsers::keypair_of,
         input_validators::{is_keypair_or_ask_keyword, is_parsable, is_pubkey},
         keypair::SKIP_SEED_PHRASE_VALIDATION_ARG,
     },
-    solana_gossip::{
+    nexis_gossip::{
         cluster_info::{Node, VALIDATOR_PORT_RANGE},
         contact_info::ContactInfo,
     },
-    solana_replica_node::{
+    nexis_replica_node::{
         replica_node::{ReplicaNode, ReplicaNodeConfig},
         replica_util,
     },
-    solana_rpc::{rpc::JsonRpcConfig, rpc_pubsub_service::PubSubConfig},
-    solana_runtime::{accounts_index::AccountSecondaryIndexes, snapshot_utils::EVM_STATE_DIR},
-    solana_sdk::{exit::Exit, pubkey::Pubkey, signature::Signer},
-    solana_streamer::socket::SocketAddrSpace,
+    nexis_rpc::{rpc::JsonRpcConfig, rpc_pubsub_service::PubSubConfig},
+    nexis_runtime::{accounts_index::AccountSecondaryIndexes, snapshot_utils::EVM_STATE_DIR},
+    nexis_sdk::{exit::Exit, pubkey::Pubkey, signature::Signer},
+    nexis_streamer::socket::SocketAddrSpace,
     exzo_validator::port_range_validator,
     std::{
         collections::HashSet,
@@ -41,7 +41,7 @@ pub fn main() {
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .setting(AppSettings::VersionlessSubcommands)
         .setting(AppSettings::InferSubcommands)
         .arg(
@@ -131,7 +131,7 @@ pub fn main() {
                 .value_name("HOST:PORT")
                 .takes_value(true)
                 .multiple(true)
-                .validator(solana_net_utils::is_host_port)
+                .validator(nexis_net_utils::is_host_port)
                 .help("Rendezvous with the cluster at this gossip entrypoint"),
         )
         .arg(
@@ -139,7 +139,7 @@ pub fn main() {
                 .long("bind-address")
                 .value_name("HOST")
                 .takes_value(true)
-                .validator(solana_net_utils::is_host)
+                .validator(nexis_net_utils::is_host)
                 .default_value("0.0.0.0")
                 .help("IP address to bind the replica ports"),
         )
@@ -148,7 +148,7 @@ pub fn main() {
                 .long("rpc-bind-address")
                 .value_name("HOST")
                 .takes_value(true)
-                .validator(solana_net_utils::is_host)
+                .validator(nexis_net_utils::is_host)
                 .help("IP address to bind the Json RPC port [default: use --bind-address]"),
         )
         .arg(
@@ -197,11 +197,11 @@ pub fn main() {
         )
         .get_matches();
 
-    let bind_address = solana_net_utils::parse_host(matches.value_of("bind_address").unwrap())
+    let bind_address = nexis_net_utils::parse_host(matches.value_of("bind_address").unwrap())
         .expect("invalid bind_address");
 
     let rpc_bind_address = if let Some(rpc_bind_address) = matches.value_of("rpc_bind_address") {
-        solana_net_utils::parse_host(rpc_bind_address).expect("invalid rpc_bind_address")
+        nexis_net_utils::parse_host(rpc_bind_address).expect("invalid rpc_bind_address")
     } else {
         bind_address
     };
@@ -220,7 +220,7 @@ pub fn main() {
         .unwrap_or_default()
         .into_iter()
         .map(|entrypoint| {
-            solana_net_utils::parse_host_port(&entrypoint).unwrap_or_else(|e| {
+            nexis_net_utils::parse_host_port(&entrypoint).unwrap_or_else(|e| {
                 eprintln!("failed to parse entrypoint address: {}", e);
                 exit(1);
             })
@@ -236,7 +236,7 @@ pub fn main() {
     let gossip_host: IpAddr = matches
         .value_of("gossip_host")
         .map(|gossip_host| {
-            solana_net_utils::parse_host(gossip_host).unwrap_or_else(|err| {
+            nexis_net_utils::parse_host(gossip_host).unwrap_or_else(|err| {
                 eprintln!("Failed to parse --gossip-host: {}", err);
                 exit(1);
             })
@@ -252,7 +252,7 @@ pub fn main() {
                         "Contacting {} to determine the validator's public IP address",
                         entrypoint_addr
                     );
-                    solana_net_utils::get_public_ip_addr(entrypoint_addr).map_or_else(
+                    nexis_net_utils::get_public_ip_addr(entrypoint_addr).map_or_else(
                         |err| {
                             eprintln!(
                                 "Failed to contact cluster entrypoint {}: {}",
@@ -276,7 +276,7 @@ pub fn main() {
     let gossip_addr = SocketAddr::new(
         gossip_host,
         value_t!(matches, "gossip_port", u16).unwrap_or_else(|_| {
-            solana_net_utils::find_available_port_in_range(bind_address, (0, 1)).unwrap_or_else(
+            nexis_net_utils::find_available_port_in_range(bind_address, (0, 1)).unwrap_or_else(
                 |err| {
                     eprintln!("Unable to find an available gossip port: {}", err);
                     exit(1);
@@ -286,7 +286,7 @@ pub fn main() {
     );
 
     let dynamic_port_range =
-        solana_net_utils::parse_port_range(matches.value_of("dynamic_port_range").unwrap())
+        nexis_net_utils::parse_port_range(matches.value_of("dynamic_port_range").unwrap())
             .expect("invalid dynamic_port_range");
 
     let cluster_entrypoints = entrypoint_addrs
@@ -320,7 +320,7 @@ pub fn main() {
             vec![ledger_path.join("accounts")]
         };
 
-    let peer_address = solana_net_utils::parse_host(matches.value_of("peer_address").unwrap())
+    let peer_address = nexis_net_utils::parse_host(matches.value_of("peer_address").unwrap())
         .expect("invalid peer_address");
 
     let peer_rpc_port = value_t!(matches, "peer_rpc_port", u16).unwrap_or_else(|_| {
@@ -356,14 +356,14 @@ pub fn main() {
         SocketAddr::new(rpc_bind_address, rpc_port + 1),
         // If additional ports are added, +2 needs to be skipped to avoid a conflict with
         // the websocket port (which is +2) in web3.js This odd port shifting is tracked at
-        // https://github.com/solana-labs/solana/issues/12250
+        // https://github.com/nexis-labs/nexis/issues/12250
     );
 
     let logfile = {
         let logfile = matches
             .value_of("logfile")
             .map(|s| s.into())
-            .unwrap_or_else(|| format!("solana-replica-node-{}.log", identity_keypair.pubkey()));
+            .unwrap_or_else(|| format!("nexis-replica-node-{}.log", identity_keypair.pubkey()));
 
         if logfile == "-" {
             None

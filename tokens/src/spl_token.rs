@@ -4,15 +4,15 @@ use {
         commands::{Allocation, Error, FundingSource},
     },
     console::style,
-    solana_account_decoder::parse_token::{
+    nexis_account_decoder::parse_token::{
         pubkey_from_spl_token, real_number_string, real_number_string_trimmed, spl_token_pubkey,
     },
-    solana_client::rpc_client::RpcClient,
-    solana_sdk::{instruction::Instruction, message::Message, native_token::lamports_to_sol},
-    solana_transaction_status::parse_token::spl_token_instruction,
+    nexis_client::rpc_client::RpcClient,
+    nexis_sdk::{instruction::Instruction, message::Message, native_token::lamports_to_sol},
+    nexis_transaction_status::parse_token::spl_token_instruction,
     spl_associated_token_account_v1_0::{create_associated_token_account, get_associated_token_address},
     spl_token_v2_0::{
-        solana_program::program_pack::Pack,
+        nexis_program::program_pack::Pack,
         state::{Account as SplTokenAccount, Mint},
     },
 };
@@ -109,7 +109,7 @@ pub fn check_spl_token_balances(
     if fee_payer_balance < fees + account_creation_amount {
         return Err(Error::InsufficientFunds(
             vec![FundingSource::FeePayer].into(),
-            lamports_to_sol(fees + account_creation_amount).to_string(),
+            lamports_to_nzt(fees + account_creation_amount).to_string(),
         ));
     }
     let source_token_account = client
@@ -168,8 +168,8 @@ pub fn print_token_balances(
 #[cfg(test)]
 mod tests {
     // The following unit tests were written for v1.4 using the ProgramTest framework, passing its
-    // BanksClient into the `solana-tokens` methods. With the revert to RpcClient in this module
-    // (https://github.com/solana-labs/solana/pull/13623), that approach was no longer viable.
+    // BanksClient into the `nexis-tokens` methods. With the revert to RpcClient in this module
+    // (https://github.com/nexis-labs/nexis/pull/13623), that approach was no longer viable.
     // These tests were removed rather than rewritten to avoid accruing technical debt. Once a new
     // rpc/client framework is implemented, they should be restored.
     //
@@ -177,5 +177,5 @@ mod tests {
     // async fn test_process_spl_token_transfer_amount_allocations()
     // async fn test_check_spl_token_balances()
     //
-    // https://github.com/solana-labs/solana/blob/5511d52c6284013a24ced10966d11d8f4585799e/tokens/src/spl_token.rs#L490-L685
+    // https://github.com/nexis-labs/nexis/blob/5511d52c6284013a24ced10966d11d8f4585799e/tokens/src/spl_token.rs#L490-L685
 }

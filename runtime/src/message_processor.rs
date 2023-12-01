@@ -1,7 +1,7 @@
 use {
     serde::{Deserialize, Serialize},
-    solana_measure::measure::Measure,
-    solana_program_runtime::{
+    nexis_measure::measure::Measure,
+    nexis_program_runtime::{
         compute_budget::ComputeBudget,
         instruction_recorder::InstructionRecorder,
         invoke_context::{
@@ -12,7 +12,7 @@ use {
         sysvar_cache::SysvarCache,
         timings::{ExecuteDetailsTimings, ExecuteTimings},
     },
-    solana_sdk::{
+    nexis_sdk::{
         account::WritableAccount,
         feature_set::{prevent_calling_precompiles_as_programs, FeatureSet},
         hash::Hash,
@@ -30,7 +30,7 @@ use {
 pub struct MessageProcessor {}
 
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
-impl ::solana_frozen_abi::abi_example::AbiExample for MessageProcessor {
+impl ::nexis_frozen_abi::abi_example::AbiExample for MessageProcessor {
     fn example() -> Self {
         // MessageProcessor's fields are #[serde(skip)]-ed and not Serialize
         // so, just rely on Default anyway.
@@ -170,7 +170,7 @@ mod tests {
     use {
         super::*,
         crate::rent_collector::RentCollector,
-        solana_sdk::{
+        nexis_sdk::{
             account::{AccountSharedData, ReadableAccount},
             instruction::{AccountMeta, Instruction, InstructionError},
             keyed_account::keyed_account_at_index,
@@ -246,11 +246,11 @@ mod tests {
         )));
         let accounts = vec![
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 AccountSharedData::new_ref(100, 1, &mock_system_program_id),
             ),
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 AccountSharedData::new_ref(0, 1, &mock_system_program_id),
             ),
             (mock_system_program_id, program_account),
@@ -459,11 +459,11 @@ mod tests {
         )));
         let accounts = vec![
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 AccountSharedData::new_ref(100, 1, &mock_program_id),
             ),
             (
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 AccountSharedData::new_ref(0, 1, &mock_program_id),
             ),
             (mock_program_id, program_account),

@@ -103,14 +103,14 @@ command_step() {
     timeout_in_minutes: $3
     artifact_paths: "log-*.txt"
     agents:
-      - "queue=solana"
+      - "queue=nexis"
 EOF
 }
 
 
 trigger_secondary_step() {
   cat  >> "$output_file" <<"EOF"
-  - trigger: "solana-secondary"
+  - trigger: "nexis-secondary"
     branches: "!pull/*"
     async: true
     build:
@@ -170,7 +170,7 @@ all_test_steps() {
     timeout_in_minutes: 25
     artifact_paths: "bpf-dumps.tar.bz2"
     agents:
-      - "queue=solana"
+      - "queue=nexis"
 EOF
   else
     annotate --style info \
@@ -224,7 +224,7 @@ EOF
     name: "downstream-projects"
     timeout_in_minutes: 30
     agents:
-      - "queue=solana"
+      - "queue=nexis"
 EOF
   else
     annotate --style info \
@@ -295,7 +295,7 @@ if [[ -n $BUILDKITE_TAG ]]; then
   start_pipeline "Tag pipeline for $BUILDKITE_TAG"
 
   annotate --style info --context release-tag \
-    "https://github.com/solana-labs/solana/releases/$BUILDKITE_TAG"
+    "https://github.com/nexis-labs/nexis/releases/$BUILDKITE_TAG"
 
   # Jump directly to the secondary build to publish release artifacts quickly
   trigger_secondary_step
@@ -313,7 +313,7 @@ if [[ $BUILDKITE_BRANCH =~ ^pull ]]; then
 
   # Add helpful link back to the corresponding Github Pull Request
   annotate --style info --context pr-backlink \
-    "Github Pull Request: https://github.com/solana-labs/solana/$BUILDKITE_BRANCH"
+    "Github Pull Request: https://github.com/nexis-labs/nexis/$BUILDKITE_BRANCH"
 
   if [[ $GITHUB_USER = "dependabot[bot]" ]]; then
     command_step dependabot "ci/dependabot-pr.sh" 5

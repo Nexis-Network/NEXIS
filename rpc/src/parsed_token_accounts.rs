@@ -1,19 +1,19 @@
 use {
     jsonrpc_core::{Error, Result},
-    solana_account_decoder::{
+    nexis_account_decoder::{
         parse_account_data::AccountAdditionalData,
         parse_token::{
             get_token_account_mint, spl_token_native_mint, spl_token_native_mint_program_id,
         },
         UiAccount, UiAccountData, UiAccountEncoding,
     },
-    solana_client::rpc_response::RpcKeyedAccount,
-    solana_runtime::bank::Bank,
-    solana_sdk::{
+    nexis_client::rpc_response::RpcKeyedAccount,
+    nexis_runtime::bank::Bank,
+    nexis_sdk::{
         account::{AccountSharedData, ReadableAccount},
         pubkey::Pubkey,
     },
-    spl_token::{solana_program::program_pack::Pack, state::Mint},
+    spl_token::{nexis_program::program_pack::Pack, state::Mint},
     std::{collections::HashMap, sync::Arc},
 };
 

@@ -9,7 +9,7 @@ use {
     console::style,
     log::*,
     rand::{seq::SliceRandom, thread_rng},
-    solana_clap_utils::{
+    nexis_clap_utils::{
         input_parsers::{keypair_of, keypairs_of, pubkey_of, value_of},
         input_validators::{
             is_keypair, is_keypair_or_ask_keyword, is_niceness_adjustment_valid, is_parsable,
@@ -17,27 +17,27 @@ use {
         },
         keypair::SKIP_SEED_PHRASE_VALIDATION_ARG,
     },
-    solana_client::{
+    nexis_client::{
         rpc_client::RpcClient, rpc_config::RpcLeaderScheduleConfig,
         rpc_request::MAX_MULTIPLE_ACCOUNTS,
     },
-    solana_core::{
+    nexis_core::{
         ledger_cleanup_service::{DEFAULT_MAX_LEDGER_SHREDS, DEFAULT_MIN_MAX_LEDGER_SHREDS},
         tower_storage,
         tpu::DEFAULT_TPU_COALESCE_MS,
         validator::{is_snapshot_config_valid, Validator, ValidatorConfig, ValidatorStartProgress},
     },
-    solana_gossip::{
+    nexis_gossip::{
         cluster_info::{Node, VALIDATOR_PORT_RANGE},
         contact_info::ContactInfo,
     },
-    solana_ledger::blockstore_db::BlockstoreRecoveryMode,
-    solana_metrics::datapoint_info,
-    solana_perf::recycler::enable_recycler_warming,
-    solana_poh::poh_service,
-    solana_replica_lib::accountsdb_repl_server::AccountsDbReplServiceConfig,
-    solana_rpc::{rpc::JsonRpcConfig, rpc_pubsub_service::PubSubConfig},
-    solana_runtime::{
+    nexis_ledger::blockstore_db::BlockstoreRecoveryMode,
+    nexis_metrics::datapoint_info,
+    nexis_perf::recycler::enable_recycler_warming,
+    nexis_poh::poh_service,
+    nexis_replica_lib::accountsdb_repl_server::AccountsDbReplServiceConfig,
+    nexis_rpc::{rpc::JsonRpcConfig, rpc_pubsub_service::PubSubConfig},
+    nexis_runtime::{
         accounts_db::{
             AccountShrinkThreshold, AccountsDbConfig, DEFAULT_ACCOUNTS_SHRINK_OPTIMIZE_TOTAL_SPACE,
             DEFAULT_ACCOUNTS_SHRINK_RATIO,
@@ -55,15 +55,15 @@ use {
             DEFAULT_MAX_INCREMENTAL_SNAPSHOT_ARCHIVES_TO_RETAIN, EVM_STATE_DIR,
         },
     },
-    solana_sdk::{
+    nexis_sdk::{
         clock::{Slot, DEFAULT_S_PER_SLOT},
         commitment_config::CommitmentConfig,
         hash::Hash,
         pubkey::Pubkey,
         signature::{Keypair, Signer},
     },
-    solana_send_transaction_service::send_transaction_service,
-    solana_streamer::socket::SocketAddrSpace,
+    nexis_send_transaction_service::send_transaction_service,
+    nexis_streamer::socket::SocketAddrSpace,
     std::{
         collections::{HashSet, VecDeque},
         env,
@@ -399,7 +399,7 @@ fn get_cluster_shred_version(entrypoints: &[SocketAddr]) -> Option<u16> {
         index.into_iter().map(|i| &entrypoints[i])
     };
     for entrypoint in entrypoints {
-        match solana_net_utils::get_cluster_shred_version(entrypoint) {
+        match nexis_net_utils::get_cluster_shred_version(entrypoint) {
             Err(err) => eprintln!("get_cluster_shred_version failed: {}, {}", entrypoint, err),
             Ok(0) => eprintln!("zero sherd-version from entrypoint: {}", entrypoint),
             Ok(shred_version) => {
@@ -425,7 +425,7 @@ fn platform_id() -> String {
 
 #[cfg(target_os = "linux")]
 fn check_os_network_limits() {
-    use {solana_metrics::datapoint_warn, std::collections::HashMap, sysctl::Sysctl};
+    use {nexis_metrics::datapoint_warn, std::collections::HashMap, sysctl::Sysctl};
 
     fn sysctl_read(name: &str) -> Result<String, sysctl::SysctlError> {
         let ctl = sysctl::Ctl::new(name)?;
@@ -482,7 +482,7 @@ fn check_os_network_limits() {
 
     if check_failed {
         datapoint_warn!("os-config", ("network_limit_test_failed", 1, i64));
-        warn!("OS network limit test failed. solana-sys-tuner may be used to configure OS network limits. Bypass check with --no-os-network-limits-test.");
+        warn!("OS network limit test failed.nexis-sys-tuner may be used to configure OS network limits. Bypass check with --no-os-network-limits-test.");
     } else {
         info!("OS network limits test passed.");
     }
@@ -532,7 +532,7 @@ pub fn main() {
     let default_accounts_shrink_ratio = &DEFAULT_ACCOUNTS_SHRINK_RATIO.to_string();
 
     let matches = App::new(crate_name!()).about(crate_description!())
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .setting(AppSettings::VersionlessSubcommands)
         .setting(AppSettings::InferSubcommands)
         .arg(
@@ -619,7 +619,7 @@ pub fn main() {
                 .value_name("HOST:PORT")
                 .takes_value(true)
                 .multiple(true)
-                .validator(solana_net_utils::is_host_port)
+                .validator(nexis_net_utils::is_host_port)
                 .help("Rendezvous with the cluster at this gossip entrypoint"),
         )
         .arg(
@@ -775,7 +775,7 @@ pub fn main() {
                 .long("rpc-faucet-address")
                 .value_name("HOST:PORT")
                 .takes_value(true)
-                .validator(solana_net_utils::is_host_port)
+                .validator(nexis_net_utils::is_host_port)
                 .help("Enable the JSON RPC 'requestAirdrop' API with this faucet address."),
         )
         .arg(
@@ -823,7 +823,7 @@ pub fn main() {
                 .value_name("HOST:PORT")
                 .takes_value(true)
                 .multiple(true)
-                .validator(solana_net_utils::is_host_port)
+                .validator(nexis_net_utils::is_host_port)
                 .help("etcd gRPC endpoint to connect with")
         )
         .arg(
@@ -871,7 +871,7 @@ pub fn main() {
                 .long("gossip-host")
                 .value_name("HOST")
                 .takes_value(true)
-                .validator(solana_net_utils::is_host)
+                .validator(nexis_net_utils::is_host)
                 .help("Gossip DNS name or IP address for the validator to advertise in gossip \
                        [default: ask --entrypoint, or 127.0.0.1 when --entrypoint is not provided]"),
         )
@@ -881,7 +881,7 @@ pub fn main() {
                 .value_name("HOST:PORT")
                 .takes_value(true)
                 .conflicts_with("private_rpc")
-                .validator(solana_net_utils::is_host_port)
+                .validator(nexis_net_utils::is_host_port)
                 .help("RPC address for the validator to advertise publicly in gossip. \
                       Useful for validators running behind a load balancer or proxy \
                       [default: use --rpc-bind-address / --rpc-port]"),
@@ -1204,7 +1204,7 @@ pub fn main() {
                 .long("bind-address")
                 .value_name("HOST")
                 .takes_value(true)
-                .validator(solana_net_utils::is_host)
+                .validator(nexis_net_utils::is_host)
                 .default_value("0.0.0.0")
                 .help("IP address to bind the validator ports"),
         )
@@ -1213,7 +1213,7 @@ pub fn main() {
                 .long("rpc-bind-address")
                 .value_name("HOST")
                 .takes_value(true)
-                .validator(solana_net_utils::is_host)
+                .validator(nexis_net_utils::is_host)
                 .help("IP address to bind the RPC port [default: 127.0.0.1 if --private-rpc is present, otherwise use --bind-address]"),
         )
         .arg(
@@ -1400,7 +1400,7 @@ pub fn main() {
                 .long("accountsdb-repl-bind-address")
                 .value_name("HOST")
                 .takes_value(true)
-                .validator(solana_net_utils::is_host)
+                .validator(nexis_net_utils::is_host)
                 .hidden(true)
                 .help("IP address to bind the AccountsDb Replication port [default: use --bind-address]"),
         )
@@ -1444,7 +1444,7 @@ pub fn main() {
         .arg(
             Arg::with_name("snapshot_archive_format")
                 .long("snapshot-archive-format")
-                .alias("snapshot-compression") // Legacy name used by Solana v1.5.x and older
+                .alias("snapshot-compression") // Legacy name used by Nexis v1.5.x and older
                 .possible_values(&["bz2", "gzip", "zstd", "tar", "none"])
                 .default_value("zstd")
                 .value_name("ARCHIVE_TYPE")
@@ -1522,10 +1522,10 @@ pub fn main() {
                     "program-id",
                     "spl-token-owner",
                     "spl-token-mint",
-                    "exzo-accounts-storages",
-                    "exzo-accounts-owners",
-                    "exzo-accounts-operationals",
-                    "exzo-relying-party-owners",
+                    "nexis-accounts-storages",
+                    "nexis-accounts-owners",
+                    "nexis-accounts-operationals",
+                    "nexis-relying-party-owners",
                 ])
                 .value_name("INDEX")
                 .help("Enable an accounts index, indexed by the selected account field"),
@@ -2031,7 +2031,7 @@ pub fn main() {
         let logfile = matches
             .value_of("logfile")
             .map(|s| s.into())
-            .unwrap_or_else(|| format!("exzo-validator-{}.log", identity_keypair.pubkey()));
+            .unwrap_or_else(|| format!("nexis-validator-{}.log", identity_keypair.pubkey()));
 
         if logfile == "-" {
             None
@@ -2043,16 +2043,16 @@ pub fn main() {
     let use_progress_bar = logfile.is_none();
     let _logger_thread = redirect_stderr_to_file(logfile);
 
-    info!("{} {}", crate_name!(), solana_version::version!());
+    info!("{} {}", crate_name!(), nexis_version::version!());
     info!("Starting validator with: {:#?}", std::env::args_os());
 
     let cuda = matches.is_present("cuda");
     if cuda {
-        solana_perf::perf_libs::init_cuda();
+        nexis_perf::perf_libs::init_cuda();
         enable_recycler_warming();
     }
 
-    solana_core::validator::report_target_features();
+    nexis_core::validator::report_target_features();
 
     let evm_state_path = if let Ok(evm_state_path) = value_t!(matches, "evm_state_path", String) {
         PathBuf::from(evm_state_path)
@@ -2140,13 +2140,13 @@ pub fn main() {
         "--gossip-validator",
     );
 
-    let bind_address = solana_net_utils::parse_host(matches.value_of("bind_address").unwrap())
+    let bind_address = nexis_net_utils::parse_host(matches.value_of("bind_address").unwrap())
         .expect("invalid bind_address");
     let rpc_bind_address = if matches.is_present("rpc_bind_address") {
-        solana_net_utils::parse_host(matches.value_of("rpc_bind_address").unwrap())
+        nexis_net_utils::parse_host(matches.value_of("rpc_bind_address").unwrap())
             .expect("invalid rpc_bind_address")
     } else if private_rpc {
-        solana_net_utils::parse_host("127.0.0.1").unwrap()
+        nexis_net_utils::parse_host("127.0.0.1").unwrap()
     } else {
         bind_address
     };
@@ -2176,7 +2176,7 @@ pub fn main() {
         .unwrap_or_default()
         .into_iter()
         .map(|entrypoint| {
-            solana_net_utils::parse_host_port(&entrypoint).unwrap_or_else(|e| {
+            nexis_net_utils::parse_host_port(&entrypoint).unwrap_or_else(|e| {
                 eprintln!("failed to parse entrypoint address: {}", e);
                 exit(1);
             })
@@ -2192,7 +2192,7 @@ pub fn main() {
         .ok()
         .or_else(|| get_cluster_shred_version(&entrypoint_addrs));
 
-    let tower_storage: Arc<dyn solana_core::tower_storage::TowerStorage> =
+    let tower_storage: Arc<dyn nexis_core::tower_storage::TowerStorage> =
         match value_t_or_exit!(matches, "tower_storage", String).as_str() {
             "file" => {
                 let tower_path = value_t!(matches, "tower", PathBuf)
@@ -2281,7 +2281,7 @@ pub fn main() {
 
     let accountsdb_repl_service_config = if matches.is_present("enable_accountsdb_repl") {
         let accountsdb_repl_bind_address = if matches.is_present("accountsdb_repl_bind_address") {
-            solana_net_utils::parse_host(matches.value_of("accountsdb_repl_bind_address").unwrap())
+            nexis_net_utils::parse_host(matches.value_of("accountsdb_repl_bind_address").unwrap())
                 .expect("invalid accountsdb_repl_bind_address")
         } else {
             bind_address
@@ -2333,7 +2333,7 @@ pub fn main() {
                 .is_present("enable_rpc_bigtable_ledger_storage"),
             enable_bigtable_ledger_upload: matches.is_present("enable_bigtable_ledger_upload"),
             faucet_addr: matches.value_of("rpc_faucet_addr").map(|address| {
-                solana_net_utils::parse_host_port(address).expect("failed to parse faucet address")
+                nexis_net_utils::parse_host_port(address).expect("failed to parse faucet address")
             }),
             full_api: matches.is_present("full_rpc_api"),
             obsolete_v1_7_api: matches.is_present("obsolete_v1_7_rpc_api"),
@@ -2363,7 +2363,7 @@ pub fn main() {
                 SocketAddr::new(rpc_bind_address, rpc_port + 1),
                 // If additional ports are added, +2 needs to be skipped to avoid a conflict with
                 // the websocket port (which is +2) in web3.js This odd port shifting is tracked at
-                // https://github.com/solana-labs/solana/issues/12250
+                // https://github.com/nexis-labs/nexis/issues/12250
             )
         }),
         pubsub_config: PubSubConfig {
@@ -2448,7 +2448,7 @@ pub fn main() {
     });
 
     let dynamic_port_range =
-        solana_net_utils::parse_port_range(matches.value_of("dynamic_port_range").unwrap())
+        nexis_net_utils::parse_port_range(matches.value_of("dynamic_port_range").unwrap())
             .expect("invalid dynamic_port_range");
 
     let account_paths: Vec<PathBuf> =
@@ -2629,7 +2629,7 @@ pub fn main() {
     }
 
     let public_rpc_addr = matches.value_of("public_rpc_addr").map(|addr| {
-        solana_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
+        nexis_net_utils::parse_host_port(addr).unwrap_or_else(|e| {
             eprintln!("failed to parse public rpc address: {}", e);
             exit(1);
         })
@@ -2661,7 +2661,7 @@ pub fn main() {
     let gossip_host: IpAddr = matches
         .value_of("gossip_host")
         .map(|gossip_host| {
-            solana_net_utils::parse_host(gossip_host).unwrap_or_else(|err| {
+            nexis_net_utils::parse_host(gossip_host).unwrap_or_else(|err| {
                 eprintln!("Failed to parse --gossip-host: {}", err);
                 exit(1);
             })
@@ -2677,7 +2677,7 @@ pub fn main() {
                         "Contacting {} to determine the validator's public IP address",
                         entrypoint_addr
                     );
-                    solana_net_utils::get_public_ip_addr(entrypoint_addr).map_or_else(
+                    nexis_net_utils::get_public_ip_addr(entrypoint_addr).map_or_else(
                         |err| {
                             eprintln!(
                                 "Failed to contact cluster entrypoint {}: {}",
@@ -2701,7 +2701,7 @@ pub fn main() {
     let gossip_addr = SocketAddr::new(
         gossip_host,
         value_t!(matches, "gossip_port", u16).unwrap_or_else(|_| {
-            solana_net_utils::find_available_port_in_range(bind_address, (0, 1)).unwrap_or_else(
+            nexis_net_utils::find_available_port_in_range(bind_address, (0, 1)).unwrap_or_else(
                 |err| {
                     eprintln!("Unable to find an available gossip port: {}", err);
                     exit(1);
@@ -2747,12 +2747,12 @@ pub fn main() {
         }
     }
 
-    solana_metrics::set_host_id(identity_keypair.pubkey().to_string());
-    solana_metrics::set_panic_hook("validator", {
-        let version = format!("{:?}", solana_version::version!());
+    nexis_metrics::set_host_id(identity_keypair.pubkey().to_string());
+    nexis_metrics::set_panic_hook("validator", {
+        let version = format!("{:?}", nexis_version::version!());
         Some(version)
     });
-    solana_entry::entry::init_poh();
+    nexis_entry::entry::init_poh();
     snapshot_utils::remove_tmp_snapshot_archives(&snapshot_archives_dir);
 
     let identity_keypair = identity_keypair;
@@ -2826,10 +2826,10 @@ fn process_account_indexes(matches: &ArgMatches) -> AccountSecondaryIndexes {
             "program-id" => AccountIndex::ProgramId,
             "spl-token-mint" => AccountIndex::SplTokenMint,
             "spl-token-owner" => AccountIndex::SplTokenOwner,
-            "exzo-accounts-storages" => AccountIndex::ExzoAccountStorage,
-            "exzo-accounts-owners" => AccountIndex::ExzoAccountOwner,
-            "exzo-accounts-operationals" => AccountIndex::ExzoAccountOperational,
-            "exzo-relying-party-owners" => AccountIndex::ExzoRelyingOwner,
+            "nexis-accounts-storages" => AccountIndex::ExzoAccountStorage,
+            "nexis-accounts-owners" => AccountIndex::ExzoAccountOwner,
+            "nexis-accounts-operationals" => AccountIndex::ExzoAccountOperational,
+            "nexis-relying-party-owners" => AccountIndex::ExzoRelyingOwner,
             unexpected => panic!("Unable to handle account_index {}", unexpected),
         })
         .collect();

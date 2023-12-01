@@ -1,19 +1,19 @@
 use {
     log::*,
     rand::{seq::SliceRandom, thread_rng, Rng},
-    solana_gossip::{
+    nexis_gossip::{
         cluster_info::{ClusterInfo, Node},
         contact_info::ContactInfo,
         gossip_service::GossipService,
     },
-    solana_runtime::{snapshot_archive_info::SnapshotArchiveInfoGetter, snapshot_utils},
-    solana_sdk::{
+    nexis_runtime::{snapshot_archive_info::SnapshotArchiveInfoGetter, snapshot_utils},
+    nexis_sdk::{
         clock::Slot,
         hash::Hash,
         pubkey::Pubkey,
         signature::{Keypair, Signer},
     },
-    solana_streamer::socket::SocketAddrSpace,
+    nexis_streamer::socket::SocketAddrSpace,
     std::{
         collections::HashSet,
         net::{SocketAddr, UdpSocket},
@@ -35,7 +35,7 @@ pub fn get_cluster_shred_version(entrypoints: &[SocketAddr]) -> Option<u16> {
         index.into_iter().map(|i| &entrypoints[i])
     };
     for entrypoint in entrypoints {
-        match solana_net_utils::get_cluster_shred_version(entrypoint) {
+        match nexis_net_utils::get_cluster_shred_version(entrypoint) {
             Err(err) => eprintln!("get_cluster_shred_version failed: {}, {}", entrypoint, err),
             Ok(0) => eprintln!("zero sherd-version from entrypoint: {}", entrypoint),
             Ok(shred_version) => {

@@ -1,6 +1,6 @@
 use {
-    solana_core::validator::ValidatorConfig,
-    solana_sdk::exit::Exit,
+    nexis_core::validator::ValidatorConfig,
+    nexis_sdk::exit::Exit,
     std::sync::{Arc, RwLock},
 };
 

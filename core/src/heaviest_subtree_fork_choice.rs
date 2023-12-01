@@ -6,9 +6,9 @@ use {
         latest_validator_votes_for_frozen_banks::LatestValidatorVotesForFrozenBanks,
         progress_map::ProgressMap, tree_diff::TreeDiff,
     },
-    solana_measure::measure::Measure,
-    solana_runtime::{bank::Bank, bank_forks::BankForks, epoch_stakes::EpochStakes},
-    solana_sdk::{
+    nexis_measure::measure::Measure,
+    nexis_runtime::{bank::Bank, bank_forks::BankForks, epoch_stakes::EpochStakes},
+    nexis_sdk::{
         clock::{Epoch, Slot},
         epoch_schedule::EpochSchedule,
         hash::Hash,
@@ -1077,8 +1077,8 @@ mod test {
     use {
         super::*,
         crate::vote_simulator::VoteSimulator,
-        solana_runtime::{bank::Bank, bank_utils},
-        solana_sdk::{hash::Hash, slot_history::SlotHistory},
+        nexis_runtime::{bank::Bank, bank_utils},
+        nexis_sdk::{hash::Hash, slot_history::SlotHistory},
         std::{collections::HashSet, ops::Range},
         trees::tr,
     };

@@ -1,4 +1,4 @@
-pub const JSON_RPC_URL: &str = "http://rpc-main-1.exzo.network";
+pub const JSON_RPC_URL: &str = "http://rpc-main-1.nexis.network";
 
 /// Returns last 30 releases from GitHub Release REST API, could be
 /// increased up to 100 (?per_page=100). If we need a list with more

@@ -13,8 +13,8 @@ use super::{errors::*, CallResult};
 use super::{NativeContext, Result};
 use crate::scope::evm::gweis_to_lamports;
 use crate::AccountStructure;
-use solana_sdk::account::{ReadableAccount, WritableAccount};
-use solana_sdk::pubkey::Pubkey;
+use nexis_sdk::account::{ReadableAccount, WritableAccount};
+use nexis_sdk::pubkey::Pubkey;
 
 pub trait NativeFunction<Inputs> {
     type PromiseType;
@@ -166,7 +166,7 @@ where
 //
 // 0x56454c41532d434841494e000000000053574150 for better search
 // TODO: Implement some procedural macro to render this in more
-pub static ETH_TO_XZO_ADDR: Lazy<H160> = Lazy::new(|| {
+pub static ETH_TO_NZT_ADDR: Lazy<H160> = Lazy::new(|| {
     H160::from_str(concat!(
         "56454c41532d434841494e", // 'EXZO-CHAIN'
         "0000000000",             // just spaces
@@ -188,7 +188,7 @@ pub struct EthToXzoResult {
     amount: u64,
 }
 
-pub static ETH_TO_XZO_CODE: Lazy<NativeContract<EthToXzoImp, Pubkey>> = Lazy::new(|| {
+pub static ETH_TO_NZT_CODE: Lazy<NativeContract<EthToXzoImp, Pubkey>> = Lazy::new(|| {
     #[allow(deprecated)]
     let abi = Function {
         name: String::from("transferToNative"),
@@ -209,12 +209,12 @@ pub static ETH_TO_XZO_CODE: Lazy<NativeContract<EthToXzoImp, Pubkey>> = Lazy::ne
     ) -> Result<(PrecompileOutput, u64, Vec<EthToXzoResult>)> {
         // EVM should ensure that user has enough tokens, before calling this precompile.
 
-        log::trace!("Precompile ETH_TO_XZO");
+        log::trace!("Precompile ETH_TO_NZT");
 
         if !matches!(
             cx.precompile_context.call_scheme,
             None | Some(CallScheme::Call)
-        ) || cx.precompile_context.evm_context.address != *ETH_TO_XZO_ADDR
+        ) || cx.precompile_context.evm_context.address != *ETH_TO_NZT_ADDR
         // if transfer to other address
         {
             log::trace!(
@@ -271,7 +271,7 @@ pub static ETH_TO_XZO_CODE: Lazy<NativeContract<EthToXzoImp, Pubkey>> = Lazy::ne
     }
 
     fn handle_promise(accounts: AccountStructure, promise: EthToXzoResult) -> Result<()> {
-        log::trace!("Promise handle ETH_TO_XZO {:?}", promise);
+        log::trace!("Promise handle ETH_TO_NZT {:?}", promise);
         let lamports = promise.amount;
         let pubkey = promise.pubkey;
         let user = if let Some(account) = accounts.find_user(&pubkey) {

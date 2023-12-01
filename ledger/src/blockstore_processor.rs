@@ -13,14 +13,14 @@ use {
     log::*,
     rand::{seq::SliceRandom, thread_rng},
     rayon::{prelude::*, ThreadPool},
-    solana_entry::entry::{
+    nexis_entry::entry::{
         self, create_ticks, Entry, EntrySlice, EntryType, EntryVerificationStatus, VerifyRecyclers,
     },
-    solana_measure::measure::Measure,
-    solana_metrics::{datapoint_error, inc_new_counter_debug},
-    solana_program_runtime::timings::ExecuteTimings,
-    solana_rayon_threadlimit::get_thread_count,
-    solana_runtime::{
+    nexis_measure::measure::Measure,
+    nexis_metrics::{datapoint_error, inc_new_counter_debug},
+    nexis_program_runtime::timings::ExecuteTimings,
+    nexis_rayon_threadlimit::get_thread_count,
+    nexis_runtime::{
         accounts_db::{AccountShrinkThreshold, AccountsDbConfig},
         accounts_index::AccountSecondaryIndexes,
         accounts_update_notifier_interface::AccountsUpdateNotifier,
@@ -41,7 +41,7 @@ use {
         vote_account::VoteAccount,
         vote_sender_types::ReplayVoteSender,
     },
-    solana_sdk::{
+    nexis_sdk::{
         clock::{Slot, MAX_PROCESSING_AGE},
         feature_set,
         genesis_config::GenesisConfig,
@@ -55,7 +55,7 @@ use {
             VersionedTransaction,
         },
     },
-    solana_transaction_status::token_balances::{
+    nexis_transaction_status::token_balances::{
         collect_token_balances, TransactionTokenBalancesSet,
     },
     std::{
@@ -1691,11 +1691,11 @@ pub mod tests {
         crossbeam_channel::unbounded,
         matches::assert_matches,
         rand::{thread_rng, Rng},
-        solana_entry::entry::{create_ticks, next_entry, next_entry_mut},
-        solana_runtime::genesis_utils::{
+        nexis_entry::entry::{create_ticks, next_entry, next_entry_mut},
+        nexis_runtime::genesis_utils::{
             self, create_genesis_config_with_vote_accounts, ValidatorVoteKeypairs,
         },
-        solana_sdk::{
+        nexis_sdk::{
             account::{AccountSharedData, WritableAccount},
             epoch_schedule::EpochSchedule,
             hash::Hash,
@@ -1705,7 +1705,7 @@ pub mod tests {
             system_transaction,
             transaction::{Transaction, TransactionError},
         },
-        solana_vote_program::{
+        nexis_vote_program::{
             self,
             vote_state::{VoteState, VoteStateVersions, MAX_LOCKOUT_HISTORY},
             vote_transaction,
@@ -1743,7 +1743,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_missing_hashes() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let hashes_per_tick = 2;
         let GenesisConfigInfo {
@@ -1776,7 +1776,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -1796,7 +1796,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_invalid_slot_tick_count() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -1827,7 +1827,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -1852,7 +1852,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -1876,7 +1876,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_slot_with_trailing_entry() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let GenesisConfigInfo {
             mint_keypair,
@@ -1918,7 +1918,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -1941,7 +1941,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_incomplete_slot() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2003,7 +2003,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -2035,7 +2035,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -2053,7 +2053,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_two_forks_and_squash() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2115,7 +2115,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -2146,7 +2146,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_two_forks() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2208,7 +2208,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -2250,7 +2250,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_dead_slot() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2277,7 +2277,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -2305,7 +2305,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_with_dead_child() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2334,7 +2334,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -2373,7 +2373,7 @@ pub mod tests {
 
     #[test]
     fn test_root_with_all_dead_children() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2395,7 +2395,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -2414,7 +2414,7 @@ pub mod tests {
 
     #[test]
     fn test_process_blockstore_epoch_boundary_root() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10_000);
         let ticks_per_slot = genesis_config.ticks_per_slot;
@@ -2459,7 +2459,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -2519,7 +2519,7 @@ pub mod tests {
 
     #[test]
     fn test_process_empty_entry_is_registered() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -2549,8 +2549,8 @@ pub mod tests {
 
     #[test]
     fn test_process_ledger_simple() {
-        solana_logger::setup();
-        let leader_pubkey = solana_sdk::pubkey::new_rand();
+        nexis_logger::setup();
+        let leader_pubkey = nexis_sdk::pubkey::new_rand();
         let mint = 100;
         let hashes_per_tick = 10;
         let GenesisConfigInfo {
@@ -2617,7 +2617,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -2661,7 +2661,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -2694,7 +2694,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -2725,7 +2725,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -2800,7 +2800,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -3016,7 +3016,7 @@ pub mod tests {
 
     #[test]
     fn test_process_entries_2nd_entry_collision_with_self_and_error() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         let GenesisConfigInfo {
             genesis_config,
@@ -3205,7 +3205,7 @@ pub mod tests {
                     bank.last_blockhash(),
                     1,
                     0,
-                    &solana_sdk::pubkey::new_rand(),
+                    &nexis_sdk::pubkey::new_rand(),
                 ));
 
                 next_entry_mut(&mut hash, 0, transactions)
@@ -3366,7 +3366,7 @@ pub mod tests {
             ..
         } = create_genesis_config(11_000);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
         bank.transfer(1_000, &mint_keypair, &pubkey).unwrap();
         assert_eq!(bank.transaction_count(), 1);
         assert_eq!(bank.get_balance(&pubkey), 1_000);
@@ -3468,7 +3468,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -3591,7 +3591,7 @@ pub mod tests {
     /// Ensure afterwards that the snapshots were created.
     #[test]
     fn test_process_blockstore_from_root_with_snapshots() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo {
             mut genesis_config, ..
         } = create_genesis_config(123);
@@ -3698,7 +3698,7 @@ pub mod tests {
     fn test_process_entries_stress() {
         // this test throws lots of rayon threads at process_entries()
         //  finds bugs in very low-layer stuff
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo {
             genesis_config,
             mint_keypair,
@@ -3746,7 +3746,7 @@ pub mod tests {
                             bank.last_blockhash(),
                             100,
                             100,
-                            &solana_sdk::pubkey::new_rand(),
+                            &nexis_sdk::pubkey::new_rand(),
                         ));
                         transactions
                     })
@@ -3891,14 +3891,14 @@ pub mod tests {
         // Create array of two transactions which throw different errors
         let account_not_found_tx = system_transaction::transfer(
             &keypair,
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             42,
             bank.last_blockhash(),
         );
         let account_not_found_sig = account_not_found_tx.signatures[0];
         let invalid_blockhash_tx = system_transaction::transfer(
             &mint_keypair,
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             42,
             Hash::default(),
         );
@@ -3941,7 +3941,7 @@ pub mod tests {
 
         let bank1 = Arc::new(Bank::new_from_parent(
             &bank0,
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             1,
         ));
 
@@ -4034,7 +4034,7 @@ pub mod tests {
     }
 
     fn run_test_process_blockstore_with_supermajority_root(blockstore_root: Option<Slot>) {
-        solana_logger::setup();
+        nexis_logger::setup();
         /*
             Build fork structure:
                  slot 0
@@ -4104,7 +4104,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -4149,7 +4149,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -4217,7 +4217,7 @@ pub mod tests {
         let evm_state_dir = TempDir::new().unwrap();
         let evm_genesis_path = ledger_path
             .path()
-            .join(solana_sdk::genesis_config::EVM_GENESIS);
+            .join(nexis_sdk::genesis_config::EVM_GENESIS);
         genesis_config
             .generate_evm_state(&ledger_path.path(), None)
             .unwrap();
@@ -4256,12 +4256,12 @@ pub mod tests {
                         let mut vote_account = AccountSharedData::new(
                             1,
                             VoteState::size_of(),
-                            &solana_vote_program::id(),
+                            &nexis_vote_program::id(),
                         );
                         let versioned = VoteStateVersions::new_current(vote_state);
                         VoteState::serialize(&versioned, vote_account.data_as_mut_slice()).unwrap();
                         (
-                            solana_sdk::pubkey::new_rand(),
+                            nexis_sdk::pubkey::new_rand(),
                             (stake, VoteAccount::from(vote_account)),
                         )
                     })

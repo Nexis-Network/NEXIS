@@ -7,11 +7,11 @@ use {
     log::*,
     num_traits::FromPrimitive,
     serde_json::{self, Value},
-    solana_clap_utils::{self, input_parsers::*, input_validators::*, keypair::*},
-    solana_cli_output::{
+    nexis_clap_utils::{self, input_parsers::*, input_validators::*, keypair::*},
+    nexis_cli_output::{
         display::println_name_value, CliSignature, CliValidatorsSortOrder, OutputFormat,
     },
-    solana_client::{
+    nexis_client::{
         blockhash_query::BlockhashQuery,
         client_error::{ClientError, Result as ClientResult},
         nonce_utils,
@@ -20,8 +20,8 @@ use {
             RpcLargestAccountsFilter, RpcSendTransactionConfig, RpcTransactionLogsFilter,
         },
     },
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_sdk::{
+    nexis_remote_wallet::remote_wallet::RemoteWalletManager,
+    nexis_sdk::{
         clock::{Epoch, Slot},
         commitment_config::CommitmentConfig,
         decode_error::DecodeError,
@@ -32,7 +32,7 @@ use {
         stake::{instruction::LockupArgs, state::Lockup},
         transaction::{Transaction, TransactionError},
     },
-    solana_vote_program::vote_state::VoteAuthorize,
+    nexis_vote_program::vote_state::VoteAuthorize,
     std::{collections::HashMap, error, io::stdout, str::FromStr, sync::Arc, time::Duration},
     thiserror::Error,
 };
@@ -489,15 +489,15 @@ pub struct CliConfig<'a> {
 
 impl CliConfig<'_> {
     fn default_keypair_path() -> String {
-        solana_cli_config::Config::default().keypair_path
+        nexis_cli_config::Config::default().keypair_path
     }
 
     fn default_json_rpc_url() -> String {
-        solana_cli_config::Config::default().json_rpc_url
+        nexis_cli_config::Config::default().json_rpc_url
     }
 
     fn default_websocket_url() -> String {
-        solana_cli_config::Config::default().websocket_url
+        nexis_cli_config::Config::default().websocket_url
     }
 
     fn default_commitment() -> CommitmentConfig {
@@ -534,13 +534,13 @@ impl CliConfig<'_> {
             (SettingType::Explicit, websocket_cfg_url.to_string()),
             (
                 SettingType::Computed,
-                solana_cli_config::Config::compute_websocket_url(&normalize_to_url_if_moniker(
+                nexis_cli_config::Config::compute_websocket_url(&normalize_to_url_if_moniker(
                     json_rpc_cmd_url,
                 )),
             ),
             (
                 SettingType::Computed,
-                solana_cli_config::Config::compute_websocket_url(&normalize_to_url_if_moniker(
+                nexis_cli_config::Config::compute_websocket_url(&normalize_to_url_if_moniker(
                     json_rpc_cfg_url,
                 )),
             ),
@@ -657,7 +657,7 @@ pub fn parse_command(
             get_clap_app(
                 crate_name!(),
                 crate_description!(),
-                solana_version::version!(),
+                nexis_version::version!(),
             )
             .gen_completions_to("exzo", shell_choice, &mut stdout());
             std::process::exit(0);
@@ -940,7 +940,7 @@ pub fn process_command(config: &CliConfig) -> ProcessResult {
         // Cluster Query Commands
         // Get address of this client
         CliCommand::Address => Ok(format!("{}", config.pubkey()?)),
-        // Return software version of solana-cli and cluster entrypoint node
+        // Return software version ofnexis-cli and cluster entrypoint node
         CliCommand::Catchup {
             node_pubkey,
             node_json_rpc_url,
@@ -1594,7 +1594,7 @@ pub fn process_command(config: &CliConfig) -> ProcessResult {
 
         // Wallet Commands
 
-        // Request an airdrop from Solana Faucet;
+        // Request an airdrop from Nexis Faucet;
         CliCommand::Airdrop { pubkey, lamports } => {
             process_airdrop(&rpc_client, config, pubkey, *lamports)
         }
@@ -1730,13 +1730,13 @@ mod tests {
     use {
         super::*,
         serde_json::{json, Value},
-        solana_client::{
+        nexis_client::{
             blockhash_query,
             mock_sender::SIGNATURE,
             rpc_request::RpcRequest,
             rpc_response::{Response, RpcResponseContext},
         },
-        solana_sdk::{
+        nexis_sdk::{
             pubkey::Pubkey,
             signature::{
                 keypair_from_seed, read_keypair_file, write_keypair_file, Keypair, Presigner,
@@ -1744,7 +1744,7 @@ mod tests {
             stake, system_program,
             transaction::TransactionError,
         },
-        solana_transaction_status::TransactionConfirmationStatus,
+        nexis_transaction_status::TransactionConfirmationStatus,
         std::path::PathBuf,
     };
 
@@ -1783,7 +1783,7 @@ mod tests {
         assert_eq!(signer_info.signers.len(), 1);
         assert_eq!(signer_info.index_of(None), Some(0));
         assert_eq!(
-            signer_info.index_of(Some(solana_sdk::pubkey::new_rand())),
+            signer_info.index_of(Some(nexis_sdk::pubkey::new_rand())),
             None
         );
 
@@ -1841,7 +1841,7 @@ mod tests {
     fn test_cli_parse_command() {
         let test_commands = get_clap_app("test", "desc", "version");
 
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
         let pubkey_string = format!("{}", pubkey);
 
         let default_keypair = Keypair::new();
@@ -1932,11 +1932,11 @@ mod tests {
         assert!(parse_command(&test_bad_signature, &default_signer, &mut None).is_err());
 
         // Test CreateAddressWithSeed
-        let from_pubkey = Some(solana_sdk::pubkey::new_rand());
+        let from_pubkey = Some(nexis_sdk::pubkey::new_rand());
         let from_str = from_pubkey.unwrap().to_string();
         for (name, program_id) in &[
             ("STAKE", stake::program::id()),
-            ("VOTE", solana_vote_program::id()),
+            ("VOTE", nexis_vote_program::id()),
             ("NONCE", system_program::id()),
         ] {
             let test_create_address_with_seed = test_commands.clone().get_matches_from(vec![
@@ -2074,7 +2074,7 @@ mod tests {
             pubkey: None,
             use_lamports_unit: false,
         };
-        assert_eq!(process_command(&config).unwrap(), "0.0000004 XZO");
+        assert_eq!(process_command(&config).unwrap(), "0.0000004 NZT");
 
         let good_signature = Signature::new(&bs58::decode(SIGNATURE).into_vec().unwrap());
         config.command = CliCommand::Confirm(good_signature);
@@ -2124,7 +2124,7 @@ mod tests {
             ..CliConfig::default()
         };
         let current_authority = keypair_from_seed(&[5; 32]).unwrap();
-        let new_authorized_pubkey = solana_sdk::pubkey::new_rand();
+        let new_authorized_pubkey = nexis_sdk::pubkey::new_rand();
         vote_config.signers = vec![&current_authority];
         vote_config.command = CliCommand::VoteAuthorize {
             vote_account_pubkey: bob_pubkey,
@@ -2162,7 +2162,7 @@ mod tests {
 
         let bob_keypair = Keypair::new();
         let bob_pubkey = bob_keypair.pubkey();
-        let custodian = solana_sdk::pubkey::new_rand();
+        let custodian = nexis_sdk::pubkey::new_rand();
         config.command = CliCommand::CreateStakeAccount {
             stake_account: 1,
             seed: None,
@@ -2187,8 +2187,8 @@ mod tests {
         config.signers = vec![&keypair, &bob_keypair];
         process_command(&config).unwrap();
 
-        let stake_account_pubkey = solana_sdk::pubkey::new_rand();
-        let to_pubkey = solana_sdk::pubkey::new_rand();
+        let stake_account_pubkey = nexis_sdk::pubkey::new_rand();
+        let to_pubkey = nexis_sdk::pubkey::new_rand();
         config.command = CliCommand::WithdrawStake {
             stake_account_pubkey,
             destination_account_pubkey: to_pubkey,
@@ -2207,7 +2207,7 @@ mod tests {
         config.signers = vec![&keypair];
         process_command(&config).unwrap();
 
-        let stake_account_pubkey = solana_sdk::pubkey::new_rand();
+        let stake_account_pubkey = nexis_sdk::pubkey::new_rand();
         config.command = CliCommand::DeactivateStake {
             stake_account_pubkey,
             stake_authority: 0,
@@ -2222,7 +2222,7 @@ mod tests {
         };
         process_command(&config).unwrap();
 
-        let stake_account_pubkey = solana_sdk::pubkey::new_rand();
+        let stake_account_pubkey = nexis_sdk::pubkey::new_rand();
         let split_stake_account = Keypair::new();
         config.command = CliCommand::SplitStake {
             stake_account_pubkey,
@@ -2241,8 +2241,8 @@ mod tests {
         config.signers = vec![&keypair, &split_stake_account];
         process_command(&config).unwrap();
 
-        let stake_account_pubkey = solana_sdk::pubkey::new_rand();
-        let source_stake_account_pubkey = solana_sdk::pubkey::new_rand();
+        let stake_account_pubkey = nexis_sdk::pubkey::new_rand();
+        let source_stake_account_pubkey = nexis_sdk::pubkey::new_rand();
         let merge_stake_account = Keypair::new();
         config.command = CliCommand::MergeStake {
             stake_account_pubkey,
@@ -2267,7 +2267,7 @@ mod tests {
         assert_eq!(process_command(&config).unwrap(), "1234");
 
         // CreateAddressWithSeed
-        let from_pubkey = solana_sdk::pubkey::new_rand();
+        let from_pubkey = nexis_sdk::pubkey::new_rand();
         config.signers = vec![];
         config.command = CliCommand::CreateAddressWithSeed {
             from_pubkey: Some(from_pubkey),
@@ -2280,7 +2280,7 @@ mod tests {
         assert_eq!(address.unwrap(), expected_address.to_string());
 
         // Need airdrop cases
-        let to = solana_sdk::pubkey::new_rand();
+        let to = nexis_sdk::pubkey::new_rand();
         config.signers = vec![&keypair];
         config.command = CliCommand::Airdrop {
             pubkey: Some(to),
@@ -2377,7 +2377,7 @@ mod tests {
 
     #[test]
     fn test_cli_deploy() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let mut pathbuf = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         pathbuf.push("tests");
         pathbuf.push("fixtures");
@@ -2438,7 +2438,7 @@ mod tests {
         write_keypair_file(&default_keypair, &default_keypair_file).unwrap();
         let default_signer = DefaultSigner::new("", &default_keypair_file);
 
-        //Test Transfer Subcommand, SOL
+        //Test Transfer Subcommand, NZT
         let from_keypair = keypair_from_seed(&[0u8; 32]).unwrap();
         let from_pubkey = from_keypair.pubkey();
         let from_string = from_pubkey.to_string();

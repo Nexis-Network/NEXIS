@@ -1,7 +1,7 @@
 use {
     byteorder::{ByteOrder, LittleEndian, WriteBytesExt},
-    solana_rbpf::{aligned_memory::AlignedMemory, ebpf::HOST_ALIGN},
-    solana_sdk::{
+    nexis_rbpf::{aligned_memory::AlignedMemory, ebpf::HOST_ALIGN},
+    nexis_sdk::{
         account::{ReadableAccount, WritableAccount},
         bpf_loader_deprecated,
         entrypoint::{BPF_ALIGN_OF_U128, MAX_PERMITTED_DATA_INCREASE},
@@ -316,8 +316,8 @@ pub fn deserialize_parameters_aligned(
 mod tests {
     use {
         super::*,
-        solana_program_runtime::invoke_context::{prepare_mock_invoke_context, InvokeContext},
-        solana_sdk::{
+        nexis_program_runtime::invoke_context::{prepare_mock_invoke_context, InvokeContext},
+        nexis_sdk::{
             account::{Account, AccountSharedData},
             account_info::AccountInfo,
             bpf_loader,
@@ -332,9 +332,9 @@ mod tests {
 
     #[test]
     fn test_serialize_parameters() {
-        let program_id = solana_sdk::pubkey::new_rand();
-        let dup_key = solana_sdk::pubkey::new_rand();
-        let dup_key2 = solana_sdk::pubkey::new_rand();
+        let program_id = nexis_sdk::pubkey::new_rand();
+        let dup_key = nexis_sdk::pubkey::new_rand();
+        let dup_key2 = nexis_sdk::pubkey::new_rand();
         let keyed_accounts = [
             (
                 false,
@@ -375,7 +375,7 @@ mod tests {
             (
                 false,
                 false,
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(AccountSharedData::from(Account {
                     lamports: 2,
                     data: vec![11u8, 12, 13, 14, 15, 16, 17, 18, 19],
@@ -387,7 +387,7 @@ mod tests {
             (
                 false,
                 false,
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(AccountSharedData::from(Account {
                     lamports: 3,
                     data: vec![],
@@ -423,7 +423,7 @@ mod tests {
             (
                 false,
                 true,
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(AccountSharedData::from(Account {
                     lamports: 5,
                     data: vec![11u8, 12, 13, 14, 15, 16, 17, 18, 19],
@@ -435,7 +435,7 @@ mod tests {
             (
                 false,
                 true,
-                solana_sdk::pubkey::new_rand(),
+                nexis_sdk::pubkey::new_rand(),
                 Rc::new(RefCell::new(AccountSharedData::from(Account {
                     lamports: 6,
                     data: vec![],

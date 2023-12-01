@@ -2,24 +2,24 @@
 use {
     log::*,
     serial_test::serial,
-    solana_core::validator::ValidatorConfig,
-    solana_gossip::{cluster_info::Node, contact_info::ContactInfo},
-    solana_local_cluster::{
+    nexis_core::validator::ValidatorConfig,
+    nexis_gossip::{cluster_info::Node, contact_info::ContactInfo},
+    nexis_local_cluster::{
         cluster::Cluster,
         local_cluster::{ClusterConfig, LocalCluster},
         validator_configs::*,
     },
-    solana_replica_lib::accountsdb_repl_server::AccountsDbReplServiceConfig,
-    solana_replica_node::{
+    nexis_replica_lib::accountsdb_repl_server::AccountsDbReplServiceConfig,
+    nexis_replica_node::{
         replica_node::{ReplicaNode, ReplicaNodeConfig},
         replica_util,
     },
-    solana_rpc::{rpc::JsonRpcConfig, rpc_pubsub_service::PubSubConfig},
-    solana_runtime::{
+    nexis_rpc::{rpc::JsonRpcConfig, rpc_pubsub_service::PubSubConfig},
+    nexis_runtime::{
         accounts_index::AccountSecondaryIndexes, snapshot_archive_info::SnapshotArchiveInfoGetter,
         snapshot_config::SnapshotConfig, snapshot_utils,
     },
-    solana_sdk::{
+    nexis_sdk::{
         client::SyncClient,
         clock::Slot,
         commitment_config::CommitmentConfig,
@@ -28,7 +28,7 @@ use {
         hash::Hash,
         signature::{Keypair, Signer},
     },
-    solana_streamer::socket::SocketAddrSpace,
+    nexis_streamer::socket::SocketAddrSpace,
     std::{
         net::{IpAddr, Ipv4Addr, SocketAddr},
         path::{Path, PathBuf},
@@ -40,7 +40,7 @@ use {
 };
 
 const RUST_LOG_FILTER: &str =
-    "error,solana_core::replay_stage=warn,solana_local_cluster=info,local_cluster=info";
+    "error,nexis_core::replay_stage=warn,nexis_local_cluster=info,local_cluster=info";
 
 fn wait_for_next_snapshot(
     cluster: &LocalCluster,
@@ -131,7 +131,7 @@ fn setup_snapshot_validator_config(
 
     let bind_ip_addr = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
     let accountsdb_repl_port =
-        solana_net_utils::find_available_port_in_range(bind_ip_addr, (1024, 65535)).unwrap();
+        nexis_net_utils::find_available_port_in_range(bind_ip_addr, (1024, 65535)).unwrap();
     let replica_server_addr = SocketAddr::new(bind_ip_addr, accountsdb_repl_port);
 
     let accountsdb_repl_service_config = Some(AccountsDbReplServiceConfig {
@@ -157,7 +157,7 @@ fn setup_snapshot_validator_config(
 }
 
 fn test_local_cluster_start_and_exit_with_config(socket_addr_space: SocketAddrSpace) {
-    solana_logger::setup();
+    nexis_logger::setup();
     const NUM_NODES: usize = 1;
     let mut config = ClusterConfig {
         validator_configs: make_identical_validator_configs(
@@ -182,7 +182,7 @@ fn test_replica_bootstrap() {
 
     test_local_cluster_start_and_exit_with_config(socket_addr_space);
 
-    solana_logger::setup_with_default(RUST_LOG_FILTER);
+    nexis_logger::setup_with_default(RUST_LOG_FILTER);
     // First set up the cluster with 1 node
     let snapshot_interval_slots = 50;
     let num_account_paths = 3;
@@ -229,10 +229,10 @@ fn test_replica_bootstrap() {
 
     // now bring up a replica to talk to it.
     let ip_addr = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
-    let port = solana_net_utils::find_available_port_in_range(ip_addr, (8101, 8200)).unwrap();
+    let port = nexis_net_utils::find_available_port_in_range(ip_addr, (8101, 8200)).unwrap();
     let rpc_addr = SocketAddr::new(ip_addr, port);
 
-    let port = solana_net_utils::find_available_port_in_range(ip_addr, (8201, 8300)).unwrap();
+    let port = nexis_net_utils::find_available_port_in_range(ip_addr, (8201, 8300)).unwrap();
 
     let rpc_pubsub_addr = SocketAddr::new(ip_addr, port);
     let ledger_dir = tempfile::tempdir_in(farf_dir()).unwrap();
@@ -245,11 +245,11 @@ fn test_replica_bootstrap() {
     let bank_snapshots_dir = snapshot_archives_dir.join("snapshot");
     let account_paths: Vec<PathBuf> = vec![ledger_path.join("accounts")];
 
-    let port = solana_net_utils::find_available_port_in_range(ip_addr, (8301, 8400)).unwrap();
+    let port = nexis_net_utils::find_available_port_in_range(ip_addr, (8301, 8400)).unwrap();
     let gossip_addr = SocketAddr::new(ip_addr, port);
 
-    let dynamic_port_range = solana_net_utils::parse_port_range("8401-8500").unwrap();
-    let bind_address = solana_net_utils::parse_host("127.0.0.1").unwrap();
+    let dynamic_port_range = nexis_net_utils::parse_port_range("8401-8500").unwrap();
+    let bind_address = nexis_net_utils::parse_host("127.0.0.1").unwrap();
     let node = Node::new_with_external_ip(
         &identity_keypair.pubkey(),
         &gossip_addr,

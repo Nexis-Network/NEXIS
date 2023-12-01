@@ -4,10 +4,10 @@ use anyhow::*;
 use evm_rpc::{Hex, RPCTransaction};
 use evm_state::{Block, BlockHeader, TransactionInReceipt, H256};
 use serde_json::json;
-use solana_client::{rpc_client::RpcClient, rpc_request::RpcRequest};
-use solana_evm_loader_program::instructions::v0;
-use solana_sdk::pubkey::Pubkey;
-use solana_storage_bigtable::LedgerStorage;
+use nexis_client::{rpc_client::RpcClient, rpc_request::RpcRequest};
+use nexis_evm_loader_program::instructions::v0;
+use nexis_sdk::pubkey::Pubkey;
+use nexis_storage_bigtable::LedgerStorage;
 
 use crate::extensions::NativeBlockExt;
 

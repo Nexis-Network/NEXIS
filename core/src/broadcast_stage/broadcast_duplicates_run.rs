@@ -2,10 +2,10 @@ use {
     super::*,
     crate::cluster_nodes::ClusterNodesCache,
     itertools::Itertools,
-    solana_entry::entry::Entry,
-    solana_gossip::cluster_info::DATA_PLANE_FANOUT,
-    solana_ledger::shred::Shredder,
-    solana_sdk::{
+    nexis_entry::entry::Entry,
+    nexis_gossip::cluster_info::DATA_PLANE_FANOUT,
+    nexis_ledger::shred::Shredder,
+    nexis_sdk::{
         hash::Hash,
         signature::{Keypair, Signature, Signer},
         system_transaction,

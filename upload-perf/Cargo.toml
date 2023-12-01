@@ -1,20 +1,20 @@
 [package]
-name = "solana-upload-perf"
+name = "nexis-upload-perf"
 version = "1.9.29"
 description = "Metrics Upload Utility"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
 edition = "2021"
-homepage = "https://solana.com/"
+homepage = "https://nexis.network/"
 publish = false
 
 [dependencies]
 serde_json = "1.0.72"
-solana-metrics = { path = "../metrics", version = "=1.9.29" }
+nexis-metrics = { path = "../metrics", version = "=1.9.29" }
 
 [[bin]]
-name = "solana-upload-perf"
+name = "nexis-upload-perf"
 path = "src/upload-perf.rs"
 
 

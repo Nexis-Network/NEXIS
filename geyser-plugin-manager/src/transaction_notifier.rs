@@ -2,14 +2,14 @@
 use {
     crate::geyser_plugin_manager::GeyserPluginManager,
     log::*,
-    solana_geyser_plugin_interface::geyser_plugin_interface::{
+    nexis_geyser_plugin_interface::geyser_plugin_interface::{
         ReplicaTransactionInfo, ReplicaTransactionInfoVersions,
     },
-    solana_measure::measure::Measure,
-    solana_metrics::*,
-    solana_rpc::transaction_notifier_interface::TransactionNotifier,
-    solana_sdk::{clock::Slot, signature::Signature, transaction::SanitizedTransaction},
-    solana_transaction_status::TransactionStatusMeta,
+    nexis_measure::measure::Measure,
+    nexis_metrics::*,
+    nexis_rpc::transaction_notifier_interface::TransactionNotifier,
+    nexis_sdk::{clock::Slot, signature::Signature, transaction::SanitizedTransaction},
+    nexis_transaction_status::TransactionStatusMeta,
     std::sync::{Arc, RwLock},
 };
 

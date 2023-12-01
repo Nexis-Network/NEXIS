@@ -3,8 +3,8 @@ use {
     crate::bigtable::RowKey,
     log::*,
     serde::{Deserialize, Serialize},
-    solana_metrics::inc_new_counter_debug,
-    solana_sdk::{
+    nexis_metrics::inc_new_counter_debug,
+    nexis_sdk::{
         clock::{Slot, UnixTimestamp},
     deserialize_utils::default_on_eof,
         pubkey::Pubkey,
@@ -12,9 +12,9 @@ use {
         sysvar::is_sysvar_id,
         transaction::{Transaction, TransactionError},
     },
-    solana_storage_proto::convert::generated_evm,
-    solana_storage_proto::convert::{generated, tx_by_addr},
-    solana_transaction_status::{
+    nexis_storage_proto::convert::generated_evm,
+    nexis_storage_proto::convert::{generated, tx_by_addr},
+    nexis_transaction_status::{
         extract_and_fmt_memos, ConfirmedBlock, ConfirmedBlockWithOptionalMetadata,
         ConfirmedTransactionStatusWithSignature, ConfirmedTransactionWithOptionalMetadata, Reward,
         TransactionByAddrInfo, TransactionConfirmationStatus, TransactionStatus,
@@ -28,7 +28,7 @@ use {
 };
 
 #[macro_use]
-extern crate solana_metrics;
+extern crate nexis_metrics;
 
 #[macro_use]
 extern crate serde_derive;
@@ -357,7 +357,7 @@ impl LedgerStorage {
         credential_path: Option<String>,
     ) -> Result<Self> {
         let connection =
-            bigtable::BigTableConnection::new("solana-ledger", read_only, timeout, credential_path)
+            bigtable::BigTableConnection::new("nexis-ledger", read_only, timeout, credential_path)
                 .await?;
         Ok(Self { connection })
     }

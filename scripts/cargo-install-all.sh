@@ -98,7 +98,7 @@ else
         exzo-keygen
         exzo-test-validator
         exzo-validator
-        solana-ledger-tool
+       nexis-ledger-tool
         evm-bridge
         rbpf-cli
     )
@@ -108,13 +108,13 @@ else
         BINS+=(
             cargo-build-bpf
             cargo-test-bpf
-            solana-dos
-            solana-stake-accounts
+           nexis-dos
+           nexis-stake-accounts
         )
     fi
     
-    #XXX: Ensure `solana-genesis` is built LAST!
-    # See https://github.com/solana-labs/solana/issues/5826
+    #XXX: Ensure `nexis-genesis` is built LAST!
+    # See https://github.com/nexis-labs/nexis/issues/5826
     BINS+=(exzo-genesis)
 fi
 
@@ -156,7 +156,7 @@ fi
     set -x
     # deps dir can be empty
     shopt -s nullglob
-    for dep in target/"$buildVariant"/deps/libsolana*program.*; do
+    for dep in target/"$buildVariant"/deps/libnexis*program.*; do
         cp -fv "$dep" "$installDir/bin/deps"
     done
 )

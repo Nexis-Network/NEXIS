@@ -1,14 +1,14 @@
 #![allow(clippy::integer_arithmetic)]
 use log::*;
 use serde::{Deserialize, Serialize};
-use solana_client::{client_error::Result as ClientResult, rpc_client::RpcClient};
-use solana_metrics::{datapoint_error, datapoint_info};
-use solana_sdk::{
-    clock::Slot, native_token::LAMPORTS_PER_XZO, program_utils::limited_deserialize,
+use nexis_client::{client_error::Result as ClientResult, rpc_client::RpcClient};
+use nexis_metrics::{datapoint_error, datapoint_info};
+use nexis_sdk::{
+    clock::Slot, native_token::LAMPORTS_PER_NZT, program_utils::limited_deserialize,
     pubkey::Pubkey, signature::Signature, transaction::Transaction,
 };
-use solana_stake_program::{stake_instruction::StakeInstruction, stake_state::Lockup};
-use solana_transaction_status::{
+use nexis_stake_program::{stake_instruction::StakeInstruction, stake_state::Lockup};
+use nexis_transaction_status::{
     EncodedConfirmedBlock, UiTransactionEncoding, UiTransactionStatusMeta,
 };
 use std::{collections::HashMap, thread::sleep, time::Duration};
@@ -78,14 +78,14 @@ fn process_transaction(
     // Look for stake operations
     for instruction in message.instructions.iter().rev() {
         let program_pubkey = message.account_keys[instruction.program_id_index as usize];
-        if program_pubkey != solana_stake_program::id() {
+        if program_pubkey != nexis_stake_program::id() {
             continue;
         }
 
         // Only look for stake instructions in the last instruction of a
         // transaction.  This ensures that the `meta.post_balances` for the
         // transaction reflects the account balances after the stake instruction
-        // executed.  At this time the `solana` cli will only create transactions with the stake
+        // executed.  At this time the `nexis` cli will only create transactions with the stake
         // instruction as the last instruction.
         if !last_instruction {
             datapoint_error!(
@@ -232,7 +232,7 @@ fn process_transaction(
         if let Some(mut account_info) = accounts.get_mut(&account_pubkey.to_string()) {
             let post_balance = meta.post_balances[index];
             if account_info.compliant_since.is_some()
-                && post_balance <= account_info.lamports.saturating_sub(LAMPORTS_PER_XZO)
+                && post_balance <= account_info.lamports.saturating_sub(LAMPORTS_PER_NZT)
             {
                 account_info.compliant_since = None;
                 account_info.transactions.push(AccountTransactionInfo {
@@ -359,32 +359,32 @@ pub fn process_slots(rpc_client: &RpcClient, accounts_info: &mut AccountsInfo, b
 mod test {
     use super::*;
     use serial_test::serial;
-    use solana_client::rpc_config::RpcSendTransactionConfig;
-    use solana_core::{rpc::JsonRpcConfig, validator::ValidatorConfig};
-    use solana_local_cluster::local_cluster::{ClusterConfig, LocalCluster};
-    use solana_sdk::{
+    use nexis_client::rpc_config::RpcSendTransactionConfig;
+    use nexis_core::{rpc::JsonRpcConfig, validator::ValidatorConfig};
+    use nexis_local_cluster::local_cluster::{ClusterConfig, LocalCluster};
+    use nexis_sdk::{
         commitment_config::CommitmentConfig,
         genesis_config::ClusterType,
         message::Message,
-        native_token::sol_to_lamports,
+        native_token::nzt_to_lamports,
         signature::{Keypair, Signer},
         system_transaction,
         transaction::Transaction,
     };
-    use solana_stake_program::{stake_instruction, stake_state::Authorized};
+    use nexis_stake_program::{stake_instruction, stake_state::Authorized};
 
     #[test]
     #[serial]
     #[ignore]
     fn test_record() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let mut accounts_info = AccountsInfo::default();
 
         let min_sol = 400;
         let cluster = LocalCluster::new(&mut ClusterConfig {
             cluster_type: ClusterType::MainnetBeta,
             node_stakes: vec![400; 1],
-            cluster_lamports: sol_to_lamports(1_000_000_000.0),
+            cluster_lamports: nzt_to_lamports(1_000_000_000.0),
             validator_configs: vec![ValidatorConfig {
                 rpc_config: JsonRpcConfig {
                     enable_rpc_transaction_history: true,
@@ -592,7 +592,7 @@ mod test {
             2 * min_sol,
         );
 
-        // Withdraw 1 sol from system 1 to make it non-compliant
+        // Withdraw 1 nzt from system 1 to make it non-compliant
         rpc_client
             .send_transaction_with_config(
                 &system_transaction::transfer(
@@ -634,7 +634,7 @@ mod test {
             2 * min_sol,
         );
 
-        // Withdraw 1 sol - 1 lamport from system 2, it's still compliant
+        // Withdraw 1nzt- 1 lamport from system 2, it's still compliant
         rpc_client
             .send_transaction_with_config(
                 &system_transaction::transfer(

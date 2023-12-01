@@ -1,7 +1,7 @@
 #[allow(deprecated)]
-use solana_sdk::sysvar::fees::Fees;
+use nexis_sdk::sysvar::fees::Fees;
 use {
-    solana_sdk::{
+    nexis_sdk::{
         instruction::InstructionError,
         sysvar::{
             clock::Clock, epoch_schedule::EpochSchedule, rent::Rent, slot_hashes::SlotHashes,
@@ -11,7 +11,7 @@ use {
 };
 
 #[cfg(RUSTC_WITH_SPECIALIZATION)]
-impl ::solana_frozen_abi::abi_example::AbiExample for SysvarCache {
+impl ::nexis_frozen_abi::abi_example::AbiExample for SysvarCache {
     fn example() -> Self {
         // SysvarCache is not Serialize so just rely on Default.
         SysvarCache::default()

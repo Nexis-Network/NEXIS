@@ -5,9 +5,9 @@
 use {
     crate::rpc_subscriptions::RpcSubscriptions,
     crossbeam_channel::{Receiver, RecvTimeoutError, Sender},
-    solana_client::rpc_response::{SlotTransactionStats, SlotUpdate},
-    solana_runtime::{bank::Bank, bank_forks::BankForks},
-    solana_sdk::{clock::Slot, timing::timestamp},
+    nexis_client::rpc_response::{SlotTransactionStats, SlotUpdate},
+    nexis_runtime::{bank::Bank, bank_forks::BankForks},
+    nexis_sdk::{clock::Slot, timing::timestamp},
     std::{
         collections::HashSet,
         sync::{
@@ -71,7 +71,7 @@ impl OptimisticallyConfirmedBankTracker {
         let mut last_notified_confirmed_slot: Slot = 0;
         let mut highest_confirmed_slot: Slot = 0;
         let thread_hdl = Builder::new()
-            .name("solana-optimistic-bank-tracker".to_string())
+            .name("nexis-optimistic-bank-tracker".to_string())
             .spawn(move || loop {
                 if exit_.load(Ordering::Relaxed) {
                     break;
@@ -317,11 +317,11 @@ impl OptimisticallyConfirmedBankTracker {
 mod tests {
     use {
         super::*,
-        solana_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
-        solana_runtime::{
+        nexis_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
+        nexis_runtime::{
             accounts_background_service::AbsRequestSender, commitment::BlockCommitmentCache,
         },
-        solana_sdk::pubkey::Pubkey,
+        nexis_sdk::pubkey::Pubkey,
         std::sync::atomic::AtomicU64,
     };
 

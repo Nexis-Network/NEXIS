@@ -1,16 +1,35 @@
+/// This module contains the implementation of the `BanksServer` struct and its associated methods.
+/// The `BanksServer` struct is responsible for handling transactions and interacting with the bank.
+/// It provides methods for sending transactions, retrieving fees, checking transaction status,
+/// and processing transactions with preflight and commitment levels.
+/// The `BanksServer` struct is used by the server to handle incoming requests from clients.
+/// It relies on the `BankForks` and `BlockCommitmentCache` structs to manage the state of the bank.
+/// The `BanksServer` struct also uses a transaction sender to forward transactions to the validator.
+/// It runs in a loop, continuously processing incoming transactions.
+/// The `BanksServer` struct is designed to be used in a multi-threaded environment.
+/// It is cloneable and can be shared across multiple threads.
+/// The `BanksServer` struct is typically created using the `new` or `new_loopback` methods.
+/// The `new` method is used for production environments, while the `new_loopback` method is useful for unit testing.
+/// The `BanksServer` struct implements the `Banks` trait, which defines the RPC methods that can be called by clients.
+/// These methods include sending transactions, retrieving fees, checking transaction status,
+/// getting the current slot, getting the block height, and processing transactions with preflight and commitment levels.
+/// The `BanksServer` struct also provides helper methods for retrieving the current slot and bank based on the commitment level.
+/// Additionally, it includes a method for polling the signature status of a transaction.
+/// Overall, the `BanksServer` struct serves as the main interface for interacting with the bank and handling transactions.
+/// It plays a crucial role in the overall functionality of the banks server.
 use {
     bincode::{deserialize, serialize},
     futures::{future, prelude::stream::StreamExt},
-    solana_banks_interface::{
+    nexis_banks_interface::{
         Banks, BanksRequest, BanksResponse, BanksTransactionResultWithSimulation,
         TransactionConfirmationStatus, TransactionSimulationDetails, TransactionStatus,
     },
-    solana_runtime::{
+    nexis_runtime::{
         bank::{Bank, TransactionSimulationResult},
         bank_forks::BankForks,
         commitment::BlockCommitmentCache,
     },
-    solana_sdk::{
+    nexis_sdk::{
         account::Account,
         clock::Slot,
         commitment_config::CommitmentLevel,
@@ -22,7 +41,7 @@ use {
         signature::Signature,
         transaction::{self, SanitizedTransaction, Transaction},
     },
-    solana_send_transaction_service::{
+    nexis_send_transaction_service::{
         send_transaction_service::{SendTransactionService, TransactionInfo},
         tpu_info::NullTpuInfo,
     },
@@ -106,7 +125,7 @@ impl BanksServer {
         }
         let server_bank_forks = bank_forks.clone();
         Builder::new()
-            .name("solana-bank-forks-client".to_string())
+            .name("nexis-bank-forks-client".to_string())
             .spawn(move || Self::run(server_bank_forks, transaction_receiver))
             .unwrap();
         Self::new(

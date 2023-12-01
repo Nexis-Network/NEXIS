@@ -1,17 +1,17 @@
 [package]
-name = "solana-core"
+name = "nexis-core"
 description = "Blockchain, Rebuilt for Scale"
 version = "1.9.29"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-core"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-core"
 readme = "../README.md"
-repository = "https://github.com/solana-labs/solana"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
 license = "Apache-2.0"
 edition = "2021"
 
 [badges]
-codecov = { repository = "solana-labs/solana", branch = "master", service = "github" }
+codecov = { repository = "nexis-network/nexis", branch = "master", service = "github" }
 
 [dependencies]
 ahash = "0.7.6"
@@ -34,33 +34,33 @@ rayon = "1.5.1"
 retain_mut = "=0.1.9"
 serde = "1.0.130"
 serde_derive = "1.0.103"
-solana-bloom = { path = "../bloom", version = "=1.9.29" }
-solana-client = { path = "../client", version = "=1.9.29" }
-solana-entry = { path = "../entry", version = "=1.9.29" }
-solana-geyser-plugin-manager = { path = "../geyser-plugin-manager", version = "=1.9.29" }
-solana-gossip = { path = "../gossip", version = "=1.9.29" }
-solana-ledger = { path = "../ledger", version = "=1.9.29" }
-solana-logger = { path = "../logger", version = "=1.9.29" }
-solana-measure = { path = "../measure", version = "=1.9.29" }
-solana-metrics = { path = "../metrics", version = "=1.9.29" }
-solana-net-utils = { path = "../net-utils", version = "=1.9.29" }
-solana-perf = { path = "../perf", version = "=1.9.29" }
-solana-poh = { path = "../poh", version = "=1.9.29" }
-solana-program-runtime = { path = "../program-runtime", version = "=1.9.29" }
-solana-rpc = { path = "../rpc", version = "=1.9.29" }
-solana-replica-lib = { path = "../replica-lib", version = "=1.9.29" }
-solana-runtime = { path = "../runtime", version = "=1.9.29" }
-solana-sdk = { path = "../sdk", version = "=1.9.29" }
-solana-frozen-abi = { path = "../frozen-abi", version = "=1.9.29" }
-solana-frozen-abi-macro = { path = "../frozen-abi/macro", version = "=1.9.29" }
-solana-send-transaction-service = { path = "../send-transaction-service", version = "=1.9.29" }
-solana-streamer = { path = "../streamer", version = "=1.9.29" }
-solana-transaction-status = { path = "../transaction-status", version = "=1.9.29" }
-solana-version = { path = "../version", version = "=0.6.3" }
-solana-vote-program = { path = "../programs/vote", version = "=1.9.29" }
+nexis-bloom = { path = "../bloom", version = "=1.9.29" }
+nexis-client = { path = "../client", version = "=1.9.29" }
+nexis-entry = { path = "../entry", version = "=1.9.29" }
+nexis-geyser-plugin-manager = { path = "../geyser-plugin-manager", version = "=1.9.29" }
+nexis-gossip = { path = "../gossip", version = "=1.9.29" }
+nexis-ledger = { path = "../ledger", version = "=1.9.29" }
+nexis-logger = { path = "../logger", version = "=1.9.29" }
+nexis-measure = { path = "../measure", version = "=1.9.29" }
+nexis-metrics = { path = "../metrics", version = "=1.9.29" }
+nexis-net-utils = { path = "../net-utils", version = "=1.9.29" }
+nexis-perf = { path = "../perf", version = "=1.9.29" }
+nexis-poh = { path = "../poh", version = "=1.9.29" }
+nexis-program-runtime = { path = "../program-runtime", version = "=1.9.29" }
+nexis-rpc = { path = "../rpc", version = "=1.9.29" }
+nexis-replica-lib = { path = "../replica-lib", version = "=1.9.29" }
+nexis-runtime = { path = "../runtime", version = "=1.9.29" }
+nexis-sdk = { path = "../sdk", version = "=1.9.29" }
+nexis-frozen-abi = { path = "../frozen-abi", version = "=1.9.29" }
+nexis-frozen-abi-macro = { path = "../frozen-abi/macro", version = "=1.9.29" }
+nexis-send-transaction-service = { path = "../send-transaction-service", version = "=1.9.29" }
+nexis-streamer = { path = "../streamer", version = "=1.9.29" }
+nexis-transaction-status = { path = "../transaction-status", version = "=1.9.29" }
+nexis-version = { path = "../version", version = "=0.6.3" }
+nexis-vote-program = { path = "../programs/vote", version = "=1.9.29" }
 tempfile = "3.2.0"
 thiserror = "1.0"
-solana-rayon-threadlimit = { path = "../rayon-threadlimit", version = "=1.9.29" }
+nexis-rayon-threadlimit = { path = "../rayon-threadlimit", version = "=1.9.29" }
 sys-info = "0.9.1"
 tokio = { version = "~1.14.1", features = ["full"] }
 
@@ -71,9 +71,9 @@ primitive-types = "0.11.0"
 secp256k1 = { version = "0.19.0", features = ["recovery", "global-context"] }
 evm-state = { path = "../evm-utils/evm-state" }
 evm-rpc = { path = "../evm-utils/evm-rpc" }
-solana-evm-loader-program = { path = "../evm-utils/programs/evm_loader" }
+nexis-evm-loader-program = { path = "../evm-utils/programs/evm_loader" }
 exzo-account-program = { path = "../programs/exzo-account-program" }
-exzo-relying-party-program = { path = "../programs/exzo-relying-party-program" }
+nexis-relying-party-program = { path = "../programs/nexis-relying-party-program" }
 
 trees = "0.4.2"
 snafu = "0.7"
@@ -88,9 +88,9 @@ matches = "0.1.9"
 reqwest = { version = "0.11.6", default-features = false, features = ["blocking", "rustls-tls", "json"] }
 serde_json = "1.0.72"
 serial_test = "0.5.1"
-solana-program-runtime = { path = "../program-runtime", version = "=1.9.29" }
-solana-stake-program = { path = "../programs/stake", version = "=1.9.29" }
-solana-version = { path = "../version", version = "=0.6.3" }
+nexis-program-runtime = { path = "../program-runtime", version = "=1.9.29" }
+nexis-stake-program = { path = "../programs/stake", version = "=1.9.29" }
+nexis-version = { path = "../version", version = "=0.6.3" }
 static_assertions = "1.1.0"
 systemstat = "0.1.10"
 

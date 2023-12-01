@@ -1,12 +1,12 @@
-// This bench attempts to justify the value of `solana_core::poh_service::NUM_HASHES_PER_BATCH`
+// This bench attempts to justify the value of `nexis_core::poh_service::NUM_HASHES_PER_BATCH`
 
 #![feature(test)]
 extern crate test;
 
 use {
-    solana_entry::poh::Poh,
-    solana_poh::poh_service::DEFAULT_HASHES_PER_BATCH,
-    solana_sdk::hash::Hash,
+    nexis_entry::poh::Poh,
+    nexis_poh::poh_service::DEFAULT_HASHES_PER_BATCH,
+    nexis_sdk::hash::Hash,
     std::sync::{
         atomic::{AtomicBool, Ordering},
         Arc, Mutex,

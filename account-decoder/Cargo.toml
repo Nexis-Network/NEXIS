@@ -1,11 +1,11 @@
 [package]
-name = "solana-account-decoder"
+name = "nexis-account-decompiler"
 version = "1.9.29"
-description = "Solana account decoder"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-account-decoder"
+description = "Nexis account decoder"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-account-decompiler"
 license = "Apache-2.0"
 edition = "2021"
 
@@ -19,15 +19,15 @@ lazy_static = "1.4.0"
 serde = "1.0.130"
 serde_derive = "1.0.103"
 serde_json = "1.0.72"
-solana-config-program = { path = "../programs/config", version = "=1.9.29" }
-solana-sdk = { path = "../sdk", version = "=1.9.29" }
-solana-vote-program = { path = "../programs/vote", version = "=1.9.29" }
+nexis-config-program = { path = "../programs/config", version = "=1.9.29" }
+nexis-sdk = { path = "../sdk", version = "=1.9.29" }
+nexis-vote-program = { path = "../programs/vote", version = "=1.9.29" }
 spl-token = { version = "=3.2.0", features = ["no-entrypoint"] }
 thiserror = "1.0"
 zstd = "0.9.0"
 
 exzo-account-program = { path = "../programs/exzo-account-program" }
-exzo-relying-party-program = { path = "../programs/exzo-relying-party-program" }
+nexis-relying-party-program = { path = "../programs/nexis-relying-party-program" }
 
 
 [package.metadata.docs.rs]

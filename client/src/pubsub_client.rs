@@ -17,8 +17,8 @@ use {
         value::Value::{Number, Object},
         Map, Value,
     },
-    solana_account_decoder::UiAccount,
-    solana_sdk::{clock::Slot, pubkey::Pubkey, signature::Signature},
+    nexis_account_decoder::UiAccount,
+    nexis_sdk::{clock::Slot, pubkey::Pubkey, signature::Signature},
     std::{
         marker::PhantomData,
         net::TcpStream,

@@ -3,11 +3,11 @@ use {
     common::{
         add_lookup_table_account, assert_ix_error, new_address_lookup_table, setup_test_context,
     },
-    solana_address_lookup_table_program::{
+    nexis_address_lookup_table_program::{
         instruction::freeze_lookup_table, state::AddressLookupTable,
     },
-    solana_program_test::*,
-    solana_sdk::{
+    nexis_program_test::*,
+    nexis_sdk::{
         instruction::InstructionError,
         pubkey::Pubkey,
         signature::{Keypair, Signer},

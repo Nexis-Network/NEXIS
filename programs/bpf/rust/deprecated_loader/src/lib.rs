@@ -2,8 +2,8 @@
 
 #![allow(unreachable_code)]
 
-extern crate solana_program;
-use solana_program::{
+extern crate nexis_program;
+use nexis_program::{
     account_info::AccountInfo, bpf_loader, entrypoint_deprecated,
     entrypoint_deprecated::ProgramResult, log::*, msg, pubkey::Pubkey,
 };
@@ -42,7 +42,7 @@ fn process_instruction(
     // the no-op program, no account keys or input data are expected but real
     // programs will have specific requirements so they can do their work.
     msg!("Account keys and instruction input data:");
-    sol_log_params(accounts, instruction_data);
+    nzt_log_params(accounts, instruction_data);
 
     {
         // Test - use std methods, unwrap

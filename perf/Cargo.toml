@@ -1,12 +1,12 @@
 [package]
-name = "solana-perf"
+name = "nexis-perf"
 version = "1.9.29"
-description = "Solana Performance APIs"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "Nexis Performance APIs"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-perf"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-perf"
 edition = "2021"
 
 [dependencies]
@@ -22,12 +22,12 @@ log = "0.4.14"
 rand = "0.7.0"
 rayon = "1.5.1"
 serde = "1.0.130"
-solana-bloom = { path = "../bloom", version = "=1.9.29" }
-solana-logger = { path = "../logger", version = "=1.9.29" }
-solana-metrics = { path = "../metrics", version = "=1.9.29" }
-solana-sdk = { path = "../sdk", version = "=1.9.29" }
-solana-vote-program = { path = "../programs/vote", version = "=1.9.29" }
-solana-rayon-threadlimit = { path = "../rayon-threadlimit", version = "=1.9.29" }
+nexis-bloom = { path = "../bloom", version = "=1.9.29" }
+nexis-logger = { path = "../logger", version = "=1.9.29" }
+nexis-metrics = { path = "../metrics", version = "=1.9.29" }
+nexis-sdk = { path = "../sdk", version = "=1.9.29" }
+nexis-vote-program = { path = "../programs/vote", version = "=1.9.29" }
+nexis-rayon-threadlimit = { path = "../rayon-threadlimit", version = "=1.9.29" }
 
 [target."cfg(target_os = \"linux\")".dependencies]
 caps = "0.5.3"
@@ -35,7 +35,7 @@ libc = "0.2.108"
 nix = "0.23.0"
 
 [lib]
-name = "solana_perf"
+name = "nexis_perf"
 
 [dev-dependencies]
 matches = "0.1.9"

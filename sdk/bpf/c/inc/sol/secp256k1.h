@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @brief Solana secp256k1 system call
+ * @brief Nexis secp256k1 system call
  */
 
 #include <sol/types.h>
@@ -16,11 +16,11 @@ extern "C" {
 /** Length of a secp256k1 recover result */
 #define SECP256K1_RECOVER_RESULT_LENGTH 64
 
-/** The hash provided to a sol_secp256k1_recover is invalid */
+/** The hash provided to a nzt_secp256k1_recover is invalid */
 #define SECP256K1_RECOVER_ERROR_INVALID_HASH 1
-/** The recovery_id provided to a sol_secp256k1_recover is invalid */
+/** The recovery_id provided to a nzt_secp256k1_recover is invalid */
 #define SECP256K1_RECOVER_ERROR_INVALID_RECOVERY_ID 2
-/** The signature provided to a sol_secp256k1_recover is invalid */
+/** The signature provided to a nzt_secp256k1_recover is invalid */
 #define SECP256K1_RECOVER_ERROR_INVALID_SIGNATURE 3
 
 /**
@@ -32,7 +32,7 @@ extern "C" {
  * @param result 64 byte array to hold the result. A recovered public key
  * @return 0 if executed successfully
  */
-uint64_t sol_secp256k1_recover(
+uint64_t nzt_secp256k1_recover(
     const uint8_t *hash,
     uint64_t recovery_id,
     const uint8_t *signature,

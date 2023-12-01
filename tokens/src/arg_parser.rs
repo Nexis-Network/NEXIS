@@ -6,14 +6,14 @@ use {
     clap::{
         crate_description, crate_name, value_t, value_t_or_exit, App, Arg, ArgMatches, SubCommand,
     },
-    solana_clap_utils::{
+    nexis_clap_utils::{
         input_parsers::{pubkey_of_signer, value_of},
         input_validators::{is_amount, is_valid_pubkey, is_valid_signer},
         keypair::{pubkey_from_path, signer_from_path},
     },
-    solana_cli_config::CONFIG_FILE,
-    solana_remote_wallet::remote_wallet::maybe_wallet_manager,
-    solana_sdk::native_token::sol_to_lamports,
+    nexis_cli_config::CONFIG_FILE,
+    nexis_remote_wallet::remote_wallet::maybe_wallet_manager,
+    nexis_sdk::native_token::nzt_to_lamports,
     std::{error::Error, ffi::OsString, process::exit},
 };
 
@@ -25,7 +25,7 @@ where
     let default_config_file = CONFIG_FILE.as_ref().unwrap();
     App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .arg(
             Arg::with_name("config_file")
                 .long("config")
@@ -40,11 +40,11 @@ where
                 .global(true)
                 .takes_value(true)
                 .value_name("URL")
-                .help("RPC entrypoint address. i.e. https://rpc-dev-1.exzo.network"),
+                .help("RPC entrypoint address. i.e. https://rpc-dev-1.nexis.network"),
         )
         .subcommand(
             SubCommand::with_name("distribute-tokens")
-                .about("Distribute XZO")
+                .about("Distribute NZT")
                 .arg(
                     Arg::with_name("db_path")
                         .long("db-path")
@@ -71,7 +71,7 @@ where
                         .takes_value(true)
                         .value_name("AMOUNT")
                         .validator(is_amount)
-                        .help("The amount to send to each recipient, in XZO"),
+                        .help("The amount to send to each recipient, in NZT"),
                 )
                 .arg(
                     Arg::with_name("dry_run")
@@ -155,8 +155,8 @@ where
                         .default_value("1.0")
                         .long("unlocked-sol")
                         .takes_value(true)
-                        .value_name("SOL_AMOUNT")
-                        .help("Amount of SOL to put in system account to pay for fees"),
+                        .value_name("NZT_AMOUNT")
+                        .help("Amount of NZT to put in system account to pay for fees"),
                 )
                 .arg(
                     Arg::with_name("lockup_authority")
@@ -236,7 +236,7 @@ where
                         .long("unlocked-xzo")
                         .takes_value(true)
                         .value_name("XZO_AMOUNT")
-                        .help("Amount of XZO to put in system account to pay for fees"),
+                        .help("Amount of NZT to put in system account to pay for fees"),
                 )
                 .arg(
                     Arg::with_name("stake_authority")
@@ -433,7 +433,7 @@ fn parse_distribute_tokens_args(
         fee_payer,
         stake_args: None,
         spl_token_args: None,
-        transfer_amount: value_of(matches, "transfer_amount").map(sol_to_lamports),
+        transfer_amount: value_of(matches, "transfer_amount").map(nzt_to_lamports),
     })
 }
 
@@ -472,7 +472,7 @@ fn parse_create_stake_args(
         .transpose()?;
 
     let stake_args = StakeArgs {
-        unlocked_sol: sol_to_lamports(value_t_or_exit!(matches, "unlocked_sol", f64)),
+        unlocked_sol: nzt_to_lamports(value_t_or_exit!(matches, "unlocked_sol", f64)),
         lockup_authority,
         sender_stake_args: None,
     };
@@ -555,7 +555,7 @@ fn parse_distribute_stake_args(
         lockup_authority,
     };
     let stake_args = StakeArgs {
-        unlocked_sol: sol_to_lamports(value_t_or_exit!(matches, "unlocked_sol", f64)),
+        unlocked_sol: nzt_to_lamports(value_t_or_exit!(matches, "unlocked_sol", f64)),
         lockup_authority: lockup_authority_address,
         sender_stake_args: Some(sender_stake_args),
     };

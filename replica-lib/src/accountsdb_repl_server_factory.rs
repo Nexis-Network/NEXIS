@@ -5,8 +5,8 @@ use {
         replica_confirmed_slots_server::ReplicaSlotConfirmationServerImpl,
     },
     crossbeam_channel::Receiver,
-    solana_rpc::optimistically_confirmed_bank_tracker::BankNotification,
-    solana_runtime::bank_forks::BankForks,
+    nexis_rpc::optimistically_confirmed_bank_tracker::BankNotification,
+    nexis_runtime::bank_forks::BankForks,
     std::sync::{Arc, RwLock},
 };
 

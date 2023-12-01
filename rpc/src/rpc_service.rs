@@ -1,4 +1,4 @@
-//! The `rpc_service` module implements the Solana JSON RPC service.
+//! The `rpc_service` module implements the Nexis JSON RPC service.
 
 use {
     crate::{
@@ -18,25 +18,25 @@ use {
         RequestMiddlewareAction, ServerBuilder,
     },
     regex::Regex,
-    solana_client::rpc_cache::LargestAccountsCache,
-    solana_gossip::cluster_info::ClusterInfo,
-    solana_ledger::{
+    nexis_client::rpc_cache::LargestAccountsCache,
+    nexis_gossip::cluster_info::ClusterInfo,
+    nexis_ledger::{
         bigtable_upload_service::BigTableUploadService, blockstore::Blockstore,
         leader_schedule_cache::LeaderScheduleCache,
     },
-    solana_metrics::inc_new_counter_info,
-    solana_perf::thread::renice_this_thread,
-    solana_poh::poh_recorder::PohRecorder,
-    solana_runtime::{
+    nexis_metrics::inc_new_counter_info,
+    nexis_perf::thread::renice_this_thread,
+    nexis_poh::poh_recorder::PohRecorder,
+    nexis_runtime::{
         bank_forks::BankForks, commitment::BlockCommitmentCache,
         snapshot_archive_info::SnapshotArchiveInfoGetter, snapshot_config::SnapshotConfig,
         snapshot_utils,
     },
-    solana_sdk::{
+    nexis_sdk::{
         exit::Exit, genesis_config::DEFAULT_GENESIS_DOWNLOAD_PATH, hash::Hash,
         native_token::lamports_to_sol, pubkey::Pubkey,
     },
-    solana_send_transaction_service::send_transaction_service::{self, SendTransactionService},
+    nexis_send_transaction_service::send_transaction_service::{self, SendTransactionService},
     std::{
         collections::HashSet,
         net::SocketAddr,
@@ -295,18 +295,18 @@ fn process_rest(bank_forks: &Arc<RwLock<BankForks>>, path: &str) -> Option<Strin
             let bank = bank_forks.read().unwrap().root_bank();
             let total_supply = bank.capitalization();
             let non_circulating_supply =
-                solana_runtime::non_circulating_supply::calculate_non_circulating_supply(&bank)
+                nexis_runtime::non_circulating_supply::calculate_non_circulating_supply(&bank)
                     .expect("Scan should not error on root banks")
                     .lamports;
             Some(format!(
                 "{}",
-                lamports_to_sol(total_supply - non_circulating_supply)
+                lamports_to_nzt(total_supply - non_circulating_supply)
             ))
         }
         "/v0/total-supply" => {
             let bank = bank_forks.read().unwrap().root_bank();
             let total_supply = bank.capitalization();
-            Some(format!("{}", lamports_to_sol(total_supply)))
+            Some(format!("{}", lamports_to_nzt(total_supply)))
         }
         _ => None,
     }
@@ -364,7 +364,7 @@ impl JsonRpcService {
             tokio::runtime::Builder::new_multi_thread()
                 .worker_threads(rpc_threads)
                 .on_thread_start(move || renice_this_thread(rpc_niceness_adj).unwrap())
-                .thread_name("exzo-rpc")
+                .thread_name("nexis-rpc")
                 .enable_all()
                 .build()
                 .expect("Runtime"),
@@ -375,7 +375,7 @@ impl JsonRpcService {
         let (bigtable_ledger_storage, _bigtable_ledger_upload_service) =
             if config.enable_bigtable_ledger_storage || config.enable_bigtable_ledger_upload {
                 runtime
-                    .block_on(solana_storage_bigtable::LedgerStorage::new(
+                    .block_on(nexis_storage_bigtable::LedgerStorage::new(
                         !config.enable_bigtable_ledger_upload,
                         config.rpc_bigtable_timeout,
                         None,
@@ -455,7 +455,7 @@ impl JsonRpcService {
                     .unwrap_or_else(|| Targets::default().with_default(LevelFilter::WARN));
 
                 let tracer = opentelemetry_jaeger::new_pipeline()
-                    .with_service_name("exzo-jsonrpc-tracer")
+                    .with_service_name("nexis-jsonrpc-tracer")
                     .with_collector_endpoint(collector)
                     .install_batch(opentelemetry::runtime::Tokio)
                     .unwrap();
@@ -475,7 +475,7 @@ impl JsonRpcService {
 
         let (close_handle_sender, close_handle_receiver) = channel();
         let thread_hdl = Builder::new()
-            .name("exzo-jsonrpc".to_string())
+            .name("nexis-jsonrpc".to_string())
             .spawn(move || {
                 renice_this_thread(rpc_niceness_adj).unwrap();
 
@@ -564,22 +564,22 @@ mod tests {
     use {
         super::*,
         crate::rpc::create_validator_exit,
-        solana_gossip::{
+        nexis_gossip::{
             contact_info::ContactInfo,
             crds::GossipRoute,
             crds_value::{CrdsData, CrdsValue, SnapshotHashes},
         },
-        solana_ledger::{
+        nexis_ledger::{
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
             get_tmp_ledger_path,
         },
-        solana_runtime::bank::Bank,
-        solana_sdk::{
+        nexis_runtime::bank::Bank,
+        nexis_sdk::{
             genesis_config::{ClusterType, DEFAULT_GENESIS_ARCHIVE},
             signature::Signer,
             signer::keypair::Keypair,
         },
-        solana_streamer::socket::SocketAddrSpace,
+        nexis_streamer::socket::SocketAddrSpace,
         std::{
             io::Write,
             net::{IpAddr, Ipv4Addr},
@@ -605,7 +605,7 @@ mod tests {
         let ip_addr = IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0));
         let rpc_addr = SocketAddr::new(
             ip_addr,
-            solana_net_utils::find_available_port_in_range(ip_addr, (10000, 65535)).unwrap(),
+            nexis_net_utils::find_available_port_in_range(ip_addr, (10000, 65535)).unwrap(),
         );
         let bank_forks = Arc::new(RwLock::new(BankForks::new(bank)));
         let ledger_path = get_tmp_ledger_path!();
@@ -640,7 +640,7 @@ mod tests {
             None,
         );
         let thread = rpc_service.thread_hdl.thread();
-        assert_eq!(thread.name().unwrap(), "exzo-jsonrpc");
+        assert_eq!(thread.name().unwrap(), "nexis-jsonrpc");
 
         assert_eq!(
             10_000,
@@ -825,9 +825,9 @@ mod tests {
         let health_check_slot_distance = 123;
         let override_health_check = Arc::new(AtomicBool::new(false));
         let known_validators = vec![
-            solana_sdk::pubkey::new_rand(),
-            solana_sdk::pubkey::new_rand(),
-            solana_sdk::pubkey::new_rand(),
+            nexis_sdk::pubkey::new_rand(),
+            nexis_sdk::pubkey::new_rand(),
+            nexis_sdk::pubkey::new_rand(),
         ];
 
         let health = Arc::new(RpcHealth::new(

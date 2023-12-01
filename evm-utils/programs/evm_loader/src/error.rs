@@ -1,5 +1,5 @@
 use num_derive::{FromPrimitive, ToPrimitive};
-use solana_sdk::decode_error::DecodeError;
+use nexis_sdk::decode_error::DecodeError;
 
 use snafu::Snafu;
 

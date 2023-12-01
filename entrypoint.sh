@@ -3,7 +3,7 @@ set -ex
 
 MIN_VALIDATOR_STAKE=10001 # 10k min stake + rent exempt
 MIN_RENT_FEE=100 # Some value that should be enough for fee
-DATADIR=/data/solana
+DATADIR=/datanexis
 NODE_TYPE=$1  #validator/bootstrap
 NETWORK=${NETWORK:-"devnet"} #devnet/testnet/mainnet-beta
 
@@ -23,7 +23,7 @@ vote_account_exist() {
     exzo --keypair $datadir/identity.json --url $rpc_url vote-account $datadir/vote-account.json
 }
 
-run_solana_validator() {
+run_nexis_validator() {
     declare datadir=$1
     declare entrypoint=$2
     declare port_range=$3
@@ -73,7 +73,7 @@ run_solana_validator() {
     --enable-cpi-and-log-storage
 }
 
-run_solana_bootstrap() {
+run_nexis_bootstrap() {
     declare datadir=$1
     declare host=$2
     declare port_range=$3
@@ -128,8 +128,8 @@ fetch_program() {
         return
     fi
     
-    if [[ -r ~/.cache/solana-spl/$so ]]; then
-        cp ~/.cache/solana-spl/"$so" "$so"
+    if [[ -r ~/.cache/nexis-spl/$so ]]; then
+        cp ~/.cache/nexis-spl/"$so" "$so"
     else
         echo "Downloading $name $version"
         so_name="spl_${name//-/_}.so"
@@ -137,11 +137,11 @@ fetch_program() {
             set -x
             curl -L --retry 5 --retry-delay 2 --retry-connrefused \
             -o "$so" \
-            "https://github.com/solana-labs/solana-program-library/releases/download/$name-v$version/$so_name"
+            "https://github.com/nexis-labs/nexis-program-library/releases/download/$name-v$version/$so_name"
         )
         
-        mkdir -p ~/.cache/solana-spl
-        cp "$so" ~/.cache/solana-spl/"$so"
+        mkdir -p ~/.cache/nexis-spl
+        cp "$so" ~/.cache/nexis-spl/"$so"
     fi
     
 }
@@ -183,7 +183,7 @@ case "${NODE_TYPE}" in
         PORT_RANGE=$2
         RPC_PORT=$3
         IP=`get_my_ip`
-        run_solana_bootstrap $DATADIR $IP $PORT_RANGE $RPC_PORT
+        run_nexis_bootstrap $DATADIR $IP $PORT_RANGE $RPC_PORT
     ;;
     "validator")
         ENTRYPOINT=$2
@@ -192,7 +192,7 @@ case "${NODE_TYPE}" in
         mkdir -p $DATADIR/v
         # cp /config/genesis.bin $DATADIR/v/genesis.bin
         DATADIR=$DATADIR/v
-        run_solana_validator $DATADIR $ENTRYPOINT $PORT_RANGE $RPC_PORT
+        run_nexis_validator $DATADIR $ENTRYPOINT $PORT_RANGE $RPC_PORT
     ;;
     "bridge")
         ENTRYPOINT=$2

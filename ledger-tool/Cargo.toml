@@ -1,13 +1,13 @@
 [package]
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
 edition = "2021"
-name = "solana-ledger-tool"
+name = "nexis-ledger-tool"
 description = "Blockchain, Rebuilt for Scale"
 version = "1.9.29"
-repository = "https://github.com/solana-labs/solana"
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-ledger-tool"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-ledger-tool"
 
 [dependencies]
 bs58 = "0.4.0"
@@ -22,26 +22,26 @@ regex = "1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.72"
 serde_yaml = "0.8.21"
-solana-clap-utils = { path = "../clap-utils", version = "=1.9.29" }
-solana-cli-output = { path = "../cli-output", version = "=1.9.29" }
-solana-core = { path = "../core", version = "=1.9.29" }
-solana-entry = { path = "../entry", version = "=1.9.29" }
-solana-ledger = { path = "../ledger", version = "=1.9.29" }
-solana-logger = { path = "../logger", version = "=1.9.29" }
-solana-measure = { path = "../measure", version = "=1.9.29" }
-solana-runtime = { path = "../runtime", version = "=1.9.29" }
-solana-sdk = { path = "../sdk", version = "=1.9.29" }
-solana-stake-program = { path = "../programs/stake", version = "=1.9.29" }
-solana-storage-bigtable = { path = "../storage-bigtable", version = "=1.9.29" }
-solana-transaction-status = { path = "../transaction-status", version = "=1.9.29" }
-solana-version = { path = "../version", version = "=0.6.3" }
-solana-vote-program = { path = "../programs/vote", version = "=1.9.29" }
+nexis-clap-utils = { path = "../clap-utils", version = "=1.9.29" }
+nexis-cli-output = { path = "../cli-output", version = "=1.9.29" }
+nexis-core = { path = "../core", version = "=1.9.29" }
+nexis-entry = { path = "../entry", version = "=1.9.29" }
+nexis-ledger = { path = "../ledger", version = "=1.9.29" }
+nexis-logger = { path = "../logger", version = "=1.9.29" }
+nexis-measure = { path = "../measure", version = "=1.9.29" }
+nexis-runtime = { path = "../runtime", version = "=1.9.29" }
+nexis-sdk = { path = "../sdk", version = "=1.9.29" }
+nexis-stake-program = { path = "../programs/stake", version = "=1.9.29" }
+nexis-storage-bigtable = { path = "../storage-bigtable", version = "=1.9.29" }
+nexis-transaction-status = { path = "../transaction-status", version = "=1.9.29" }
+nexis-version = { path = "../version", version = "=0.6.3" }
+nexis-vote-program = { path = "../programs/vote", version = "=1.9.29" }
 tokio = { version = "1.14.1", features = ["full"] }
 
 evm-state = { path = "../evm-utils/evm-state" }
 evm-rpc = { path = "../evm-utils/evm-rpc" }
-solana-evm-loader-program = { path = "../evm-utils/programs/evm_loader" }
-triedb = { git = "https://github.com/velas/triedb", tag = "rocksdb-v0.19", features = ["rocksdb"] }
+nexis-evm-loader-program = { path = "../evm-utils/programs/evm_loader" }
+triedb = { git = "https://github.com/Nexis-Network/triedb", tag = "rocksdb-v0.19", features = ["rocksdb"] }
 rlp = "0.5.0"
 anyhow = "1.0.43"
 rayon = "1.5.0"

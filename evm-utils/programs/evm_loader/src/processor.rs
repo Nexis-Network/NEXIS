@@ -16,11 +16,11 @@ use borsh::BorshDeserialize;
 use evm::{gweis_to_lamports, Executor, ExitReason};
 use evm_state::ExecutionResult;
 use serde::de::DeserializeOwned;
-use solana_program_runtime::ic_msg;
-use solana_program_runtime::invoke_context::InvokeContext;
-use solana_sdk::account::{AccountSharedData, ReadableAccount, WritableAccount};
-use solana_sdk::instruction::InstructionError;
-use solana_sdk::{keyed_account::KeyedAccount, program_utils::limited_deserialize};
+use nexis_program_runtime::ic_msg;
+use nexis_program_runtime::invoke_context::InvokeContext;
+use nexis_sdk::account::{AccountSharedData, ReadableAccount, WritableAccount};
+use nexis_sdk::instruction::InstructionError;
+use nexis_sdk::{keyed_account::KeyedAccount, program_utils::limited_deserialize};
 
 use super::error::EvmError;
 use super::tx_chunks::TxChunks;
@@ -49,22 +49,22 @@ impl EvmProcessor {
 
         let cross_execution_enabled = invoke_context
             .feature_set
-            .is_active(&solana_sdk::feature_set::exzo::evm_cross_execution::id());
+            .is_active(&nexis_sdk::feature_set::exzo::evm_cross_execution::id());
         let register_swap_tx_in_evm = invoke_context
             .feature_set
-            .is_active(&solana_sdk::feature_set::exzo::native_swap_in_evm_history::id());
+            .is_active(&nexis_sdk::feature_set::exzo::native_swap_in_evm_history::id());
         let new_error_handling = invoke_context
             .feature_set
-            .is_active(&solana_sdk::feature_set::exzo::evm_new_error_handling::id());
+            .is_active(&nexis_sdk::feature_set::exzo::evm_new_error_handling::id());
         let ignore_reset_on_cleared = invoke_context
             .feature_set
-            .is_active(&solana_sdk::feature_set::exzo::ignore_reset_on_cleared::id());
+            .is_active(&nexis_sdk::feature_set::exzo::ignore_reset_on_cleared::id());
         let free_ownership_require_signer = invoke_context
             .feature_set
-            .is_active(&solana_sdk::feature_set::exzo::free_ownership_require_signer::id());
+            .is_active(&nexis_sdk::feature_set::exzo::free_ownership_require_signer::id());
         let borsh_serialization_enabled = invoke_context
             .feature_set
-            .is_active(&solana_sdk::feature_set::exzo::evm_instruction_borsh_serialization::id());
+            .is_active(&nexis_sdk::feature_set::exzo::evm_instruction_borsh_serialization::id());
 
         let cross_execution = invoke_context.get_stack_height() != 1;
 
@@ -140,7 +140,7 @@ impl EvmProcessor {
         };
 
         if register_swap_tx_in_evm {
-            executor.reset_balance(*precompiles::ETH_TO_XZO_ADDR, ignore_reset_on_cleared)
+            executor.reset_balance(*precompiles::ETH_TO_NZT_ADDR, ignore_reset_on_cleared)
         }
 
         // When old error handling, manually convert EvmError to InstructionError
@@ -234,7 +234,7 @@ impl EvmProcessor {
                     executor.support_precompile(),
                     invoke_context
                         .feature_set
-                        .is_active(&solana_sdk::feature_set::exzo::evm_new_precompiles::id()),
+                        .is_active(&nexis_sdk::feature_set::exzo::evm_new_precompiles::id()),
                 );
                 executor.transaction_execute(
                     tx,
@@ -273,7 +273,7 @@ impl EvmProcessor {
                     executor.support_precompile(),
                     invoke_context
                         .feature_set
-                        .is_active(&solana_sdk::feature_set::exzo::evm_new_precompiles::id()),
+                        .is_active(&nexis_sdk::feature_set::exzo::evm_new_precompiles::id()),
                 );
                 executor.transaction_execute_unsinged(
                     from,
@@ -331,14 +331,14 @@ impl EvmProcessor {
             .try_account_ref_mut()
             .map_err(|_| EvmError::BorrowingFailed)?;
 
-        if *user.owner() != crate::ID || *user_pk == solana::evm_state::ID {
+        if *user.owner() != crate::ID || *user_pk == nexis::evm_state::ID {
             ic_msg!(
                 invoke_context,
                 "FreeOwnership: Incorrect account provided, maybe this account is not owned by evm."
             );
             return Err(EvmError::FreeNotEvmAccount);
         }
-        user.set_owner(solana_sdk::system_program::id());
+        user.set_owner(nexis_sdk::system_program::id());
         Ok(())
     }
 
@@ -400,7 +400,7 @@ impl EvmProcessor {
         evm_account.set_lamports(evm_account_lamports);
         executor.deposit(evm_address, gweis);
         if register_swap_tx_in_evm {
-            executor.register_swap_tx_in_evm(*precompiles::ETH_TO_XZO_ADDR, evm_address, gweis)
+            executor.register_swap_tx_in_evm(*precompiles::ETH_TO_NZT_ADDR, evm_address, gweis)
         }
         Ok(())
     }
@@ -644,7 +644,7 @@ impl EvmProcessor {
         }
 
         write!(
-            crate::solana_extension::MultilineLogger::new(invoke_context.get_log_collector()),
+            crate::nexis_extension::MultilineLogger::new(invoke_context.get_log_collector()),
             "{}",
             result
         )
@@ -723,7 +723,7 @@ impl EvmProcessor {
 
         trace!("first = {:?}", first);
         trace!("all = {:?}", keyed_accounts);
-        if first.unsigned_key() != &solana::evm_state::id() || !first.is_writable() {
+        if first.unsigned_key() != &nexis::evm_state::id() || !first.is_writable() {
             debug!("First account is not evm, or not writable");
             return Err(InstructionError::MissingAccount);
         }
@@ -770,15 +770,15 @@ mod test {
     use hex_literal::hex;
     use num_traits::Zero;
     use primitive_types::{H160, H256, U256};
-    use solana_program_runtime::{
+    use nexis_program_runtime::{
         invoke_context::{BuiltinProgram, InvokeContext},
         timings::ExecuteTimings,
     };
-    use solana_sdk::native_loader;
-    use solana_sdk::program_utils::limited_deserialize;
-    use solana_sdk::pubkey::Pubkey;
-    use solana_sdk::sysvar::rent::Rent;
-    use solana_sdk::{
+    use nexis_sdk::native_loader;
+    use nexis_sdk::program_utils::limited_deserialize;
+    use nexis_sdk::pubkey::Pubkey;
+    use nexis_sdk::sysvar::rent::Rent;
+    use nexis_sdk::{
         instruction::{AccountMeta, Instruction},
         message::{Message, SanitizedMessage},
     };
@@ -800,7 +800,7 @@ mod test {
         evm_state: evm_state::EvmBackend<evm_state::Incomming>,
         evm_state_account: MutableAccount,
         rest_accounts: BTreeMap<Pubkey, MutableAccount>,
-        feature_set: solana_sdk::feature_set::FeatureSet,
+        feature_set: nexis_sdk::feature_set::FeatureSet,
     }
 
     impl EvmMockContext {
@@ -812,7 +812,7 @@ mod test {
                 evm_state: evm_state::EvmBackend::default(),
                 evm_state_account: Rc::new(RefCell::new(crate::create_state_account(evm_balance))),
                 rest_accounts: Default::default(),
-                feature_set: solana_sdk::feature_set::FeatureSet::all_enabled(),
+                feature_set: nexis_sdk::feature_set::FeatureSet::all_enabled(),
             }
         }
 
@@ -821,7 +821,7 @@ mod test {
         }
 
         fn native_account(&mut self, pubkey: Pubkey) -> MutableAccount {
-            if pubkey == solana::evm_state::id() {
+            if pubkey == nexis::evm_state::id() {
                 self.evm_state_account.clone()
             } else if pubkey == crate::ID {
                 Rc::new(RefCell::new(AccountSharedData::new(
@@ -856,22 +856,22 @@ mod test {
                 evm::EvmConfig::new(
                     evm::TEST_CHAIN_ID,
                     self.feature_set
-                        .is_active(&solana_sdk::feature_set::exzo::burn_fee::id()),
+                        .is_active(&nexis_sdk::feature_set::exzo::burn_fee::id()),
                 ),
                 evm_state::executor::FeatureSet::new(
                     self.feature_set
-                        .is_active(&solana_sdk::feature_set::exzo::unsigned_tx_fix::id()),
+                        .is_active(&nexis_sdk::feature_set::exzo::unsigned_tx_fix::id()),
                     self.feature_set
-                        .is_active(&solana_sdk::feature_set::exzo::clear_logs_on_error::id()),
+                        .is_active(&nexis_sdk::feature_set::exzo::clear_logs_on_error::id()),
                     self.feature_set.is_active(
-                        &solana_sdk::feature_set::exzo::accept_zero_gas_price_with_native_fee::id(
+                        &nexis_sdk::feature_set::exzo::accept_zero_gas_price_with_native_fee::id(
                         ),
                     ),
                 ),
             );
 
             let evm_program = BuiltinProgram {
-                program_id: solana_sdk::evm_loader::id(),
+                program_id: nexis_sdk::evm_loader::id(),
                 process_instruction: |acc, data, context| {
                     let processor = EvmProcessor::default();
                     processor.process_instruction(acc, data, context)
@@ -914,7 +914,7 @@ mod test {
                         .deconstruct_evm()
                         .expect("Evm executor should exist");
                     let clear_logs = self.feature_set.is_active(
-                        &solana_sdk::feature_set::exzo::clear_logs_on_native_error::id(),
+                        &nexis_sdk::feature_set::exzo::clear_logs_on_native_error::id(),
                     );
                     self.evm_state
                         .apply_failed_update(&executor.evm_backend, clear_logs);
@@ -950,38 +950,38 @@ mod test {
     fn serialize_deserialize_eth_ix() {
         let tx = dummy_eth_tx();
         {
-            let sol_ix = EvmInstruction::new_execute_tx(tx.clone(), FeePayerType::Evm);
-            let ser = bincode::serialize(&sol_ix).unwrap();
-            assert_eq!(sol_ix, limited_deserialize(&ser).unwrap());
+            let nzt_ix = EvmInstruction::new_execute_tx(tx.clone(), FeePayerType::Evm);
+            let ser = bincode::serialize(&nzt_ix).unwrap();
+            assert_eq!(nzt_ix, limited_deserialize(&ser).unwrap());
         }
         {
-            let sol_ix = EvmInstruction::new_execute_authorized_tx(
+            let nzt_ix = EvmInstruction::new_execute_authorized_tx(
                 tx.clone().into(),
                 H160::zero(),
                 FeePayerType::Evm,
             );
-            let ser = bincode::serialize(&sol_ix).unwrap();
-            assert_eq!(sol_ix, limited_deserialize(&ser).unwrap());
+            let ser = bincode::serialize(&nzt_ix).unwrap();
+            assert_eq!(nzt_ix, limited_deserialize(&ser).unwrap());
         }
         {
-            let sol_ix = EvmInstruction::SwapNativeToEther {
+            let nzt_ix = EvmInstruction::SwapNativeToEther {
                 lamports: 0,
                 evm_address: H160::zero(),
             };
-            let ser = bincode::serialize(&sol_ix).unwrap();
-            assert_eq!(sol_ix, limited_deserialize(&ser).unwrap());
+            let ser = bincode::serialize(&nzt_ix).unwrap();
+            assert_eq!(nzt_ix, limited_deserialize(&ser).unwrap());
         }
         {
-            let sol_ix = EvmInstruction::FreeOwnership {};
-            let ser = bincode::serialize(&sol_ix).unwrap();
-            assert_eq!(sol_ix, limited_deserialize(&ser).unwrap());
+            let nzt_ix = EvmInstruction::FreeOwnership {};
+            let ser = bincode::serialize(&nzt_ix).unwrap();
+            assert_eq!(nzt_ix, limited_deserialize(&ser).unwrap());
         }
     }
 
     #[test]
     fn execute_tx() {
         let mut evm_context = EvmMockContext::new(0);
-        evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+        evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
         let secret_key = evm::SecretKey::from_slice(&SECRET_KEY_DUMMY).unwrap();
 
         let address = secret_key.to_address();
@@ -1038,7 +1038,7 @@ mod test {
             .with_utc_timestamps()
             .init();
         let mut evm_context = EvmMockContext::new(0);
-        evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+        evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
 
         let user_id = Pubkey::new_unique();
         let program_id = Pubkey::new_unique();
@@ -1080,7 +1080,7 @@ mod test {
     fn deploy_tx_refund_fee() {
         let init_evm_balance = 1000000;
         let mut evm_context = EvmMockContext::new(init_evm_balance);
-        evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+        evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
         let user_id = Pubkey::new_unique();
         evm_context
             .native_account(user_id)
@@ -1116,7 +1116,7 @@ mod test {
         assert_eq!(evm_context.native_account(user_id).borrow().lamports(), fee);
         assert_eq!(
             evm_context
-                .native_account(solana::evm_state::id())
+                .native_account(nexis::evm_state::id())
                 .borrow()
                 .lamports(),
             init_evm_balance + 1 // evm balance is always has 1 lamports reserve, because it is system account
@@ -1127,7 +1127,7 @@ mod test {
     #[test]
     fn tx_preserve_nonce() {
         let mut evm_context = EvmMockContext::new(0);
-        evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+        evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
         let secret_key = evm::SecretKey::from_slice(&SECRET_KEY_DUMMY).unwrap();
         let address = secret_key.to_address();
         evm_context.deposit_evm(address, U256::from(2u32) * 300000u32);
@@ -1223,7 +1223,7 @@ mod test {
     #[test]
     fn execute_tx_with_state_apply() {
         let mut evm_context = EvmMockContext::new(0);
-        evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+        evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
 
         let secret_key = evm::SecretKey::from_slice(&SECRET_KEY_DUMMY).unwrap();
 
@@ -1332,7 +1332,7 @@ mod test {
         let ether_dummy_address = H160::repeat_byte(0x11);
 
         let lamports_before = evm_context
-            .native_account(solana::evm_state::id())
+            .native_account(nexis::evm_state::id())
             .borrow()
             .lamports();
 
@@ -1346,7 +1346,7 @@ mod test {
 
         assert_eq!(
             evm_context
-                .native_account(solana::evm_state::id())
+                .native_account(nexis::evm_state::id())
                 .borrow()
                 .lamports(),
             lamports_before + 1000
@@ -1357,7 +1357,7 @@ mod test {
             .is_ok());
         assert_eq!(
             *evm_context.native_account(user_id).borrow().owner(),
-            solana_sdk::system_program::id()
+            nexis_sdk::system_program::id()
         );
 
         assert_eq!(
@@ -1384,7 +1384,7 @@ mod test {
         let ether_dummy_address = ether_sc.to_address();
 
         let lamports_before = evm_context
-            .native_account(solana::evm_state::id())
+            .native_account(nexis::evm_state::id())
             .borrow()
             .lamports();
 
@@ -1401,7 +1401,7 @@ mod test {
 
         assert_eq!(
             evm_context
-                .native_account(solana::evm_state::id())
+                .native_account(nexis::evm_state::id())
                 .borrow()
                 .lamports(),
             lamports_before + lamports_to_send
@@ -1412,7 +1412,7 @@ mod test {
             .is_ok());
         assert_eq!(
             *evm_context.native_account(user_id).borrow().owner(),
-            solana_sdk::system_program::id()
+            nexis_sdk::system_program::id()
         );
 
         assert_eq!(
@@ -1434,9 +1434,9 @@ mod test {
             nonce: 0u32.into(),
             gas_price: 1u32.into(),
             gas_limit: 300000u32.into(),
-            action: TransactionAction::Call(*precompiles::ETH_TO_XZO_ADDR),
+            action: TransactionAction::Call(*precompiles::ETH_TO_NZT_ADDR),
             value: crate::scope::evm::lamports_to_gwei(lamports_to_send_back),
-            input: precompiles::ETH_TO_XZO_CODE
+            input: precompiles::ETH_TO_NZT_CODE
                 .abi
                 .encode_input(&[ethabi::Token::FixedBytes(
                     second_user_id.to_bytes().to_vec(),
@@ -1459,7 +1459,7 @@ mod test {
             assert_eq!(
                 evm_context
                     .evm_state
-                    .get_account_state(*precompiles::ETH_TO_XZO_ADDR)
+                    .get_account_state(*precompiles::ETH_TO_NZT_ADDR)
                     .unwrap()
                     .balance,
                 0u32.into()
@@ -1469,7 +1469,7 @@ mod test {
         // Nothing should change, because of error
         assert_eq!(
             evm_context
-                .native_account(solana::evm_state::id())
+                .native_account(nexis::evm_state::id())
                 .borrow()
                 .lamports(),
             lamports_before + lamports_to_send
@@ -1496,7 +1496,7 @@ mod test {
     #[test]
     fn execute_transfer_roundtrip() {
         let mut evm_context = EvmMockContext::new(0);
-        evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+        evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
 
         let user_id = Pubkey::new_unique();
         let acc = evm_context.native_account(user_id);
@@ -1508,7 +1508,7 @@ mod test {
         let ether_dummy_address = ether_sc.to_address();
 
         let lamports_before = evm_context
-            .native_account(solana::evm_state::id())
+            .native_account(nexis::evm_state::id())
             .borrow()
             .lamports();
 
@@ -1525,7 +1525,7 @@ mod test {
 
         assert_eq!(
             evm_context
-                .native_account(solana::evm_state::id())
+                .native_account(nexis::evm_state::id())
                 .borrow()
                 .lamports(),
             lamports_before + lamports_to_send
@@ -1536,7 +1536,7 @@ mod test {
             .is_ok());
         assert_eq!(
             *evm_context.native_account(user_id).borrow().owner(),
-            solana_sdk::system_program::id()
+            nexis_sdk::system_program::id()
         );
 
         assert_eq!(
@@ -1558,9 +1558,9 @@ mod test {
             nonce: 0u32.into(),
             gas_price: 1u32.into(),
             gas_limit: 300000u32.into(),
-            action: TransactionAction::Call(*precompiles::ETH_TO_XZO_ADDR),
+            action: TransactionAction::Call(*precompiles::ETH_TO_NZT_ADDR),
             value: crate::scope::evm::lamports_to_gwei(lamports_to_send_back),
-            input: precompiles::ETH_TO_XZO_CODE
+            input: precompiles::ETH_TO_NZT_CODE
                 .abi
                 .encode_input(&[ethabi::Token::FixedBytes(
                     second_user_id.to_bytes().to_vec(),
@@ -1585,7 +1585,7 @@ mod test {
             assert_eq!(
                 evm_context
                     .evm_state
-                    .get_account_state(*precompiles::ETH_TO_XZO_ADDR)
+                    .get_account_state(*precompiles::ETH_TO_NZT_ADDR)
                     .unwrap()
                     .balance,
                 0u32.into()
@@ -1594,7 +1594,7 @@ mod test {
 
         assert_eq!(
             evm_context
-                .native_account(solana::evm_state::id())
+                .native_account(nexis::evm_state::id())
                 .borrow()
                 .lamports(),
             lamports_before + lamports_to_send - lamports_to_send_back
@@ -1639,7 +1639,7 @@ mod test {
         let ether_dummy_address = ether_sc.to_address();
 
         let lamports_before = evm_context
-            .native_account(solana::evm_state::id())
+            .native_account(nexis::evm_state::id())
             .borrow()
             .lamports();
 
@@ -1656,7 +1656,7 @@ mod test {
 
         assert_eq!(
             evm_context
-                .native_account(solana::evm_state::id())
+                .native_account(nexis::evm_state::id())
                 .borrow()
                 .lamports(),
             lamports_before + lamports_to_send
@@ -1667,7 +1667,7 @@ mod test {
             .is_ok());
         assert_eq!(
             *evm_context.native_account(user_id).borrow().owner(),
-            solana_sdk::system_program::id()
+            nexis_sdk::system_program::id()
         );
 
         assert_eq!(
@@ -1689,9 +1689,9 @@ mod test {
             nonce: 0u32.into(),
             gas_price: 1u32.into(),
             gas_limit: 300000u32.into(),
-            action: TransactionAction::Call(*precompiles::ETH_TO_XZO_ADDR),
+            action: TransactionAction::Call(*precompiles::ETH_TO_NZT_ADDR),
             value: crate::scope::evm::lamports_to_gwei(lamports_to_send_back),
-            input: precompiles::ETH_TO_XZO_CODE
+            input: precompiles::ETH_TO_NZT_CODE
                 .abi
                 .encode_input(&[ethabi::Token::FixedBytes(
                     second_user_id.to_bytes().to_vec(),
@@ -1715,7 +1715,7 @@ mod test {
             assert_eq!(
                 evm_context
                     .evm_state
-                    .get_account_state(*precompiles::ETH_TO_XZO_ADDR)
+                    .get_account_state(*precompiles::ETH_TO_NZT_ADDR)
                     .unwrap()
                     .balance,
                 0u32.into()
@@ -1725,7 +1725,7 @@ mod test {
         // Nothing should change, because of error
         assert_eq!(
             evm_context
-                .native_account(solana::evm_state::id())
+                .native_account(nexis::evm_state::id())
                 .borrow()
                 .lamports(),
             lamports_before + lamports_to_send
@@ -1749,10 +1749,10 @@ mod test {
         );
     }
 
-    fn all_ixs() -> Vec<solana_sdk::instruction::Instruction> {
+    fn all_ixs() -> Vec<nexis_sdk::instruction::Instruction> {
         let (tx_call, unsigned_tx) = dummy_call(0);
 
-        let signer = solana::Address::new_unique();
+        let signer = nexis::Address::new_unique();
         vec![
             crate::transfer_native_to_evm(signer, 1, tx_call.address().unwrap()),
             crate::free_ownership(signer),
@@ -1761,12 +1761,12 @@ mod test {
         ]
     }
 
-    fn account_by_key(pubkey: solana::Address) -> solana_sdk::account::AccountSharedData {
+    fn account_by_key(pubkey: nexis::Address) -> nexis_sdk::account::AccountSharedData {
         match &pubkey {
             id if id == &crate::ID => {
                 native_loader::create_loadable_account_for_test("EVM Processor")
             }
-            id if id == &solana_sdk::sysvar::rent::id() => solana_sdk::account::Account {
+            id if id == &nexis_sdk::sysvar::rent::id() => nexis_sdk::account::Account {
                 lamports: 10,
                 owner: native_loader::id(),
                 data: bincode::serialize(&Rent::default()).unwrap(),
@@ -1774,7 +1774,7 @@ mod test {
                 rent_epoch: 0,
             }
             .into(),
-            _rest => solana_sdk::account::Account {
+            _rest => nexis_sdk::account::Account {
                 lamports: 20000000,
                 owner: Pubkey::default(),
                 data: vec![0u8],
@@ -1786,12 +1786,12 @@ mod test {
     }
 
     #[test]
-    fn each_solana_tx_should_contain_writeable_evm_state() {
+    fn each_nexis_tx_should_contain_writeable_evm_state() {
         for ix in all_ixs() {
             // Create clear executor for each run, to avoid state conflicts in instructions (signed and unsigned tx with same nonce).
             let mut evm_context = EvmMockContext::new(0);
 
-            evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+            evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
             let secret_key = evm::SecretKey::from_slice(&SECRET_KEY_DUMMY).unwrap();
             evm_context.deposit_evm(secret_key.to_address(), U256::from(2u32) * 300000u32); // deposit some small amount for gas payments
                                                                                             // insert new accounts, if some missing
@@ -1852,7 +1852,7 @@ mod test {
                 continue;
             }
             let mut evm_context = EvmMockContext::new(1_000_000_000);
-            evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+            evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
             let receiver = Pubkey::new(&hex!(
                 "9b73845fe592e092a13df83a8f8485296ba9c0a28c7c0824c33b1b3b352b4043"
             ));
@@ -1952,7 +1952,7 @@ mod test {
                             .balance,
                         U256::from(1_000_000_000u64) * U256::from(1_000_000_000u64)
                     );
-                    // assert_eq!(lamports, 0); // solana runtime will revert this account
+                    // assert_eq!(lamports, 0); // nexisruntime will revert this account
                 }
             }
         }
@@ -1970,7 +1970,7 @@ mod test {
             hex!("cf280be10000000000000000000000000000000000000000000000000000000000000001");
 
         let mut evm_context = EvmMockContext::new(1_000_000_000);
-        evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+        evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
         let _receiver = Pubkey::new(&hex!(
             "9b73845fe592e092a13df83a8f8485296ba9c0a28c7c0824c33b1b3b352b4043"
         ));
@@ -2039,7 +2039,7 @@ mod test {
             {
                 let mut evm_context = evm_context.clone(); // make copy for test
                 evm_context
-                    .disable_feature(&solana_sdk::feature_set::exzo::clear_logs_on_error::id());
+                    .disable_feature(&nexis_sdk::feature_set::exzo::clear_logs_on_error::id());
                 let _result = evm_context.process_instruction(instruction);
                 let executor = evm_context.evm_state;
                 let tx = executor.find_transaction_receipt(tx_hash).unwrap();
@@ -2081,7 +2081,7 @@ mod test {
 
                 let _result = evm_context.process_instruction(instruction);
                 evm_context
-                    .disable_feature(&solana_sdk::feature_set::exzo::clear_logs_on_error::id());
+                    .disable_feature(&nexis_sdk::feature_set::exzo::clear_logs_on_error::id());
 
                 let executor = evm_context.evm_state;
                 let tx = executor.find_transaction_receipt(tx_hash).unwrap();
@@ -2095,7 +2095,7 @@ mod test {
     #[test]
     fn authorized_tx_only_from_signer() {
         let mut evm_context = EvmMockContext::new(0);
-        evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+        evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
         let secret_key = evm::SecretKey::from_slice(&SECRET_KEY_DUMMY).unwrap();
 
         let address = secret_key.to_address();
@@ -2246,7 +2246,7 @@ mod test {
             .with_utc_timestamps()
             .init();
         let mut evm_context = EvmMockContext::new(1000);
-        evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+        evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
 
         let mut rand = evm_state::rand::thread_rng();
         let dummy_key = evm::SecretKey::new(&mut rand);
@@ -2389,7 +2389,7 @@ mod test {
             .with_utc_timestamps()
             .init();
         let mut evm_context = EvmMockContext::new(1000);
-        evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+        evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
 
         let mut rand = evm_state::rand::thread_rng();
         let dummy_key = evm::SecretKey::new(&mut rand);
@@ -2434,7 +2434,7 @@ mod test {
             .with_utc_timestamps()
             .init();
         let mut evm_context = EvmMockContext::new(1000);
-        evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+        evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
 
         let mut rand = evm_state::rand::thread_rng();
         let dummy_key = evm::SecretKey::new(&mut rand);
@@ -2497,7 +2497,7 @@ mod test {
             hex!("6057361d0000000000000000000000000000000000000000000000000000000000000001");
 
         let mut evm_context = EvmMockContext::new(1000);
-        evm_context.disable_feature(&solana_sdk::feature_set::exzo::burn_fee::id());
+        evm_context.disable_feature(&nexis_sdk::feature_set::exzo::burn_fee::id());
 
         let mut rand = evm_state::rand::thread_rng();
         let contract_address = evm::SecretKey::new(&mut rand).to_address();
@@ -2643,11 +2643,11 @@ mod test {
     }
 
     #[test]
-    fn check_tx_mtu_is_in_solanas_limit() {
-        use solana_sdk::hash::hash;
-        use solana_sdk::message::Message;
-        use solana_sdk::signature::{Keypair, Signer};
-        use solana_sdk::transaction::Transaction;
+    fn check_tx_mtu_is_in_nexiss_limit() {
+        use nexis_sdk::hash::hash;
+        use nexis_sdk::message::Message;
+        use nexis_sdk::signature::{Keypair, Signer};
+        use nexis_sdk::transaction::Transaction;
 
         let storage = Keypair::new();
         let bridge = Keypair::new();

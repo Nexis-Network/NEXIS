@@ -1,7 +1,7 @@
 use {
     assert_cmd::prelude::*,
-    solana_ledger::{create_new_tmp_ledger, genesis_utils::create_genesis_config},
-    solana_runtime::snapshot_utils::EVM_STATE_DIR,
+    nexis_ledger::{create_new_tmp_ledger, genesis_utils::create_genesis_config},
+    nexis_runtime::snapshot_utils::EVM_STATE_DIR,
     std::process::{Command, Output},
 };
 

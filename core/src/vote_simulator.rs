@@ -13,7 +13,7 @@ use {
         replay_stage::{HeaviestForkFailures, ReplayStage},
         unfrozen_gossip_verified_vote_hashes::UnfrozenGossipVerifiedVoteHashes,
     },
-    solana_runtime::{
+    nexis_runtime::{
         accounts_background_service::AbsRequestSender,
         bank::Bank,
         bank_forks::BankForks,
@@ -21,8 +21,8 @@ use {
             create_genesis_config_with_vote_accounts, GenesisConfigInfo, ValidatorVoteKeypairs,
         },
     },
-    solana_sdk::{clock::Slot, hash::Hash, pubkey::Pubkey, signature::Signer},
-    solana_vote_program::vote_transaction,
+    nexis_sdk::{clock::Slot, hash::Hash, pubkey::Pubkey, signature::Signer},
+    nexis_vote_program::vote_transaction,
     std::{
         collections::{HashMap, HashSet},
         sync::{Arc, RwLock},

@@ -4,8 +4,8 @@ use {
     },
     bincode::deserialize,
     serde_json::json,
-    solana_sdk::{instruction::CompiledInstruction, pubkey::Pubkey},
-    solana_vote_program::vote_instruction::VoteInstruction,
+    nexis_sdk::{instruction::CompiledInstruction, pubkey::Pubkey},
+    nexis_vote_program::vote_instruction::VoteInstruction,
 };
 
 pub fn parse_vote(
@@ -147,8 +147,8 @@ fn check_num_vote_accounts(accounts: &[u8], num: usize) -> Result<(), ParseInstr
 mod test {
     use {
         super::*,
-        solana_sdk::{hash::Hash, message::Message, pubkey::Pubkey},
-        solana_vote_program::{
+        nexis_sdk::{hash::Hash, message::Message, pubkey::Pubkey},
+        nexis_vote_program::{
             vote_instruction,
             vote_state::{Vote, VoteAuthorize, VoteInit},
         },
@@ -159,7 +159,7 @@ mod test {
     fn test_parse_vote_instruction() {
         let mut keys: Vec<Pubkey> = vec![];
         for _ in 0..5 {
-            keys.push(solana_sdk::pubkey::new_rand());
+            keys.push(nexis_sdk::pubkey::new_rand());
         }
 
         let lamports = 55;
@@ -171,8 +171,8 @@ mod test {
         };
 
         let commission = 10;
-        let authorized_voter = solana_sdk::pubkey::new_rand();
-        let authorized_withdrawer = solana_sdk::pubkey::new_rand();
+        let authorized_voter = nexis_sdk::pubkey::new_rand();
+        let authorized_withdrawer = nexis_sdk::pubkey::new_rand();
         let vote_init = VoteInit {
             node_pubkey: keys[2],
             authorized_voter,
@@ -181,7 +181,7 @@ mod test {
         };
 
         let instructions = vote_instruction::create_account(
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             &keys[1],
             &vote_init,
             lamports,

@@ -1,8 +1,31 @@
+//! This is the main file of the `bench-streamer` application.
+//!
+//! The application is a benchmarking tool that measures the performance of a packet streaming system.
+//! It consists of a producer that sends packets to multiple receivers, and a sink that receives and processes the packets.
+//! The number of receive sockets and other parameters can be configured through command-line arguments.
+//!
+//! The `main` function initializes the necessary components, spawns threads for the producer and sink, measures the performance,
+//! and then shuts down the application gracefully.
+//!
+//! For more information on how to use the application and its command-line arguments, please refer to the documentation of the `clap` crate.
+//!
+//! Example usage:
+//!
+//! ```shell
+//! $ cargo run -- --num-recv-sockets 4
+//! ```
+//!
+//! This will run the `bench-streamer` application with 4 receive sockets.
+//!
+//! Note: The application uses the `nexis_streamer` and `nexis_net_utils` crates for packet streaming and network utilities respectively.
+//! Make sure to include these dependencies in your `Cargo.toml` file.
+//!
+//! For more information on the `nexis_streamer` and `nexis_net_utils` crates, please refer to their documentation.
 #![allow(clippy::integer_arithmetic)]
 
 use {
     clap::{crate_description, crate_name, App, Arg},
-    solana_streamer::{
+    nexis_streamer::{
         packet::{Packet, PacketBatch, PacketBatchRecycler, PACKET_DATA_SIZE},
         streamer::{receiver, PacketBatchReceiver, StreamerReceiveStats},
     },
@@ -60,7 +83,7 @@ fn main() -> Result<()> {
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .arg(
             Arg::with_name("num-recv-sockets")
                 .long("num-recv-sockets")
@@ -85,7 +108,7 @@ fn main() -> Result<()> {
     let recycler = PacketBatchRecycler::default();
     let stats = Arc::new(StreamerReceiveStats::new("bench-streamer-test"));
     for _ in 0..num_sockets {
-        let read = solana_net_utils::bind_to(ip_addr, port, false).unwrap();
+        let read = nexis_net_utils::bind_to(ip_addr, port, false).unwrap();
         read.set_read_timeout(Some(Duration::new(1, 0))).unwrap();
 
         addr = read.local_addr().unwrap();

@@ -1,4 +1,4 @@
-use solana_program_runtime::{ic_logger_msg, log_collector::LogCollector};
+use nexis_program_runtime::{ic_logger_msg, log_collector::LogCollector};
 use std::cell::RefCell;
 use std::fmt::Write;
 use std::rc::Rc;

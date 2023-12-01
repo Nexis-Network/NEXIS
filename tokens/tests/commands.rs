@@ -1,14 +1,14 @@
 use {
-    solana_client::rpc_client::RpcClient,
-    solana_sdk::signature::{Keypair, Signer},
-    solana_streamer::socket::SocketAddrSpace,
-    solana_test_validator::TestValidator,
-    solana_tokens::commands::test_process_distribute_tokens_with_client,
+    nexis_client::rpc_client::RpcClient,
+    nexis_sdk::signature::{Keypair, Signer},
+    nexis_streamer::socket::SocketAddrSpace,
+    nexis_test_validator::TestValidator,
+    nexis_tokens::commands::test_process_distribute_tokens_with_client,
 };
 
 #[test]
 fn test_process_distribute_with_rpc_client() {
-    solana_logger::setup();
+    nexis_logger::setup();
 
     let mint_keypair = Keypair::new();
     let test_validator =

@@ -6,9 +6,9 @@ use serde_with::DisplayFromStr;
 
 use {
     borsh::{BorshDeserialize, BorshSchema, BorshSerialize},
-    solana_program::{program_pack::IsInitialized, pubkey::Pubkey},
+    nexis_program::{program_pack::IsInitialized, pubkey::Pubkey},
 };
-solana_program::declare_id!("VRPLtk4k31bDL99mn1A5mE96CUUzQ9PnftEwf2LvMiG");
+nexis_program::declare_id!("VRPLtk4k31bDL99mn1A5mE96CUUzQ9PnftEwf2LvMiG");
 
 /// Struct provided metadata of the related program
 #[serde_as]

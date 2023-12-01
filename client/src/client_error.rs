@@ -1,7 +1,7 @@
 use {
     crate::{rpc_request, rpc_response},
-    solana_faucet::faucet::FaucetError,
-    solana_sdk::{
+    nexis_faucet::faucet::FaucetError,
+    nexis_sdk::{
         signature::SignerError, transaction::TransactionError, transport::TransportError,
     },
     std::io,

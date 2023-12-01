@@ -1,7 +1,7 @@
 use {
     crate::keypair::{parse_signer_source, SignerSourceKind, ASK_KEYWORD},
     chrono::DateTime,
-    solana_sdk::{
+    nexis_sdk::{
         clock::{Epoch, Slot},
         hash::Hash,
         pubkey::{Pubkey, MAX_SEED_LEN},
@@ -213,9 +213,9 @@ where
 
 pub fn normalize_to_url_if_moniker<T: AsRef<str>>(url_or_moniker: T) -> String {
     match url_or_moniker.as_ref() {
-        "m" | "mainnet" => "https://rpc-main-1.exzo.network",
-        "t" | "testnet" => "https://rpc-test-1.exzo.network",
-        "d" | "devnet" => "https://rpc-dev-1.exzo.network",
+        "m" | "mainnet" => "https://rpc-main-1.nexis.network",
+        "t" | "testnet" => "https://rpc-test-1.nexis.network",
+        "d" | "devnet" => "https://rpc-dev-1.nexis.network",
         "l" | "localhost" => "http://localhost:8899",
         url => url,
     }
@@ -379,7 +379,7 @@ where
             value, err
         )
     })?;
-    if solana_perf::thread::is_renice_allowed(adjustment) {
+    if nexis_perf::thread::is_renice_allowed(adjustment) {
         Ok(())
     } else {
         Err(String::from(

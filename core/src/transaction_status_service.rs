@@ -1,13 +1,13 @@
 use crossbeam_channel::{Receiver, RecvTimeoutError};
 use itertools::izip;
-use solana_ledger::{
+use nexis_ledger::{
     blockstore::Blockstore,
     blockstore_processor::{TransactionStatusBatch, TransactionStatusMessage},
 };
-use solana_runtime::bank::{
+use nexis_runtime::bank::{
     Bank, InnerInstructionsList, NonceRollbackInfo, TransactionLogMessages,
 };
-use solana_transaction_status::{InnerInstructions, Reward, TransactionStatusMeta};
+use nexis_transaction_status::{InnerInstructions, Reward, TransactionStatusMeta};
 use std::{
     sync::{
         atomic::{AtomicBool, AtomicU64, Ordering},
@@ -31,7 +31,7 @@ impl TransactionStatusService {
     ) -> Self {
         let exit = exit.clone();
         let thread_hdl = Builder::new()
-            .name("solana-transaction-status-writer".to_string())
+            .name("nexis-transaction-status-writer".to_string())
             .spawn(move || loop {
                 if exit.load(Ordering::Relaxed) {
                     break;

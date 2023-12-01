@@ -1,8 +1,8 @@
 use {
     crate::serve_repair::ServeRepair,
-    solana_ledger::blockstore::Blockstore,
-    solana_perf::recycler::Recycler,
-    solana_streamer::{
+    nexis_ledger::blockstore::Blockstore,
+    nexis_perf::recycler::Recycler,
+    nexis_streamer::{
         socket::SocketAddrSpace,
         streamer::{self, StreamerReceiveStats},
     },

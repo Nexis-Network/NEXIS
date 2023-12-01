@@ -1,12 +1,12 @@
 use {
     clap::{crate_description, crate_name, values_t, App, Arg},
     log::*,
-    solana_clap_utils::input_parsers::{lamports_of_sol, value_of},
-    solana_faucet::{
+    nexis_clap_utils::input_parsers::{lamports_of_sol, value_of},
+    nexis_faucet::{
         faucet::{run_faucet, Faucet, FAUCET_PORT},
         socketaddr,
     },
-    solana_sdk::signature::read_keypair_file,
+    nexis_sdk::signature::read_keypair_file,
     std::{
         collections::HashSet,
         net::{IpAddr, Ipv4Addr, SocketAddr},
@@ -17,13 +17,13 @@ use {
 
 #[tokio::main]
 async fn main() {
-    let default_keypair = solana_cli_config::Config::default().keypair_path;
+    let default_keypair = nexis_cli_config::Config::default().keypair_path;
 
-    solana_logger::setup_with_default("solana=info");
-    solana_metrics::set_panic_hook("faucet", /*version:*/ None);
+    nexis_logger::setup_with_default("nexis=info");
+    nexis_metrics::set_panic_hook("faucet", /*version:*/ None);
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .arg(
             Arg::with_name("keypair")
                 .short("k")
@@ -47,14 +47,14 @@ async fn main() {
                 .alias("cap")
                 .value_name("NUM")
                 .takes_value(true)
-                .help("Request limit for time slice, in XZO"),
+                .help("Request limit for time slice, in NZT"),
         )
         .arg(
             Arg::with_name("per_request_cap")
                 .long("per-request-cap")
                 .value_name("NUM")
                 .takes_value(true)
-                .help("Request limit for a single request, in XZO"),
+                .help("Request limit for a single request, in NZT"),
         )
         .arg(
             Arg::with_name("allowed_ip")
@@ -84,8 +84,8 @@ async fn main() {
         .expect("failed to read client keypair");
 
     let time_slice = value_of(&matches, "slice");
-    let per_time_cap = lamports_of_sol(&matches, "per_time_cap");
-    let per_request_cap = lamports_of_sol(&matches, "per_request_cap");
+    let per_time_cap = lamports_of_nzt(&matches, "per_time_cap");
+    let per_request_cap = lamports_of_nzt(&matches, "per_request_cap");
 
     let allowed_ips: HashSet<_> = values_t!(matches.values_of("allowed_ip"), IpAddr)
         .unwrap_or_default()

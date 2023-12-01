@@ -1,6 +1,6 @@
 use anyhow::*;
-use solana_sdk::clock::Slot;
-use solana_storage_bigtable::LedgerStorage;
+use nexis_sdk::clock::Slot;
+use nexis_storage_bigtable::LedgerStorage;
 
 use crate::extensions::NativeBlockExt;
 

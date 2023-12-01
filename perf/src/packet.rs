@@ -1,5 +1,5 @@
 //! The `packet` module defines data structures and methods to pull data from the network.
-pub use solana_sdk::packet::{Meta, Packet, PacketFlags, PACKET_DATA_SIZE};
+pub use nexis_sdk::packet::{Meta, Packet, PacketFlags, PACKET_DATA_SIZE};
 use {
     crate::{cuda_runtime::PinnedVec, recycler::Recycler},
     serde::Serialize,
@@ -127,7 +127,7 @@ pub fn to_packet_batch_with_destination<T: Serialize>(
 mod tests {
     use {
         super::*,
-        solana_sdk::{
+        nexis_sdk::{
             hash::Hash,
             signature::{Keypair, Signer},
             system_transaction,

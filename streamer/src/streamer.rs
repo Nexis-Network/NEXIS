@@ -7,7 +7,7 @@ use {
         sendmmsg::{batch_send, SendPktsError},
         socket::SocketAddrSpace,
     },
-    solana_sdk::timing::timestamp,
+    nexis_sdk::timing::timestamp,
     std::{
         net::UdpSocket,
         sync::{
@@ -153,7 +153,7 @@ pub fn receiver(
     let res = socket.set_read_timeout(Some(Duration::new(1, 0)));
     assert!(res.is_ok(), "streamer::receiver set_read_timeout error");
     Builder::new()
-        .name("solana-receiver".to_string())
+        .name("nexis-receiver".to_string())
         .spawn(move || {
             let _ = recv_loop(
                 &socket,
@@ -216,7 +216,7 @@ pub fn responder(
     socket_addr_space: SocketAddrSpace,
 ) -> JoinHandle<()> {
     Builder::new()
-        .name(format!("solana-responder-{}", name))
+        .name(format!("nexis-responder-{}", name))
         .spawn(move || {
             let mut errors = 0;
             let mut last_error = None;
@@ -252,7 +252,7 @@ mod test {
             packet::{Packet, PacketBatch, PACKET_DATA_SIZE},
             streamer::{receiver, responder},
         },
-        solana_perf::recycler::Recycler,
+        nexis_perf::recycler::Recycler,
         std::{
             io,
             io::Write,

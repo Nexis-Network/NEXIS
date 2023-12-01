@@ -8,12 +8,12 @@ use {
     crate::{
         broadcast_stage::broadcast_utils::UnfinishedSlotInfo, cluster_nodes::ClusterNodesCache,
     },
-    solana_entry::entry::Entry,
-    solana_ledger::shred::{
+    nexis_entry::entry::Entry,
+    nexis_ledger::shred::{
         ProcessShredsStats, Shred, Shredder, MAX_DATA_SHREDS_PER_FEC_BLOCK,
         SHRED_TICK_REFERENCE_MASK,
     },
-    solana_sdk::{
+    nexis_sdk::{
         signature::Keypair,
         timing::{duration_as_us, AtomicInterval},
     },
@@ -535,18 +535,18 @@ impl BroadcastRun for StandardBroadcastRun {
 mod test {
     use {
         super::*,
-        solana_entry::entry::create_ticks,
-        solana_gossip::cluster_info::{ClusterInfo, Node},
-        solana_ledger::{
+        nexis_entry::entry::create_ticks,
+        nexis_gossip::cluster_info::{ClusterInfo, Node},
+        nexis_ledger::{
             blockstore::Blockstore, genesis_utils::create_genesis_config, get_tmp_ledger_path,
             shred::max_ticks_per_n_shreds,
         },
-        solana_runtime::bank::Bank,
-        solana_sdk::{
+        nexis_runtime::bank::Bank,
+        nexis_sdk::{
             genesis_config::GenesisConfig,
             signature::{Keypair, Signer},
         },
-        solana_streamer::socket::SocketAddrSpace,
+        nexis_streamer::socket::SocketAddrSpace,
         std::{ops::Deref, sync::Arc, time::Duration},
     };
 

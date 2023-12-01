@@ -1,3 +1,15 @@
+/// This file contains benchmark tests for various operations related to bloom filters and hash sets.
+/// The benchmarks measure the performance of operations like setting bits, adding elements to bloom filters and hash sets,
+/// and checking for the presence of elements in bloom filters and hash sets.
+/// The benchmarks use the `test` crate for benchmarking and the `bv`, `fnv`, `rand`, `nexis_bloom`, and `nexis_sdk` crates for the required functionality.
+/// The benchmarks are ignored by default and can be run using the `cargo bench` command.
+/// The benchmarks include the following functions:
+/// - `bench_bits_set`: Measures the performance of setting bits in a `BitVec` using a hash index.
+/// - `bench_bits_set_hasher`: Measures the performance of generating hash values using a hasher.
+/// - `bench_sigs_bloom`: Measures the performance of adding and checking for the presence of elements in a bloom filter.
+/// - `bench_sigs_hashmap`: Measures the performance of adding and checking for the presence of elements in a hash set.
+/// - `bench_add_hash`: Measures the performance of adding elements to a bloom filter and checking for their presence.
+/// - `bench_add_hash_atomic`: Measures the performance of adding elements to an atomic bloom filter and checking for their presence.
 #![feature(test)]
 
 extern crate test;
@@ -5,8 +17,8 @@ use {
     bv::BitVec,
     fnv::FnvHasher,
     rand::Rng,
-    solana_bloom::bloom::{AtomicBloom, Bloom, BloomHashIndex},
-    solana_sdk::{
+    nexis_bloom::bloom::{AtomicBloom, Bloom, BloomHashIndex},
+    nexis_sdk::{
         hash::{hash, Hash},
         signature::Signature,
     },
@@ -103,7 +115,7 @@ fn bench_sigs_hashmap(bencher: &mut Bencher) {
 #[bench]
 fn bench_add_hash(bencher: &mut Bencher) {
     let mut rng = rand::thread_rng();
-    let hash_values: Vec<_> = std::iter::repeat_with(|| solana_sdk::hash::new_rand(&mut rng))
+    let hash_values: Vec<_> = std::iter::repeat_with(|| nexis_sdk::hash::new_rand(&mut rng))
         .take(1200)
         .collect();
     let mut fail = 0;
@@ -123,7 +135,7 @@ fn bench_add_hash(bencher: &mut Bencher) {
 #[bench]
 fn bench_add_hash_atomic(bencher: &mut Bencher) {
     let mut rng = rand::thread_rng();
-    let hash_values: Vec<_> = std::iter::repeat_with(|| solana_sdk::hash::new_rand(&mut rng))
+    let hash_values: Vec<_> = std::iter::repeat_with(|| nexis_sdk::hash::new_rand(&mut rng))
         .take(1200)
         .collect();
     let mut fail = 0;

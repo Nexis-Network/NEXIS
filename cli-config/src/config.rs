@@ -10,7 +10,7 @@ lazy_static! {
     ///
     /// This is a [lazy_static] of `Option<String>`, the value of which is
     ///
-    /// > `~/.config/solana/cli/config.yml`
+    /// > `~/.config/nexis/cli/config.yml`
     ///
     /// It will only be `None` if it is unable to identify the user's home
     /// directory, which should not happen under typical OS environments.
@@ -24,17 +24,17 @@ lazy_static! {
     };
 }
 
-/// The Solana CLI configuration.
+/// The Nexis CLI configuration.
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Config {
-    /// The RPC address of a Solana validator node.
+    /// The RPC address of a Nexis validator node.
     ///
     /// Typical values for mainnet, devnet, and testnet are [described in the
-    /// Solana documentation][rpcdocs].
+    /// Nexis documentation][rpcdocs].
     ///
     /// For local testing, the typical value is `http://localhost:8899`.
     ///
-    /// [rpcdocs]: https://docs.solana.com/cluster/rpc-endpoints
+    /// [rpcdocs]: https://docs.nexis.network/cluster/rpc-endpoints
     pub json_rpc_url: String,
     /// The address to connect to for receiving event notifications.
     ///
@@ -45,15 +45,15 @@ pub struct Config {
     pub websocket_url: String,
     /// The default signing source, which may be a keypair file, but may also
     /// represent several other types of signers, as described in the
-    /// documentation for `solana_clap_utils::keypair::signer_from_path`.
+    /// documentation for `nexis_clap_utils::keypair::signer_from_path`.
     /// Because it represents sources other than a simple path, the name
     /// `keypair_path` is misleading, and exists for backwards compatibility
     /// reasons.
     ///
     /// The signing source can be loaded with either the `signer_from_path`
-    /// function, or with `solana_clap_utils::keypair::DefaultSigner`.
+    /// function, or with `nexis_clap_utils::keypair::DefaultSigner`.
     pub keypair_path: String,
-    /// A mapping from Solana addresses to human-readable names.
+    /// A mapping from Nexis addresses to human-readable names.
     ///
     /// By default the only value in this map is the system program.
     #[serde(default)]
@@ -61,7 +61,7 @@ pub struct Config {
     /// The default commitment level.
     ///
     /// By default the value is "confirmed", as defined by
-    /// `solana_sdk::commitment_config::CommitmentLevel::Confirmed`.
+    /// `nexis_sdk::commitment_config::CommitmentLevel::Confirmed`.
     #[serde(default)]
     pub commitment: String,
 }
@@ -73,7 +73,7 @@ impl Default for Config {
             keypair_path.extend(&[".config", "exzo", "id.json"]);
             keypair_path.to_str().unwrap().to_string()
         };
-        let json_rpc_url = "https://rpc-main-1.exzo.network".to_string();
+        let json_rpc_url = "https://rpc-main-1.nexis.network".to_string();
 
         // Empty websocket_url string indicates the client should
         // `Config::compute_websocket_url(&json_rpc_url)`
@@ -177,13 +177,13 @@ mod test {
     #[test]
     fn compute_websocket_url() {
         assert_eq!(
-            Config::compute_websocket_url("http://rpc-dev-1.exzo.network"),
-            "ws://rpc-dev-1.exzo.network/".to_string()
+            Config::compute_websocket_url("http://rpc-dev-1.nexis.network"),
+            "ws://rpc-dev-1.nexis.network/".to_string()
         );
 
         assert_eq!(
-            Config::compute_websocket_url("https://rpc-dev-1.exzo.network"),
-            "wss://rpc-dev-1.exzo.network/".to_string()
+            Config::compute_websocket_url("https://rpc-dev-1.nexis.network"),
+            "wss://rpc-dev-1.nexis.network/".to_string()
         );
 
         assert_eq!(

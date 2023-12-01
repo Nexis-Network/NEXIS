@@ -10,9 +10,9 @@ use {
             resolve_command, AuthorizeArgs, Command, MoveArgs, NewArgs, RebaseArgs, SetLockupArgs,
         },
     },
-    solana_cli_config::Config,
-    solana_client::{client_error::ClientError, rpc_client::RpcClient},
-    solana_sdk::{
+    nexis_cli_config::Config,
+    nexis_client::{client_error::ClientError, rpc_client::RpcClient},
+    nexis_sdk::{
         message::Message,
         native_token::lamports_to_sol,
         pubkey::Pubkey,
@@ -21,7 +21,7 @@ use {
         stake::{instruction::LockupArgs, state::Lockup},
         transaction::Transaction,
     },
-    solana_stake_program::stake_state,
+    nexis_stake_program::stake_state,
     std::{env, error::Error},
 };
 
@@ -262,8 +262,8 @@ fn main() -> Result<(), Box<dyn Error>> {
             );
             let balances = get_balances(&client, addresses)?;
             let lamports: u64 = balances.into_iter().map(|(_, bal)| bal).sum();
-            let sol = lamports_to_sol(lamports);
-            println!("{} XZO", sol);
+            letnzt= lamports_to_nzt(lamports);
+            println!("{} NZT", sol);
         }
         Command::Authorize(args) => {
             process_authorize_stake_accounts(&client, &args)?;

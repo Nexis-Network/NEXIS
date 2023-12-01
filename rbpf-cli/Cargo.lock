@@ -300,7 +300,7 @@ name = "rbpf_cli"
 version = "0.2.8"
 dependencies = [
  "clap",
- "solana_rbpf",
+ "nexis_rbpf",
  "test_utils",
 ]
 
@@ -331,7 +331,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana_rbpf"
+name = "nexis_rbpf"
 version = "0.2.8"
 dependencies = [
  "byteorder",
@@ -378,7 +378,7 @@ name = "test_utils"
 version = "0.2.8"
 dependencies = [
  "libc",
- "solana_rbpf",
+ "nexis_rbpf",
 ]
 
 [[package]]

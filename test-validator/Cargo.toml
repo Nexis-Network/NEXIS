@@ -1,12 +1,12 @@
 [package]
-name = "solana-test-validator"
+name = "nexis-test-validator"
 description = "Blockchain, Rebuilt for Scale"
 version = "1.9.29"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-test-validator"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-test-validator"
 readme = "../README.md"
-repository = "https://github.com/solana-labs/solana"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
 license = "Apache-2.0"
 edition = "2021"
 
@@ -15,18 +15,18 @@ base64 = "0.12.3"
 log = "0.4.14"
 serde_derive = "1.0.103"
 serde_json = "1.0.72"
-solana-cli-output = { path = "../cli-output", version = "=1.9.29" }
-solana-client = { path = "../client", version = "=1.9.29" }
-solana-core = { path = "../core", version = "=1.9.29" }
-solana-gossip = { path = "../gossip", version = "=1.9.29" }
-solana-ledger = { path = "../ledger", version = "=1.9.29" }
-solana-logger = { path = "../logger", version = "=1.9.29" }
-solana-net-utils = { path = "../net-utils", version = "=1.9.29" }
-solana-program-test = { path = "../program-test", version = "=1.9.29" }
-solana-rpc = { path = "../rpc", version = "=1.9.29" }
-solana-runtime = { path = "../runtime", version = "=1.9.29" }
-solana-sdk = { path = "../sdk", version = "=1.9.29" }
-solana-streamer = { path = "../streamer", version = "=1.9.29" }
+nexis-cli-output = { path = "../cli-output", version = "=1.9.29" }
+nexis-client = { path = "../client", version = "=1.9.29" }
+nexis-core = { path = "../core", version = "=1.9.29" }
+nexis-gossip = { path = "../gossip", version = "=1.9.29" }
+nexis-ledger = { path = "../ledger", version = "=1.9.29" }
+nexis-logger = { path = "../logger", version = "=1.9.29" }
+nexis-net-utils = { path = "../net-utils", version = "=1.9.29" }
+nexis-program-test = { path = "../program-test", version = "=1.9.29" }
+nexis-rpc = { path = "../rpc", version = "=1.9.29" }
+nexis-runtime = { path = "../runtime", version = "=1.9.29" }
+nexis-sdk = { path = "../sdk", version = "=1.9.29" }
+nexis-streamer = { path = "../streamer", version = "=1.9.29" }
 evm-state = { path = "../evm-utils/evm-state" }
 
 [package.metadata.docs.rs]

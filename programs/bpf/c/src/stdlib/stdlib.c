@@ -14,7 +14,7 @@
 extern uint64_t entrypoint(const uint8_t *input) {
   struct _reent reent;
   int value = _atoi_r(&reent, "137");
-  sol_assert(value == 137);
+  nzt_assert(value == 137);
 
   return SUCCESS;
 }

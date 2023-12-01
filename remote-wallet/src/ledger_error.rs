@@ -2,7 +2,7 @@ use {num_derive::FromPrimitive, thiserror::Error};
 
 #[derive(Error, Debug, Clone, FromPrimitive, PartialEq)]
 pub enum LedgerError {
-    #[error("Solana app not open on Ledger device")]
+    #[error("Nexis app not open on Ledger device")]
     NoAppResponse = 0x6700,
 
     #[error("Ledger sdk exception")]
@@ -68,14 +68,14 @@ pub enum LedgerError {
     #[error("Ledger operation rejected by the user")]
     UserCancel = 0x6985,
 
-    #[error("Ledger received invalid Solana message")]
-    SolanaInvalidMessage = 0x6a80,
+    #[error("Ledger received invalid Nexis message")]
+    NexisInvalidMessage = 0x6a80,
 
-    #[error("Solana summary finalization failed on Ledger device")]
-    SolanaSummaryFinalizeFailed = 0x6f00,
+    #[error("Nexis summary finalization failed on Ledger device")]
+    NexisSummaryFinalizeFailed = 0x6f00,
 
-    #[error("Solana summary update failed on Ledger device")]
-    SolanaSummaryUpdateFailed = 0x6f01,
+    #[error("Nexis summary update failed on Ledger device")]
+    NexisSummaryUpdateFailed = 0x6f01,
 
     #[error("Ledger received unimplemented instruction")]
     UnimplementedInstruction = 0x6d00,

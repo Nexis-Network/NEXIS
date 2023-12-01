@@ -10,18 +10,18 @@ use {
     },
     inflector::Inflector,
     serde_json::Value,
-    solana_sdk::{instruction::InstructionError, pubkey::Pubkey, stake, system_program, sysvar},
+    nexis_sdk::{instruction::InstructionError, pubkey::Pubkey, stake, system_program, sysvar},
     std::{collections::HashMap, convert::TryFrom},
     thiserror::Error,
 };
 
 lazy_static! {
-    static ref BPF_UPGRADEABLE_LOADER_PROGRAM_ID: Pubkey = solana_sdk::bpf_loader_upgradeable::id();
-    static ref CONFIG_PROGRAM_ID: Pubkey = solana_config_program::id();
+    static ref BPF_UPGRADEABLE_LOADER_PROGRAM_ID: Pubkey = nexis_sdk::bpf_loader_upgradeable::id();
+    static ref CONFIG_PROGRAM_ID: Pubkey = nexis_config_program::id();
     static ref STAKE_PROGRAM_ID: Pubkey = stake::program::id();
     static ref SYSTEM_PROGRAM_ID: Pubkey = system_program::id();
     static ref SYSVAR_PROGRAM_ID: Pubkey = sysvar::id();
-    static ref VOTE_PROGRAM_ID: Pubkey = solana_vote_program::id();
+    static ref VOTE_PROGRAM_ID: Pubkey = nexis_vote_program::id();
     static ref EXZO_ACCOUNT_PROGRAM_ID: Pubkey = exzo_account_program::id();
     static ref EXZO_RELYING_PARTY_PROGRAM_ID: Pubkey = exzo_relying_party_program::id();
     pub static ref PARSABLE_PROGRAM_IDS: HashMap<Pubkey, ParsableAccount> = {
@@ -152,17 +152,17 @@ pub fn parse_account_data(
 mod test {
     use {
         super::*,
-        solana_sdk::nonce::{
+        nexis_sdk::nonce::{
             state::{Data, Versions},
             State,
         },
-        solana_vote_program::vote_state::{VoteState, VoteStateVersions},
+        nexis_vote_program::vote_state::{VoteState, VoteStateVersions},
     };
 
     #[test]
     fn test_parse_account_data() {
-        let account_pubkey = solana_sdk::pubkey::new_rand();
-        let other_program = solana_sdk::pubkey::new_rand();
+        let account_pubkey = nexis_sdk::pubkey::new_rand();
+        let other_program = nexis_sdk::pubkey::new_rand();
         let data = vec![0; 4];
         assert!(parse_account_data(&account_pubkey, &other_program, &data, None).is_err());
 
@@ -172,7 +172,7 @@ mod test {
         VoteState::serialize(&versioned, &mut vote_account_data).unwrap();
         let parsed = parse_account_data(
             &account_pubkey,
-            &solana_vote_program::id(),
+            &nexis_vote_program::id(),
             &vote_account_data,
             None,
         )

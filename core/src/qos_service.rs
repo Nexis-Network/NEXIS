@@ -4,13 +4,13 @@
 //!
 use {
     crate::banking_stage::{BatchedTransactionCostDetails, CommitTransactionDetails},
-    solana_measure::measure::Measure,
-    solana_runtime::{
+    nexis_measure::measure::Measure,
+    nexis_runtime::{
         bank::Bank,
         cost_model::{CostModel, TransactionCost},
         cost_tracker::CostTrackerError,
     },
-    solana_sdk::{
+    nexis_sdk::{
         timing::AtomicInterval,
         transaction::{self, SanitizedTransaction, TransactionError},
     },
@@ -62,7 +62,7 @@ impl QosService {
         let metrics_clone = metrics.clone();
         let reporting_thread = Some(
             Builder::new()
-                .name("solana-qos-service-metrics-repoting".to_string())
+                .name("nexis-qos-service-metrics-repoting".to_string())
                 .spawn(move || {
                     Self::reporting_loop(running_flag_clone, metrics_clone, reporting_duration_ms);
                 })
@@ -385,18 +385,18 @@ mod tests {
     use {
         super::*,
         itertools::Itertools,
-        solana_runtime::genesis_utils::{create_genesis_config, GenesisConfigInfo},
-        solana_sdk::{
+        nexis_runtime::genesis_utils::{create_genesis_config, GenesisConfigInfo},
+        nexis_sdk::{
             hash::Hash,
             signature::{Keypair, Signer},
             system_transaction,
         },
-        solana_vote_program::vote_transaction,
+        nexis_vote_program::vote_transaction,
     };
 
     #[test]
     fn test_compute_transaction_costs() {
-        solana_logger::setup();
+        nexis_logger::setup();
 
         // make a vec of txs
         let keypair = Keypair::new();
@@ -436,7 +436,7 @@ mod tests {
 
     #[test]
     fn test_select_transactions_per_cost() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
         let cost_model = Arc::new(RwLock::new(CostModel::default()));
@@ -488,8 +488,8 @@ mod tests {
 
     #[test]
     fn test_async_report_metrics() {
-        solana_logger::setup();
-        //solana_logger::setup_with_default("solana=info");
+        nexis_logger::setup();
+        //nexis_logger::setup_with_default("nexis=info");
 
         // make a vec of txs
         let txs_count = 128usize;
@@ -567,7 +567,7 @@ mod tests {
 
     #[test]
     fn test_update_or_remove_transaction_costs_commited() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
 
@@ -621,7 +621,7 @@ mod tests {
 
     #[test]
     fn test_update_or_remove_transaction_costs_not_commited() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
 
@@ -660,7 +660,7 @@ mod tests {
 
     #[test]
     fn test_update_or_remove_transaction_costs_mixed_execution() {
-        solana_logger::setup();
+        nexis_logger::setup();
         let GenesisConfigInfo { genesis_config, .. } = create_genesis_config(10);
         let bank = Arc::new(Bank::new_for_tests(&genesis_config));
 

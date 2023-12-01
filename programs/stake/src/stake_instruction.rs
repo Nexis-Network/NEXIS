@@ -1,13 +1,13 @@
 #[deprecated(
     since = "1.8.0",
-    note = "Please use `solana_sdk::stake::instruction` or `solana_program::stake::instruction` instead"
+    note = "Please use `nexis_sdk::stake::instruction` or `nexis_program::stake::instruction` instead"
 )]
-pub use solana_sdk::stake::instruction::*;
+pub use nexis_sdk::stake::instruction::*;
 use {
     crate::{config, stake_state::StakeAccount},
     log::*,
-    solana_program_runtime::invoke_context::InvokeContext,
-    solana_sdk::{
+    nexis_program_runtime::invoke_context::InvokeContext,
+    nexis_sdk::{
         feature_set,
         instruction::InstructionError,
         keyed_account::{from_keyed_account, get_signers, keyed_account_at_index},
@@ -341,13 +341,13 @@ mod tests {
         super::*,
         crate::stake_state::{Meta, StakeState},
         bincode::serialize,
-        solana_program_runtime::{
+        nexis_program_runtime::{
             invoke_context::{
                 mock_process_instruction, prepare_mock_invoke_context, InvokeContext,
             },
             sysvar_cache::SysvarCache,
         },
-        solana_sdk::{
+        nexis_sdk::{
             account::{self, AccountSharedData},
             instruction::{AccountMeta, Instruction},
             pubkey::Pubkey,
@@ -414,7 +414,7 @@ mod tests {
             } else if meta.pubkey == invalid_stake_state_pubkey() {
                 AccountSharedData::new(0, 0, &id())
             } else if meta.pubkey == invalid_vote_state_pubkey() {
-                AccountSharedData::new(0, 0, &solana_vote_program::id())
+                AccountSharedData::new(0, 0, &nexis_vote_program::id())
             } else if meta.pubkey == spoofed_stake_state_pubkey() {
                 AccountSharedData::new(0, 0, &spoofed_stake_program_id())
             } else {
@@ -428,7 +428,7 @@ mod tests {
             .map(|(meta, account)| (meta.is_signer, meta.is_writable, meta.pubkey, account))
             .collect();
         let mut preparation = prepare_mock_invoke_context(&[], &instruction.data, &keyed_accounts);
-        let processor_account = AccountSharedData::new_ref(0, 0, &solana_sdk::native_loader::id());
+        let processor_account = AccountSharedData::new_ref(0, 0, &nexis_sdk::native_loader::id());
         let program_indices = vec![preparation.accounts.len()];
         preparation.accounts.push((id(), processor_account));
         let mut invoke_context = InvokeContext::new_mock(&preparation.accounts, &[]);
@@ -748,7 +748,7 @@ mod tests {
         let stake_address = Pubkey::new_unique();
         let stake_account = create_default_stake_account();
         let vote_address = Pubkey::new_unique();
-        let vote_account = AccountSharedData::new_ref(0, 0, &solana_vote_program::id());
+        let vote_account = AccountSharedData::new_ref(0, 0, &nexis_vote_program::id());
         let clock_address = sysvar::clock::id();
         let clock_account = Rc::new(RefCell::new(account::create_account_shared_data_for_test(
             &sysvar::clock::Clock::default(),
@@ -1073,7 +1073,7 @@ mod tests {
             (true, false, custodian, custodian_account),
         ];
         let mut preparation = prepare_mock_invoke_context(&[], &instruction.data, &keyed_accounts);
-        let processor_account = AccountSharedData::new_ref(0, 0, &solana_sdk::native_loader::id());
+        let processor_account = AccountSharedData::new_ref(0, 0, &nexis_sdk::native_loader::id());
         let program_indices = vec![preparation.accounts.len()];
         preparation.accounts.push((id(), processor_account));
         let mut invoke_context = InvokeContext::new_mock(&preparation.accounts, &[]);

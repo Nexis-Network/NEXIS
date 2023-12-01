@@ -23,12 +23,12 @@ impl DerefMut for StakeHistory {
 }
 
 /// The inner type, which is the SDK's stake history
-type StakeHistoryInner = solana_sdk::stake_history::StakeHistory;
+type StakeHistoryInner = nexis_sdk::stake_history::StakeHistory;
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use solana_sdk::stake_history::StakeHistoryEntry;
+    use nexis_sdk::stake_history::StakeHistoryEntry;
 
     fn rand_stake_history_entry() -> StakeHistoryEntry {
         StakeHistoryEntry {

@@ -38,7 +38,7 @@ mod context;
 pub mod executor;
 mod state;
 
-// Cannot link to solana-sdk, because solana_sdk already linked to evm-state
+// Cannot link tonexis-sdk, because nexis_sdk already linked to evm-state
 // Used in BlockHeader
 #[path = "../../../sdk/src/deserialize_utils.rs"]
 mod deserialize_utils;

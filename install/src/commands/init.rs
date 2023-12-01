@@ -7,7 +7,7 @@ use crate::{
 };
 use reqwest::Url;
 use serde::Deserialize;
-use solana_sdk::{
+use nexis_sdk::{
     hash::{Hash, Hasher},
     pubkey::Pubkey,
 };
@@ -51,7 +51,7 @@ fn config_bloat(matches: &clap::ArgMatches, mode: Mode) -> Result<Config, String
                     build_env::TARGET
                 ))?;
 
-            // Write new config file only if different, so that running |solana-install init|
+            // Write new config file only if different, so that running |nexis-install init|
             // repeatedly doesn't unnecessarily re-download
             let mut current_config = Config::load(config_file).unwrap_or_default();
             current_config.current_update_manifest = None;
@@ -151,7 +151,7 @@ pub fn command_init(matches: &clap::ArgMatches, mode: Mode) -> Result<(), String
 
     let _ = fs::remove_dir_all(config.active_release_dir());
     symlink_dir(
-        release_dir.join("exzo-release"),
+        release_dir.join("nexis-release"),
         config.active_release_dir(),
     )
     .map_err(|err| {
@@ -383,7 +383,7 @@ fn check_env_path_for_bin_dir(config: &Config) {
 
     if !found {
         println!(
-            "\nPlease update your PATH environment variable to include the solana programs:\n    PATH=\"{}:$PATH\"\n",
+            "\nPlease update your PATH environment variable to include the nexisprograms:\n    PATH=\"{}:$PATH\"\n",
             config.active_release_bin_dir().to_str().unwrap()
         );
     }
@@ -581,7 +581,7 @@ fn extract_release_archive(
 /// Reads the supported TARGET triple for the given release
 fn load_release_target(release_dir: &Path) -> Result<String, String> {
     let mut version_yml = PathBuf::from(release_dir);
-    version_yml.push("exzo-release");
+    version_yml.push("nexis-release");
     version_yml.push("version.yml");
 
     let version = load_release_version(&version_yml)?;

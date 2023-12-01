@@ -1,5 +1,5 @@
 use {
-    solana_sdk::{
+    nexis_sdk::{
         instruction::{CompiledInstruction, Instruction},
         message::SanitizedMessage,
     },

@@ -1,12 +1,12 @@
 [package]
-name = "solana-runtime"
+name = "nexis-runtime"
 version = "1.9.29"
-description = "Solana runtime"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "Nexis runtime"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-runtime"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-runtime"
 edition = "2021"
 
 [dependencies]
@@ -35,21 +35,21 @@ rayon = "1.5.1"
 regex = "1.5.4"
 serde = { version = "1.0.130", features = ["rc"] }
 serde_derive = "1.0.103"
-solana-address-lookup-table-program = { path = "../programs/address-lookup-table", version = "=1.9.29" }
-solana-bloom = { path = "../bloom", version = "=1.9.29" }
-solana-config-program = { path = "../programs/config", version = "=1.9.29" }
-solana-compute-budget-program = { path = "../programs/compute-budget", version = "=1.9.29" }
-solana-frozen-abi = { path = "../frozen-abi", version = "=1.9.29" }
-solana-frozen-abi-macro = { path = "../frozen-abi/macro", version = "=1.9.29" }
-solana-logger = { path = "../logger", version = "=1.9.29" }
-solana-measure = { path = "../measure", version = "=1.9.29" }
-solana-metrics = { path = "../metrics", version = "=1.9.29" }
-solana-bucket-map = { path = "../bucket_map", version = "=1.9.29" }
-solana-program-runtime = { path = "../program-runtime", version = "=1.9.29" }
-solana-rayon-threadlimit = { path = "../rayon-threadlimit", version = "=1.9.29" }
-solana-sdk = { path = "../sdk", version = "=1.9.29" }
-solana-stake-program = { path = "../programs/stake", version = "=1.9.29" }
-solana-vote-program = { path = "../programs/vote", version = "=1.9.29" }
+nexis-address-lookup-table-program = { path = "../programs/address-lookup-table", version = "=1.9.29" }
+nexis-bloom = { path = "../bloom", version = "=1.9.29" }
+nexis-config-program = { path = "../programs/config", version = "=1.9.29" }
+nexis-compute-budget-program = { path = "../programs/compute-budget", version = "=1.9.29" }
+nexis-frozen-abi = { path = "../frozen-abi", version = "=1.9.29" }
+nexis-frozen-abi-macro = { path = "../frozen-abi/macro", version = "=1.9.29" }
+nexis-logger = { path = "../logger", version = "=1.9.29" }
+nexis-measure = { path = "../measure", version = "=1.9.29" }
+nexis-metrics = { path = "../metrics", version = "=1.9.29" }
+nexis-bucket-map = { path = "../bucket_map", version = "=1.9.29" }
+nexis-program-runtime = { path = "../program-runtime", version = "=1.9.29" }
+nexis-rayon-threadlimit = { path = "../rayon-threadlimit", version = "=1.9.29" }
+nexis-sdk = { path = "../sdk", version = "=1.9.29" }
+nexis-stake-program = { path = "../programs/stake", version = "=1.9.29" }
+nexis-vote-program = { path = "../programs/vote", version = "=1.9.29" }
 symlink = "0.1.0"
 tar = "0.4.37"
 tempfile = "3.2.0"
@@ -59,15 +59,15 @@ zstd = "0.9.0"
 
 evm-state = { path = "../evm-utils/evm-state" }
 evm-rpc = { path = "../evm-utils/evm-rpc" }
-solana-evm-loader-program = { path = "../evm-utils/programs/evm_loader" }
+nexis-evm-loader-program = { path = "../evm-utils/programs/evm_loader" }
 exzo-account-program = { path = "../programs/exzo-account-program" }
-exzo-relying-party-program = { path = "../programs/exzo-relying-party-program" }
+nexis-relying-party-program = { path = "../programs/nexis-relying-party-program" }
 anyhow = "1.0.34"
 
 
 [lib]
 crate-type = ["lib"]
-name = "solana_runtime"
+name = "nexis_runtime"
 
 [dev-dependencies]
 assert_matches = "1.5.0"

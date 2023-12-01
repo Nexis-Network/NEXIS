@@ -10,13 +10,13 @@
 # except according to those terms.
 
 # This is just a little script that can be downloaded from the internet to
-# install solana-install. It just does platform detection, downloads the installer
+# installnexis-install. It just does platform detection, downloads the installer
 # and runs it.
 
 { # this ensures the entire script is downloaded #
     
-    if [ -z "$SOLANA_DOWNLOAD_ROOT" ]; then
-        SOLANA_DOWNLOAD_ROOT="https://github.com/ExzoNetwork/Exzo-Network-Blockchain/releases/download/"
+    if [ -z "$NZT_DOWNLOAD_ROOT" ]; then
+        NZT_DOWNLOAD_ROOT="https://github.com/ExzoNetwork/Exzo-Network-Blockchain/releases/download/"
     fi
     GH_LATEST_RELEASE="https://api.github.com/repos/ExzoNetwork/Exzo-Network-Blockchain/releases/latest"
     
@@ -36,7 +36,7 @@ FLAGS:
 
 OPTIONS:
     -d, --data_dir <PATH>    Directory to store install data
-    -u, --url <URL>          JSON RPC URL for the solana cluster
+    -u, --url <URL>          JSON RPC URL for the nexiscluster
     -p, --pubkey <PUBKEY>    Public key of the update manifest
 EOF
     }
@@ -77,10 +77,10 @@ EOF
         temp_dir="$(mktemp -d 2>/dev/null || ensure mktemp -d -t exzo-install-init)"
         ensure mkdir -p "$temp_dir"
         
-        # Check for SOLANA_RELEASE environment variable override.  Otherwise fetch
+        # Check for NZT_RELEASE environment variable override.  Otherwise fetch
         # the latest release tag from github
-        if [ -n "$SOLANA_RELEASE" ]; then
-            release="$SOLANA_RELEASE"
+        if [ -n "$NZT_RELEASE" ]; then
+            release="$NZT_RELEASE"
         else
             release_file="$temp_dir/release"
             printf 'looking for latest release\n' 1>&2
@@ -94,31 +94,31 @@ EOF
             fi
         fi
         
-        download_url="$SOLANA_DOWNLOAD_ROOT/$release/exzo-install-init-$TARGET"
-        solana_install_init="$temp_dir/exzo-install-init"
+        download_url="$NZT_DOWNLOAD_ROOT/$release/exzo-install-init-$TARGET"
+        nexis_install_init="$temp_dir/exzo-install-init"
         
         printf 'downloading %s installer\n' "$release" 1>&2
         
         ensure mkdir -p "$temp_dir"
-        ensure downloader "$download_url" "$solana_install_init"
-        ensure chmod u+x "$solana_install_init"
-        if [ ! -x "$solana_install_init" ]; then
-            printf '%s\n' "Cannot execute $solana_install_init (likely because of mounting /tmp as noexec)." 1>&2
+        ensure downloader "$download_url" "$nexis_install_init"
+        ensure chmod u+x "$nexis_install_init"
+        if [ ! -x "$nexis_install_init" ]; then
+            printf '%s\n' "Cannot execute $nexis_install_init (likely because of mounting /tmp as noexec)." 1>&2
             printf '%s\n' "Please copy the file to a location where you can execute binaries and run ./exzo-install-init." 1>&2
             exit 1
         fi
         
         if [ -z "$1" ]; then
             #shellcheck disable=SC2086
-            ignore "$solana_install_init" $SOLANA_INSTALL_INIT_ARGS "$(echo $release | cut -c2-)";
+            ignore "$nexis_install_init" $NZT_INSTALL_INIT_ARGS "$(echo $release | cut -c2-)";
             elif [ "$1" = "LATEST_EXZO_RELEASE" ]; then
-            ignore "$solana_install_init" $SOLANA_INSTALL_INIT_ARGS "$(echo $release | cut -c2-)"
+            ignore "$nexis_install_init" $NZT_INSTALL_INIT_ARGS "$(echo $release | cut -c2-)"
         else
-            ignore "$solana_install_init" "$@"
+            ignore "$nexis_install_init" "$@"
         fi
         retval=$?
         
-        ignore rm "$solana_install_init"
+        ignore rm "$nexis_install_init"
         ignore rm -rf "$temp_dir"
         
         return "$retval"

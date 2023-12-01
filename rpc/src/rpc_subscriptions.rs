@@ -14,8 +14,8 @@ use {
     crossbeam_channel::{Receiver, RecvTimeoutError, SendError, Sender},
     rayon::prelude::*,
     serde::Serialize,
-    solana_account_decoder::{parse_token::is_known_spl_token_id, UiAccount, UiAccountEncoding},
-    solana_client::{
+    nexis_account_decoder::{parse_token::is_known_spl_token_id, UiAccount, UiAccountEncoding},
+    nexis_client::{
         rpc_filter::RpcFilterType,
         rpc_response::{
             ProcessedSignatureResult, ReceivedSignatureResult, Response, RpcBlockUpdate,
@@ -23,15 +23,15 @@ use {
             RpcSignatureResult, RpcVote, SlotInfo, SlotUpdate,
         },
     },
-    solana_ledger::{blockstore::Blockstore, get_tmp_ledger_path},
-    solana_measure::measure::Measure,
-    solana_rayon_threadlimit::get_thread_count,
-    solana_runtime::{
+    nexis_ledger::{blockstore::Blockstore, get_tmp_ledger_path},
+    nexis_measure::measure::Measure,
+    nexis_rayon_threadlimit::get_thread_count,
+    nexis_runtime::{
         bank::{Bank, TransactionLogInfo},
         bank_forks::BankForks,
         commitment::{BlockCommitmentCache, CommitmentSlots},
     },
-    solana_sdk::{
+    nexis_sdk::{
         account::{AccountSharedData, ReadableAccount},
         clock::Slot,
         pubkey::Pubkey,
@@ -39,8 +39,8 @@ use {
         timing::timestamp,
         transaction,
     },
-    solana_transaction_status::{ConfirmedBlock, ConfirmedBlockWithOptionalMetadata},
-    solana_vote_program::vote_state::Vote,
+    nexis_transaction_status::{ConfirmedBlock, ConfirmedBlockWithOptionalMetadata},
+    nexis_vote_program::vote_state::Vote,
     std::{
         cell::RefCell,
         collections::{HashMap, VecDeque},
@@ -605,7 +605,7 @@ impl RpcSubscriptions {
         };
         let notification_threads = config.notification_threads;
         let t_cleanup = Builder::new()
-            .name("solana-rpc-notifications".to_string())
+            .name("nexis-rpc-notifications".to_string())
             .spawn(move || {
                 let pool = rayon::ThreadPoolBuilder::new()
                     .num_threads(notification_threads.unwrap_or_else(get_thread_count))
@@ -1277,22 +1277,22 @@ pub(crate) mod tests {
             rpc_pubsub_service,
         },
         serial_test::serial,
-        solana_client::rpc_config::{
+        nexis_client::rpc_config::{
             RpcAccountInfoConfig, RpcProgramAccountsConfig, RpcSignatureSubscribeConfig,
             RpcTransactionLogsFilter, {RpcBlockSubscribeConfig, RpcBlockSubscribeFilter},
         },
-        solana_runtime::{
+        nexis_runtime::{
             commitment::BlockCommitment,
             genesis_utils::{create_genesis_config, GenesisConfigInfo},
         },
-        solana_sdk::{
+        nexis_sdk::{
             commitment_config::CommitmentConfig,
             message::Message,
             signature::{Keypair, Signer},
             stake, system_instruction, system_program, system_transaction,
             transaction::Transaction,
         },
-        solana_transaction_status::{TransactionDetails, UiTransactionEncoding},
+        nexis_transaction_status::{TransactionDetails, UiTransactionEncoding},
         std::{
             collections::HashSet,
             sync::atomic::{AtomicU64, Ordering::Relaxed},
@@ -2370,7 +2370,7 @@ pub(crate) mod tests {
 
         let next_bank = Bank::new_from_parent(
             &bank_forks.get(0).unwrap(),
-            &solana_sdk::pubkey::new_rand(),
+            &nexis_sdk::pubkey::new_rand(),
             1,
         );
         bank_forks.insert(next_bank);

@@ -1,7 +1,7 @@
 use {
     crate::{
         clock::Epoch, debug_account_data::*, program_error::ProgramError,
-        program_memory::sol_memset, pubkey::Pubkey,
+        program_memory::nzt_memset, pubkey::Pubkey,
     },
     std::{
         cell::{Ref, RefCell, RefMut},
@@ -114,7 +114,7 @@ impl<'a> AccountInfo<'a> {
     /// memory.
     ///
     /// Note:  Account data can be increased within a single call by up to
-    /// `solana_program::entrypoint::MAX_PERMITTED_DATA_INCREASE` bytes.
+    /// `nexis_program::entrypoint::MAX_PERMITTED_DATA_INCREASE` bytes.
     ///
     /// Note: Memory used to grow is already zero-initialized upon program
     /// entrypoint and re-zeroing it wastes compute units.  If within the same
@@ -137,7 +137,7 @@ impl<'a> AccountInfo<'a> {
 
         // zero-init if requested
         if zero_init && new_len > orig_len {
-            sol_memset(
+            nzt_memset(
                 &mut self.try_borrow_mut_data()?[orig_len..],
                 0,
                 new_len.saturating_sub(orig_len),
@@ -255,12 +255,12 @@ impl<'a, T: Account> IntoAccountInfo<'a> for &'a mut (Pubkey, T) {
 /// # Examples
 ///
 /// ```
-/// use solana_program::{
+/// use nexis_program::{
 ///    account_info::{AccountInfo, next_account_info},
 ///    entrypoint::ProgramResult,
 ///    pubkey::Pubkey,
 /// };
-/// # use solana_program::program_error::ProgramError;
+/// # use nexis_program::program_error::ProgramError;
 ///
 /// pub fn process_instruction(
 ///     program_id: &Pubkey,
@@ -306,12 +306,12 @@ pub fn next_account_info<'a, 'b, I: Iterator<Item = &'a AccountInfo<'b>>>(
 /// # Examples
 ///
 /// ```
-/// use solana_program::{
+/// use nexis_program::{
 ///    account_info::{AccountInfo, next_account_info, next_account_infos},
 ///    entrypoint::ProgramResult,
 ///    pubkey::Pubkey,
 /// };
-/// # use solana_program::program_error::ProgramError;
+/// # use nexis_program::program_error::ProgramError;
 ///
 /// pub fn process_instruction(
 ///     program_id: &Pubkey,

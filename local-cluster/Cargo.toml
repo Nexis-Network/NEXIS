@@ -1,13 +1,13 @@
 [package]
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
 edition = "2021"
-name = "solana-local-cluster"
+name = "nexis-local-cluster"
 description = "Blockchain, Rebuilt for Scale"
 version = "1.9.29"
-repository = "https://github.com/solana-labs/solana"
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-local-cluster"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-local-cluster"
 
 [dependencies]
 crossbeam-channel = "0.5"
@@ -17,19 +17,19 @@ fs_extra = "1.2.0"
 log = "0.4.14"
 rand = "0.7.0"
 rayon = "1.5.1"
-solana-config-program = { path = "../programs/config", version = "=1.9.29" }
-solana-core = { path = "../core", version = "=1.9.29" }
-solana-client = { path = "../client", version = "=1.9.29" }
-solana-download-utils = { path = "../download-utils", version = "=1.9.29" }
-solana-entry = { path = "../entry", version = "=1.9.29" }
-solana-gossip = { path = "../gossip", version = "=1.9.29" }
-solana-ledger = { path = "../ledger", version = "=1.9.29" }
-solana-logger = { path = "../logger", version = "=1.9.29" }
-solana-runtime = { path = "../runtime", version = "=1.9.29" }
-solana-sdk = { path = "../sdk", version = "=1.9.29" }
-solana-stake-program = { path = "../programs/stake", version = "=1.9.29" }
-solana-streamer = { path = "../streamer", version = "=1.9.29" }
-solana-vote-program = { path = "../programs/vote", version = "=1.9.29" }
+nexis-config-program = { path = "../programs/config", version = "=1.9.29" }
+nexis-core = { path = "../core", version = "=1.9.29" }
+nexis-client = { path = "../client", version = "=1.9.29" }
+nexis-download-utils = { path = "../download-utils", version = "=1.9.29" }
+nexis-entry = { path = "../entry", version = "=1.9.29" }
+nexis-gossip = { path = "../gossip", version = "=1.9.29" }
+nexis-ledger = { path = "../ledger", version = "=1.9.29" }
+nexis-logger = { path = "../logger", version = "=1.9.29" }
+nexis-runtime = { path = "../runtime", version = "=1.9.29" }
+nexis-sdk = { path = "../sdk", version = "=1.9.29" }
+nexis-stake-program = { path = "../programs/stake", version = "=1.9.29" }
+nexis-streamer = { path = "../streamer", version = "=1.9.29" }
+nexis-vote-program = { path = "../programs/vote", version = "=1.9.29" }
 tempfile = "3.2.0"
 
 [dev-dependencies]

@@ -1,6 +1,6 @@
 use crate::crds_gossip::CrdsGossip;
-use solana_measure::measure::Measure;
-use solana_sdk::pubkey::Pubkey;
+use nexis_measure::measure::Measure;
+use nexis_sdk::pubkey::Pubkey;
 use std::{
     collections::HashMap,
     sync::{

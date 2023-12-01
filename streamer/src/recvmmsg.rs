@@ -1,6 +1,6 @@
 //! The `recvmmsg` module provides recvmmsg() API implementation
 
-pub use solana_perf::packet::NUM_RCVMMSGS;
+pub use nexis_perf::packet::NUM_RCVMMSGS;
 use {
     crate::packet::{Meta, Packet},
     std::{cmp, io, net::UdpSocket},

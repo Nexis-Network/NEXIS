@@ -6,20 +6,20 @@ use {
     clap::{value_t, value_t_or_exit, App, AppSettings, Arg, ArgMatches, SubCommand},
     console::style,
     serde::{Deserialize, Serialize},
-    solana_clap_utils::{
+    nexis_clap_utils::{
         input_parsers::*,
         input_validators::*,
         keypair::DefaultSigner,
         offline::{blockhash_arg, BLOCKHASH_ARG},
     },
-    solana_cli_output::{
+    nexis_cli_output::{
         display::{
             build_balance_message, format_labeled_address, new_spinner_progress_bar,
             println_transaction, unix_timestamp_to_string, writeln_name_value,
         },
         *,
     },
-    solana_client::{
+    nexis_client::{
         client_error::ClientErrorKind,
         pubsub_client::PubsubClient,
         rpc_client::{GetConfirmedSignaturesForAddress2Config, RpcClient},
@@ -32,8 +32,8 @@ use {
         rpc_request::DELINQUENT_VALIDATOR_SLOT_DISTANCE,
         rpc_response::SlotInfo,
     },
-    solana_remote_wallet::remote_wallet::RemoteWalletManager,
-    solana_sdk::{
+    nexis_remote_wallet::remote_wallet::RemoteWalletManager,
+    nexis_sdk::{
         account::from_account,
         account_utils::StateMut,
         clock::{self, Clock, Slot},
@@ -58,8 +58,8 @@ use {
         timing,
         transaction::Transaction,
     },
-    solana_transaction_status::UiTransactionEncoding,
-    solana_vote_program::vote_state::VoteState,
+    nexis_transaction_status::UiTransactionEncoding,
+    nexis_vote_program::vote_state::VoteState,
     std::{
         collections::{BTreeMap, HashMap, VecDeque},
         fmt,
@@ -216,7 +216,7 @@ impl ClusterQuerySubCommands for App<'_, '_> {
             ),
         )
         .subcommand(
-            SubCommand::with_name("supply").about("Get information about the cluster supply of XZO")
+            SubCommand::with_name("supply").about("Get information about the cluster supply of NZT")
             .arg(
                 Arg::with_name("print_accounts")
                     .long("print-accounts")
@@ -225,7 +225,7 @@ impl ClusterQuerySubCommands for App<'_, '_> {
             ),
         )
         .subcommand(
-            SubCommand::with_name("total-supply").about("Get total number of XZO")
+            SubCommand::with_name("total-supply").about("Get total number of NZT")
             .setting(AppSettings::Hidden),
         )
         .subcommand(
@@ -329,7 +329,7 @@ impl ClusterQuerySubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of XZO"),
+                        .help("Display balance in lamports instead of NZT"),
                 ),
         )
         .subcommand(
@@ -340,7 +340,7 @@ impl ClusterQuerySubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display balance in lamports instead of XZO"),
+                        .help("Display balance in lamports instead of NZT"),
                 )
                 .arg(
                     Arg::with_name("number")
@@ -459,7 +459,7 @@ impl ClusterQuerySubCommands for App<'_, '_> {
                     Arg::with_name("lamports")
                         .long("lamports")
                         .takes_value(false)
-                        .help("Display rent in lamports instead of XZO"),
+                        .help("Display rent in lamports instead of NZT"),
                 ),
         )
     }
@@ -824,7 +824,7 @@ pub fn process_catchup(
     let mut total_sleep_interval = 0;
     loop {
         // humbly retry; the reference node (rpc_client) could be spotty,
-        // especially if pointing to api.meinnet-beta.solana.com at times
+        // especially if pointing to api.meinnet-beta.nexis.network at times
         let rpc_slot = get_slot_while_retrying(rpc_client)?;
         let node_slot = get_slot_while_retrying(&node_client)?;
         if !follow && node_slot > std::cmp::min(previous_rpc_slot, rpc_slot) {
@@ -1335,7 +1335,7 @@ pub fn process_supply(
 
 pub fn process_total_supply(rpc_client: &RpcClient, _config: &CliConfig) -> ProcessResult {
     let supply = rpc_client.supply()?.value;
-    Ok(format!("{} XZO", lamports_to_sol(supply.total)))
+    Ok(format!("{} NZT", lamports_to_nzt(supply.total)))
 }
 
 pub fn process_get_transaction_count(rpc_client: &RpcClient, _config: &CliConfig) -> ProcessResult {
@@ -1711,7 +1711,7 @@ pub fn process_show_stakes(
 
     let mut program_accounts_config = RpcProgramAccountsConfig {
         account_config: RpcAccountInfoConfig {
-            encoding: Some(solana_account_decoder::UiAccountEncoding::Base64),
+            encoding: Some(nexis_account_decoder::UiAccountEncoding::Base64),
             ..RpcAccountInfoConfig::default()
         },
         ..RpcProgramAccountsConfig::default()
@@ -1862,7 +1862,7 @@ pub fn process_show_validators(
         .current
         .iter()
         .filter(|v| {
-            v.activated_stake >= solana_vote_program::MIN_STAKERS_TO_BE_MAJORITY
+            v.activated_stake >= nexis_vote_program::MIN_STAKERS_TO_BE_MAJORITY
         })
         .count() as u64;
 
@@ -2154,7 +2154,7 @@ mod tests {
     use {
         super::*,
         crate::{clap_app::get_clap_app, cli::parse_command},
-        solana_sdk::signature::{write_keypair, Keypair},
+        nexis_sdk::signature::{write_keypair, Keypair},
         std::str::FromStr,
         tempfile::NamedTempFile,
     };

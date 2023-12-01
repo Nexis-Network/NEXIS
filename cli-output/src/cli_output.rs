@@ -13,13 +13,13 @@ use {
     inflector::cases::titlecase::to_title_case,
     serde::{Deserialize, Serialize},
     serde_json::{Map, Value},
-    solana_account_decoder::parse_token::UiTokenAccount,
-    solana_clap_utils::keypair::SignOnly,
-    solana_client::rpc_response::{
+    nexis_account_decoder::parse_token::UiTokenAccount,
+    nexis_clap_utils::keypair::SignOnly,
+    nexis_client::rpc_response::{
         RpcAccountBalance, RpcContactInfo, RpcInflationGovernor, RpcInflationRate, RpcKeyedAccount,
         RpcSupply, RpcVoteAccountInfo,
     },
-    solana_sdk::{
+    nexis_sdk::{
         clock::{Epoch, Slot, UnixTimestamp},
         epoch_info::EpochInfo,
         hash::Hash,
@@ -30,11 +30,11 @@ use {
         stake_history::StakeHistoryEntry,
         transaction::{Transaction, TransactionError},
     },
-    solana_transaction_status::{
+    nexis_transaction_status::{
         EncodedConfirmedBlock, EncodedTransaction, TransactionConfirmationStatus,
         UiTransactionStatusMeta,
     },
-    solana_vote_program::{
+    nexis_vote_program::{
         authorized_voters::AuthorizedVoters,
         vote_state::{BlockTimestamp, Lockout, MAX_EPOCH_CREDITS_HISTORY, MAX_LOCKOUT_HISTORY},
     },
@@ -435,7 +435,7 @@ impl fmt::Display for CliValidators {
                 ),
                 100. * validator.activated_stake as f64 / total_active_stake as f64,
             );
-            let style = if enable_majority_filtering && validator.activated_stake <= solana_vote_program::MIN_STAKERS_TO_BE_MAJORITY {
+            let style = if enable_majority_filtering && validator.activated_stake <= nexis_vote_program::MIN_STAKERS_TO_BE_MAJORITY {
                 style(output).dim()
             } else {
                 style(output)
@@ -546,7 +546,7 @@ impl fmt::Display for CliValidators {
                 self.use_lamports_unit,
                 highest_last_vote,
                 highest_root,
-                self.majority_count >= solana_vote_program::NUM_MAJOR_STAKERS_FOR_FILTERING as u64
+                self.majority_count >= nexis_vote_program::NUM_MAJOR_STAKERS_FOR_FILTERING as u64
             )?;
         }
 
@@ -875,8 +875,8 @@ impl fmt::Display for CliKeyedEpochRewards {
                         f,
                         "  {:<44}  ◎{:<17.9}  ◎{:<17.9}  {:>13.9}%  {:>14}  {:>10}",
                         keyed_reward.address,
-                        lamports_to_sol(reward.amount),
-                        lamports_to_sol(reward.post_balance),
+                        lamports_to_nzt(reward.amount),
+                        lamports_to_nzt(reward.post_balance),
                         reward.percent_change,
                         reward
                             .apr
@@ -1011,8 +1011,8 @@ fn show_epoch_rewards(
                 "  {:<6}  {:<11}  ◎{:<17.9}  ◎{:<17.9}  {:>13.9}%  {:>14}  {:>10}",
                 reward.epoch,
                 reward.effective_slot,
-                lamports_to_sol(reward.amount),
-                lamports_to_sol(reward.post_balance),
+                lamports_to_nzt(reward.amount),
+                lamports_to_nzt(reward.post_balance),
                 reward.percent_change,
                 reward
                     .apr
@@ -1705,7 +1705,7 @@ impl fmt::Display for CliAccountBalances {
                 f,
                 "{:<44}  {}",
                 account.address,
-                &format!("{} XZO", lamports_to_sol(account.lamports))
+                &format!("{} NZT", lamports_to_nzt(account.lamports))
             )?;
         }
         Ok(())
@@ -1740,16 +1740,16 @@ impl VerboseDisplay for CliSupply {}
 
 impl fmt::Display for CliSupply {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln_name_value(f, "Total:", &format!("{} XZO", lamports_to_sol(self.total)))?;
+        writeln_name_value(f, "Total:", &format!("{} NZT", lamports_to_nzt(self.total)))?;
         writeln_name_value(
             f,
             "Circulating:",
-            &format!("{} XZO", lamports_to_sol(self.circulating)),
+            &format!("{} NZT", lamports_to_nzt(self.circulating)),
         )?;
         writeln_name_value(
             f,
             "Non-Circulating:",
-            &format!("{} XZO", lamports_to_sol(self.non_circulating)),
+            &format!("{} NZT", lamports_to_nzt(self.non_circulating)),
         )?;
         if self.print_accounts {
             writeln!(f)?;
@@ -2331,14 +2331,14 @@ impl fmt::Display for CliBlock {
                     format!(
                         "{}◎{:<14.9}",
                         sign,
-                        lamports_to_sol(reward.lamports.unsigned_abs())
+                        lamports_to_nzt(reward.lamports.unsigned_abs())
                     ),
                     if reward.post_balance == 0 {
                         "          -                 -".to_string()
                     } else {
                         format!(
                             "◎{:<19.9}  {:>13.9}%",
-                            lamports_to_sol(reward.post_balance),
+                            lamports_to_nzt(reward.post_balance),
                             (reward.lamports.abs() as f64
                                 / (reward.post_balance as f64 - reward.lamports as f64))
                                 * 100.0
@@ -2356,7 +2356,7 @@ impl fmt::Display for CliBlock {
                 f,
                 "Total Rewards: {}◎{:<12.9}",
                 sign,
-                lamports_to_sol(total_rewards.unsigned_abs())
+                lamports_to_nzt(total_rewards.unsigned_abs())
             )?;
         }
         for (index, transaction_with_meta) in
@@ -2728,7 +2728,7 @@ mod tests {
     use {
         super::*,
         clap::{App, Arg},
-        solana_sdk::{
+        nexis_sdk::{
             message::Message,
             pubkey::Pubkey,
             signature::{keypair_from_seed, NullSigner, Signature, Signer, SignerError},

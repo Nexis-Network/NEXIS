@@ -1,25 +1,25 @@
 [package]
-name = "solana-bpf-rust-simulation"
+name = "nexis-bpf-rust-simulation"
 version = "1.9.29"
-description = "Solana BPF Program Simulation Differences"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana"
+description = "Nexis BPF Program Simulation Differences"
+authors = ["Nexis Maintainers <maintainers@nexis.foundation>"]
+repository = "https://github.com/nexis-network/nexis"
 license = "Apache-2.0"
-homepage = "https://solana.com/"
-documentation = "https://docs.rs/solana-bpf-rust-simulation"
+homepage = "https://nexis.network/"
+documentation = "https://docs.rs/nexis-bpf-rust-simulation"
 edition = "2021"
 
 [features]
 test-bpf = []
 
 [dependencies]
-solana-program = { path = "../../../../sdk/program", version = "=1.9.29" }
+nexis-program = { path = "../../../../sdk/program", version = "=1.9.29" }
 
 [dev-dependencies]
-solana-logger = { path = "../../../../logger", version = "=1.9.29" }
-solana-program-test = { path = "../../../../program-test", version = "=1.9.29" }
-solana-sdk = { path = "../../../../sdk", version = "=1.9.29" }
-solana-validator = { path = "../../../../validator", version = "=1.9.29" }
+nexis-logger = { path = "../../../../logger", version = "=1.9.29" }
+nexis-program-test = { path = "../../../../program-test", version = "=1.9.29" }
+nexis-sdk = { path = "../../../../sdk", version = "=1.9.29" }
+nexis-validator = { path = "../../../../validator", version = "=1.9.29" }
 
 [lib]
 crate-type = ["cdylib", "lib"]

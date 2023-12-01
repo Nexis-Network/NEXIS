@@ -1,8 +1,8 @@
 use {
     super::*,
-    solana_entry::entry::Entry,
-    solana_ledger::shred::Shredder,
-    solana_sdk::{hash::Hash, signature::Keypair},
+    nexis_entry::entry::Entry,
+    nexis_ledger::shred::Shredder,
+    nexis_sdk::{hash::Hash, signature::Keypair},
 };
 
 #[derive(Clone)]
@@ -155,15 +155,15 @@ impl BroadcastRun for BroadcastFakeShredsRun {
 mod tests {
     use {
         super::*,
-        solana_gossip::contact_info::ContactInfo,
-        solana_streamer::socket::SocketAddrSpace,
+        nexis_gossip::contact_info::ContactInfo,
+        nexis_streamer::socket::SocketAddrSpace,
         std::net::{IpAddr, Ipv4Addr, SocketAddr},
     };
 
     #[test]
     fn test_tvu_peers_ordering() {
         let cluster = ClusterInfo::new(
-            ContactInfo::new_localhost(&solana_sdk::pubkey::new_rand(), 0),
+            ContactInfo::new_localhost(&nexis_sdk::pubkey::new_rand(), 0),
             Arc::new(Keypair::new()),
             SocketAddrSpace::Unspecified,
         );

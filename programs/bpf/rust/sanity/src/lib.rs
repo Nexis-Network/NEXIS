@@ -2,8 +2,8 @@
 
 #![allow(unreachable_code)]
 
-extern crate solana_program;
-use solana_program::{
+extern crate nexis_program;
+use nexis_program::{
     account_info::AccountInfo, bpf_loader, entrypoint, entrypoint::ProgramResult, log::*, msg,
     pubkey::Pubkey,
 };
@@ -36,7 +36,7 @@ pub fn process_instruction(
     // the no-op program, no account keys or input data are expected but real
     // programs will have specific requirements so they can do their work.
     msg!("Account keys and instruction input data:");
-    sol_log_params(accounts, instruction_data);
+    nzt_log_params(accounts, instruction_data);
 
     {
         // Test - use std methods, unwrap
@@ -71,7 +71,7 @@ pub fn process_instruction(
         assert!(1.9986f64 < num && num < 2.0f64);
     }
 
-    sol_log_compute_units();
+    nzt_log_compute_units();
     Ok(())
 }
 

@@ -1,17 +1,17 @@
 use {
     crate::rpc_subscriptions::{NotificationEntry, RpcNotification, TimestampedNotificationEntry},
     dashmap::{mapref::entry::Entry as DashEntry, DashMap},
-    solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig},
-    solana_client::rpc_filter::RpcFilterType,
-    solana_metrics::{CounterToken, TokenCounter},
-    solana_runtime::{
+    nexis_account_decoder::{UiAccountEncoding, UiDataSliceConfig},
+    nexis_client::rpc_filter::RpcFilterType,
+    nexis_metrics::{CounterToken, TokenCounter},
+    nexis_runtime::{
         bank::{TransactionLogCollectorConfig, TransactionLogCollectorFilter},
         bank_forks::BankForks,
     },
-    solana_sdk::{
+    nexis_sdk::{
         clock::Slot, commitment_config::CommitmentConfig, pubkey::Pubkey, signature::Signature,
     },
-    solana_transaction_status::{TransactionDetails, UiTransactionEncoding},
+    nexis_transaction_status::{TransactionDetails, UiTransactionEncoding},
     std::{
         collections::{
             hash_map::{Entry, HashMap},
@@ -636,8 +636,8 @@ mod tests {
     use {
         super::*,
         crate::rpc_pubsub_service::PubSubConfig,
-        solana_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
-        solana_runtime::bank::Bank,
+        nexis_ledger::genesis_utils::{create_genesis_config, GenesisConfigInfo},
+        nexis_runtime::bank::Bank,
         std::str::FromStr,
     };
 

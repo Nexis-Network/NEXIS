@@ -1,4 +1,4 @@
-//! The solana-program-test provides a BanksClient-based test framework BPF programs
+//! Thenexis-program-test provides a BanksClient-based test framework BPF programs
 #![allow(clippy::integer_arithmetic)]
 
 // Export tokio for test clients
@@ -7,20 +7,20 @@ use {
     async_trait::async_trait,
     chrono_humanize::{Accuracy, HumanTime, Tense},
     log::*,
-    solana_banks_client::start_client,
-    solana_banks_server::banks_server::start_local_server,
-    solana_program_runtime::{
+    nexis_banks_client::start_client,
+    nexis_banks_server::banks_server::start_local_server,
+    nexis_program_runtime::{
         compute_budget::ComputeBudget, ic_msg, invoke_context::ProcessInstructionWithContext,
         stable_log, timings::ExecuteTimings,
     },
-    solana_runtime::{
+    nexis_runtime::{
         bank::{Bank, CommitTransactionCounts},
         bank_forks::BankForks,
         builtins::Builtin,
         commitment::BlockCommitmentCache,
         genesis_utils::{create_genesis_config_with_leader_ex, GenesisConfigInfo},
     },
-    solana_sdk::{
+    nexis_sdk::{
         account::{Account, AccountSharedData, ReadableAccount, WritableAccount},
         account_info::AccountInfo,
         clock::Slot,
@@ -31,7 +31,7 @@ use {
         hash::Hash,
         instruction::{Instruction, InstructionError},
         message::{Message, SanitizedMessage},
-        native_token::sol_to_lamports,
+        native_token::nzt_to_lamports,
         poh_config::PohConfig,
         program_error::{ProgramError, ACCOUNT_BORROW_FAILED, UNSUPPORTED_SYSVAR},
         pubkey::Pubkey,
@@ -39,7 +39,7 @@ use {
         signature::{Keypair, Signer},
         sysvar::{Sysvar, SysvarId},
     },
-    solana_vote_program::vote_state::{VoteState, VoteStateVersions},
+    nexis_vote_program::vote_state::{VoteState, VoteStateVersions},
     std::{
         cell::RefCell,
         collections::{HashMap, HashSet},
@@ -58,16 +58,16 @@ use {
     thiserror::Error,
     tokio::task::JoinHandle,
 };
-// Export types so test clients can limit their solana crate dependencies
+// Export types so test clients can limit their nexiscrate dependencies
 pub use {
-    solana_banks_client::{BanksClient, BanksClientError},
-    solana_program_runtime::invoke_context::InvokeContext,
+    nexis_banks_client::{BanksClient, BanksClientError},
+    nexis_program_runtime::invoke_context::InvokeContext,
 };
 
 pub mod programs;
 
 #[macro_use]
-extern crate solana_bpf_loader_program;
+extern crate nexis_bpf_loader_program;
 
 /// Errors from the program test environment
 #[derive(Error, Debug, PartialEq)]
@@ -93,7 +93,7 @@ fn get_invoke_context<'a, 'b>() -> &'a mut InvokeContext<'b> {
 }
 
 pub fn builtin_process_instruction(
-    process_instruction: solana_sdk::entrypoint::ProcessInstruction,
+    process_instruction: nexis_sdk::entrypoint::ProcessInstruction,
     _first_instruction_account: usize,
     input: &[u8],
     invoke_context: &mut InvokeContext,
@@ -176,7 +176,7 @@ pub fn builtin_process_instruction(
     Ok(())
 }
 
-/// Converts a `solana-program`-style entrypoint into the runtime's entrypoint style, for
+/// Converts a `nexis-program`-style entrypoint into the runtime's entrypoint style, for
 /// use with `ProgramTest::add_program`
 #[macro_export]
 macro_rules! processor {
@@ -184,7 +184,7 @@ macro_rules! processor {
         Some(
             |first_instruction_account: usize,
              input: &[u8],
-             invoke_context: &mut solana_program_test::InvokeContext| {
+             invoke_context: &mut nexis_program_test::InvokeContext| {
                 $crate::builtin_process_instruction(
                     $process_instruction,
                     first_instruction_account,
@@ -222,13 +222,13 @@ fn get_sysvar<T: Default + Sysvar + Sized + serde::de::DeserializeOwned + Clone>
 }
 
 struct SyscallStubs {}
-impl solana_sdk::program_stubs::SyscallStubs for SyscallStubs {
-    fn sol_log(&self, message: &str) {
+impl nexis_sdk::program_stubs::SyscallStubs for SyscallStubs {
+    fn nzt_log(&self, message: &str) {
         let invoke_context = get_invoke_context();
         ic_msg!(invoke_context, "Program log: {}", message);
     }
 
-    fn sol_invoke_signed(
+    fn nzt_invoke_signed(
         &self,
         instruction: &Instruction,
         account_infos: &[AccountInfo],
@@ -363,14 +363,14 @@ impl solana_sdk::program_stubs::SyscallStubs for SyscallStubs {
         Ok(())
     }
 
-    fn sol_get_clock_sysvar(&self, var_addr: *mut u8) -> u64 {
+    fn nzt_get_clock_sysvar(&self, var_addr: *mut u8) -> u64 {
         get_sysvar(
             get_invoke_context().get_sysvar_cache().get_clock(),
             var_addr,
         )
     }
 
-    fn sol_get_epoch_schedule_sysvar(&self, var_addr: *mut u8) -> u64 {
+    fn nzt_get_epoch_schedule_sysvar(&self, var_addr: *mut u8) -> u64 {
         get_sysvar(
             get_invoke_context().get_sysvar_cache().get_epoch_schedule(),
             var_addr,
@@ -378,20 +378,20 @@ impl solana_sdk::program_stubs::SyscallStubs for SyscallStubs {
     }
 
     #[allow(deprecated)]
-    fn sol_get_fees_sysvar(&self, var_addr: *mut u8) -> u64 {
+    fn nzt_get_fees_sysvar(&self, var_addr: *mut u8) -> u64 {
         get_sysvar(get_invoke_context().get_sysvar_cache().get_fees(), var_addr)
     }
 
-    fn sol_get_rent_sysvar(&self, var_addr: *mut u8) -> u64 {
+    fn nzt_get_rent_sysvar(&self, var_addr: *mut u8) -> u64 {
         get_sysvar(get_invoke_context().get_sysvar_cache().get_rent(), var_addr)
     }
 
-    fn sol_get_return_data(&self) -> Option<(Pubkey, Vec<u8>)> {
+    fn nzt_get_return_data(&self) -> Option<(Pubkey, Vec<u8>)> {
         let (program_id, data) = &get_invoke_context().return_data;
         Some((*program_id, data.to_vec()))
     }
 
-    fn sol_set_return_data(&self, data: &[u8]) {
+    fn nzt_set_return_data(&self, data: &[u8]) {
         let invoke_context = get_invoke_context();
         let caller = *invoke_context.get_caller().unwrap();
         invoke_context.return_data = (caller, data.to_vec());
@@ -496,11 +496,11 @@ impl Default for ProgramTest {
     /// * the current working directory
     ///
     fn default() -> Self {
-        solana_logger::setup_with_default(
-            "solana_rbpf::vm=debug,\
-             solana_runtime::message_processor=debug,\
-             solana_runtime::system_instruction_processor=trace,\
-             solana_program_test=info",
+        nexis_logger::setup_with_default(
+            "nexis_rbpf::vm=debug,\
+             nexis_runtime::message_processor=debug,\
+             nexis_runtime::system_instruction_processor=trace,\
+             nexis_program_test=info",
         );
         let prefer_bpf = std::env::var("BPF_OUT_DIR").is_ok();
 
@@ -647,7 +647,7 @@ impl ProgramTest {
                 Account {
                     lamports: Rent::default().minimum_balance(data.len()).min(1),
                     data,
-                    owner: solana_sdk::bpf_loader::id(),
+                    owner: nexis_sdk::bpf_loader::id(),
                     executable: true,
                     rent_epoch: 0,
                 },
@@ -760,7 +760,7 @@ impl ProgramTest {
             static ONCE: Once = Once::new();
 
             ONCE.call_once(|| {
-                solana_sdk::program_stubs::set_syscall_stubs(Box::new(SyscallStubs {}));
+                nexis_sdk::program_stubs::set_syscall_stubs(Box::new(SyscallStubs {}));
             });
         }
 
@@ -768,13 +768,13 @@ impl ProgramTest {
         let fee_rate_governor = FeeRateGovernor::default();
         let bootstrap_validator_pubkey = Pubkey::new_unique();
         let bootstrap_validator_stake_lamports =
-            rent.minimum_balance(VoteState::size_of()) + sol_to_lamports(1_000_000.0);
+            rent.minimum_balance(VoteState::size_of()) + nzt_to_lamports(1_000_000.0);
 
         let mint_keypair = Keypair::new();
         let voting_keypair = Keypair::new();
 
         let mut genesis_config = create_genesis_config_with_leader_ex(
-            sol_to_lamports(1_000_000.0),
+            nzt_to_lamports(1_000_000.0),
             &mint_keypair.pubkey(),
             &bootstrap_validator_pubkey,
             &voting_keypair.pubkey(),
@@ -818,13 +818,13 @@ impl ProgramTest {
                 bank.add_builtin(&$b.0, &$b.1, $b.2)
             };
         }
-        add_builtin!(solana_bpf_loader_deprecated_program!());
+        add_builtin!(nexis_bpf_loader_deprecated_program!());
         if self.use_bpf_jit {
-            add_builtin!(solana_bpf_loader_program_with_jit!());
-            add_builtin!(solana_bpf_loader_upgradeable_program_with_jit!());
+            add_builtin!(nexis_bpf_loader_program_with_jit!());
+            add_builtin!(nexis_bpf_loader_upgradeable_program_with_jit!());
         } else {
-            add_builtin!(solana_bpf_loader_program!());
-            add_builtin!(solana_bpf_loader_upgradeable_program!());
+            add_builtin!(nexis_bpf_loader_program!());
+            add_builtin!(nexis_bpf_loader_upgradeable_program!());
         }
 
         // Add commonly-used SPL programs as a convenience to the user
@@ -908,7 +908,7 @@ impl ProgramTest {
     /// Start the test client
     ///
     /// Returns a `BanksClient` interface into the test environment as well as a payer `Keypair`
-    /// with SOL for sending transactions
+    /// with NZT for sending transactions
     pub async fn start_with_context(self) -> ProgramTestContext {
         let (bank_forks, block_commitment_cache, last_blockhash, gci) = self.setup_bank();
         let target_tick_duration = gci.genesis_config.poh_config.target_tick_duration;
@@ -1141,7 +1141,7 @@ impl ProgramTestContext {
         ));
         bank_forks.set_root(
             pre_warp_slot,
-            &solana_runtime::accounts_background_service::AbsRequestSender::default(),
+            &nexis_runtime::accounts_background_service::AbsRequestSender::default(),
             Some(pre_warp_slot),
         );
 

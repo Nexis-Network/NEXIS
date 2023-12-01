@@ -1,6 +1,6 @@
 use {
     serde::Serialize,
-    solana_sdk::{
+    nexis_sdk::{
         bpf_loader_upgradeable::{self, UpgradeableLoaderState},
         client::Client,
         instruction::{AccountMeta, Instruction},

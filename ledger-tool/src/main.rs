@@ -10,15 +10,15 @@ use {
     regex::Regex,
     serde::Serialize,
     serde_json::json,
-    solana_clap_utils::{
+    nexis_clap_utils::{
         input_parsers::{cluster_type_of, pubkey_of, pubkeys_of},
         input_validators::{
             is_parsable, is_pow2, is_pubkey, is_pubkey_or_keypair, is_slot, is_valid_percentage,
         },
     },
-    solana_core::system_monitor_service::SystemMonitorService,
-    solana_entry::entry::Entry,
-    solana_ledger::{
+    nexis_core::system_monitor_service::SystemMonitorService,
+    nexis_entry::entry::Entry,
+    nexis_ledger::{
         ancestor_iterator::AncestorIterator,
         bank_forks_utils,
         blockstore::{create_new_ledger, Blockstore, PurgeType},
@@ -26,8 +26,8 @@ use {
         blockstore_processor::ProcessOptions,
         shred::Shred,
     },
-    solana_measure::measure::Measure,
-    solana_runtime::{
+    nexis_measure::measure::Measure,
+    nexis_runtime::{
         accounts_db::AccountsDbConfig,
         accounts_index::{AccountsIndexConfig, ScanConfig},
         bank::{Bank, RewardCalculationEvent},
@@ -42,14 +42,14 @@ use {
             DEFAULT_MAX_INCREMENTAL_SNAPSHOT_ARCHIVES_TO_RETAIN, EVM_STATE_DIR,
         },
     },
-    solana_sdk::{
+    nexis_sdk::{
         account::{AccountSharedData, ReadableAccount, WritableAccount},
         account_utils::StateMut,
         clock::{Epoch, Slot},
         genesis_config::{ClusterType, GenesisConfig},
         hash::Hash,
         inflation::Inflation,
-        native_token::{lamports_to_sol, sol_to_lamports, Sol},
+        native_token::{lamports_to_sol, nzt_to_lamports, Sol},
         pubkey::Pubkey,
         rent::Rent,
         shred_version::compute_shred_version,
@@ -57,8 +57,8 @@ use {
         system_program,
         transaction::{SanitizedTransaction, TransactionError},
     },
-    solana_stake_program::stake_state::{self, PointValue},
-    solana_vote_program::{
+    nexis_stake_program::stake_state::{self, PointValue},
+    nexis_vote_program::{
         self,
         vote_state::{self, VoteState},
     },
@@ -119,8 +119,8 @@ fn output_slot_rewards(blockstore: &Blockstore, slot: Slot, method: &LedgerOutpu
                             "-".to_string()
                         },
                         sign,
-                        lamports_to_sol(reward.lamports.unsigned_abs()),
-                        lamports_to_sol(reward.post_balance),
+                        lamports_to_nzt(reward.lamports.unsigned_abs()),
+                        lamports_to_nzt(reward.post_balance),
                         reward
                             .commission
                             .map(|commission| format!("{:>9}%", commission))
@@ -163,7 +163,7 @@ fn output_entry(
                     .map(|transaction_status| transaction_status.into());
 
                 if let Some(legacy_tx) = transaction.into_legacy_transaction() {
-                    solana_cli_output::display::println_transaction(
+                    nexis_cli_output::display::println_transaction(
                         &legacy_tx, &tx_status, "      ", None, None,
                     );
                 } else {
@@ -444,9 +444,9 @@ fn graph_forks(bank_forks: &BankForks, include_all_votes: bool) -> String {
                         slot_stake_and_vote_count.get(&bank.slot())
                     {
                         format!(
-                            "\nvotes: {}, stake: {:.1} XZO ({:.1}%)",
+                            "\nvotes: {}, stake: {:.1} NZT ({:.1}%)",
                             votes,
-                            lamports_to_sol(*stake),
+                            lamports_to_nzt(*stake),
                             *stake as f64 / *total_stake as f64 * 100.,
                         )
                     } else {
@@ -505,10 +505,10 @@ fn graph_forks(bank_forks: &BankForks, include_all_votes: bool) -> String {
         });
 
         dot.push(format!(
-            r#"  "last vote {}"[shape=box,label="Latest validator vote: {}\nstake: {} SOL\nroot slot: {}\nvote history:\n{}"];"#,
+            r#"  "last vote {}"[shape=box,label="Latest validator vote: {}\nstake: {} NZT\nroot slot: {}\nvote history:\n{}"];"#,
             node_pubkey,
             node_pubkey,
-            lamports_to_sol(*stake),
+            lamports_to_nzt(*stake),
             vote_state.root_slot.unwrap_or(0),
             vote_state
                 .votes
@@ -539,9 +539,9 @@ fn graph_forks(bank_forks: &BankForks, include_all_votes: bool) -> String {
     // Annotate the final "..." node with absent vote and stake information
     if absent_votes > 0 {
         dot.push(format!(
-            r#"    "..."[label="...\nvotes: {}, stake: {:.1} XZO {:.1}%"];"#,
+            r#"    "..."[label="...\nvotes: {}, stake: {:.1} NZT {:.1}%"];"#,
             absent_votes,
-            lamports_to_sol(absent_stake),
+            lamports_to_nzt(absent_stake),
             absent_stake as f64 / lowest_total_stake as f64 * 100.,
         ));
     }
@@ -583,7 +583,7 @@ fn graph_forks(bank_forks: &BankForks, include_all_votes: bool) -> String {
 }
 
 fn analyze_column<
-    C: solana_ledger::blockstore_db::Column + solana_ledger::blockstore_db::ColumnName,
+    C: nexis_ledger::blockstore_db::Column + nexis_ledger::blockstore_db::ColumnName,
 >(
     db: &Database,
     name: &str,
@@ -747,7 +747,7 @@ fn load_bank_forks(
     let (accounts_package_sender, _) = channel();
     let evm_genesis_path = blockstore
         .ledger_path()
-        .join(solana_sdk::genesis_config::EVM_GENESIS);
+        .join(nexis_sdk::genesis_config::EVM_GENESIS);
 
     bank_forks_utils::load(
         genesis_config,
@@ -859,7 +859,7 @@ fn main() {
 
     const DEFAULT_ROOT_COUNT: &str = "1";
     const DEFAULT_MAX_SLOTS_ROOT_REPAIR: &str = "2000";
-    solana_logger::setup_with_default("solana=info");
+    nexis_logger::setup_with_default("nexis=info");
 
     let starting_slot_arg = Arg::with_name("starting_slot")
         .long("starting-slot")
@@ -1003,16 +1003,16 @@ fn main() {
     .help("The maximum number of incremental snapshot archives to hold on to when purging older snapshots.");
 
     let rent = Rent::default();
-    let default_bootstrap_validator_lamports = &sol_to_lamports(500.0)
+    let default_bootstrap_validator_lamports = &nzt_to_lamports(500.0)
         .max(VoteState::get_rent_exempt_reserve(&rent))
         .to_string();
-    let default_bootstrap_validator_stake_lamports = &sol_to_lamports(0.5)
+    let default_bootstrap_validator_stake_lamports = &nzt_to_lamports(0.5)
         .max(StakeState::get_rent_exempt_reserve(&rent))
         .to_string();
 
     let matches = App::new(crate_name!())
         .about(crate_description!())
-        .version(solana_version::version!())
+        .version(nexis_version::version!())
         .setting(AppSettings::InferSubcommands)
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .setting(AppSettings::VersionlessSubcommands)
@@ -1648,7 +1648,7 @@ fn main() {
         )
         .get_matches();
 
-    info!("{} {}", crate_name!(), solana_version::version!());
+    info!("{} {}", crate_name!(), nexis_version::version!());
 
     let ledger_path = parse_ledger_path(&matches, "ledger_path");
     let evm_state_path = if let Ok(evm_state_path) = value_t!(matches, "evm_state_path", String) {
@@ -1738,7 +1738,7 @@ fn main() {
 
                 if let Some(hashes_per_tick) = arg_matches.value_of("hashes_per_tick") {
                     genesis_config.poh_config.hashes_per_tick = match hashes_per_tick {
-                        // Note: Unlike `solana-genesis`, "auto" is not supported here.
+                        // Note: Unlike `nexis-genesis`, "auto" is not supported here.
                         "sleep" => None,
                         _ => Some(value_t_or_exit!(arg_matches, "hashes_per_tick", u64)),
                     }
@@ -1748,7 +1748,7 @@ fn main() {
                     &output_directory,
                     None,
                     &genesis_config,
-                    solana_runtime::hardened_unpack::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
+                    nexis_runtime::hardened_unpack::MAX_GENESIS_ARCHIVE_UNPACKED_SIZE,
                     AccessType::PrimaryOnly,
                 )
                 .unwrap_or_else(|err| {
@@ -2283,7 +2283,7 @@ fn main() {
 
                             if let Some(hashes_per_tick) = hashes_per_tick {
                                 child_bank.set_hashes_per_tick(match hashes_per_tick {
-                                    // Note: Unlike `solana-genesis`, "auto" is not supported here.
+                                    // Note: Unlike `nexis-genesis`, "auto" is not supported here.
                                     "sleep" => None,
                                     _ => {
                                         Some(value_t_or_exit!(arg_matches, "hashes_per_tick", u64))
@@ -2366,7 +2366,7 @@ fn main() {
                             // Delete existing vote accounts
                             for (address, mut account) in bank
                                 .get_program_accounts(
-                                    &solana_vote_program::id(),
+                                    &nexis_vote_program::id(),
                                     &ScanConfig::default(),
                                 )
                                 .unwrap()
@@ -2578,7 +2578,7 @@ fn main() {
                     .unwrap()
                     .into_iter()
                     .filter(|(pubkey, _account, _slot)| {
-                        include_sysvars || !solana_sdk::sysvar::is_sysvar_id(pubkey)
+                        include_sysvars || !nexis_sdk::sysvar::is_sysvar_id(pubkey)
                     })
                     .map(|(pubkey, account, slot)| (pubkey, (account, slot)))
                     .collect();
@@ -2601,7 +2601,7 @@ fn main() {
                     for (pubkey, (account, slot)) in accounts.into_iter() {
                         let data_len = account.data().len();
                         println!("{}:", pubkey);
-                        println!("  - balance: {} XZO", lamports_to_sol(account.lamports()));
+                        println!("  - balance: {} NZT", lamports_to_nzt(account.lamports()));
                         println!("  - owner: '{}'", account.owner());
                         println!("  - executable: {}", account.executable());
                         println!("  - slot: {}", slot);
@@ -2730,7 +2730,7 @@ fn main() {
                                 new_credits_observed: Option<u64>,
                                 skipped_reasons: String,
                             }
-                            use solana_stake_program::stake_state::InflationPointCalculationEvent;
+                            use nexis_stake_program::stake_state::InflationPointCalculationEvent;
                             let stake_calculation_details: DashMap<Pubkey, CalculationDetail> =
                                 DashMap::new();
                             let last_point_value = Arc::new(RwLock::new(None));
@@ -2899,7 +2899,7 @@ fn main() {
                             for (pubkey, warped_account) in all_accounts {
                                 // Don't output sysvars; it's always updated but not related to
                                 // inflation.
-                                if solana_sdk::sysvar::is_sysvar_id(&pubkey) {
+                                if nexis_sdk::sysvar::is_sysvar_id(&pubkey) {
                                     continue;
                                 }
 

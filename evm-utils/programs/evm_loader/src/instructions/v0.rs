@@ -66,7 +66,7 @@ pub enum EvmInstruction {
     /// Inner args:
     /// from - is an address calculated using `program_evm_address`.
     /// unsigned_tx - is an evm transaction, that should be called, without EVM signature verification,
-    ///   instead solana signature verification should be called.
+    ///   instead nexissignature verification should be called.
     EvmAuthorizedTransaction {
         from: evm::Address,
         unsigned_tx: evm::UnsignedTransaction,

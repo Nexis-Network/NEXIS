@@ -2,10 +2,10 @@
 
 #![cfg(feature = "program")]
 
-extern crate solana_program;
+extern crate nexis_program;
 use crate::instructions::*;
-use solana_bpf_rust_realloc::instructions::*;
-use solana_program::{
+use nexis_bpf_rust_realloc::instructions::*;
+use nexis_program::{
     account_info::AccountInfo,
     entrypoint,
     entrypoint::ProgramResult,

@@ -6,7 +6,7 @@ use std::{
 use anyhow::{ensure, Result};
 use clap::{value_t_or_exit, App, AppSettings, Arg, ArgMatches, SubCommand};
 use log::*;
-use solana_clap_utils::ArgConstant;
+use nexis_clap_utils::ArgConstant;
 
 use evm_state::storage::{
     inspectors::verifier::{AccountsVerifier, HashVerifier},
@@ -226,7 +226,7 @@ use evm_state::storage::inspectors::DataInspector;
 impl DataInspector<H256, Account> for BalanceCounter {
     fn inspect_data(&self, _key: H256, account: Account) -> Result<()> {
         let (lamports, _) =
-            solana_evm_loader_program::scope::evm::gweis_to_lamports(account.balance);
+            nexis_evm_loader_program::scope::evm::gweis_to_lamports(account.balance);
         self.balance
             .fetch_add(lamports, std::sync::atomic::Ordering::Relaxed);
         Ok(())

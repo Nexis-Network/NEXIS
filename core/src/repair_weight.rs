@@ -7,12 +7,12 @@ use {
         serve_repair::ShredRepairType,
         tree_diff::TreeDiff,
     },
-    solana_ledger::{
+    nexis_ledger::{
         ancestor_iterator::AncestorIterator, blockstore::Blockstore, blockstore_meta::SlotMeta,
     },
-    solana_measure::measure::Measure,
-    solana_runtime::{contains::Contains, epoch_stakes::EpochStakes},
-    solana_sdk::{
+    nexis_measure::measure::Measure,
+    nexis_runtime::{contains::Contains, epoch_stakes::EpochStakes},
+    nexis_sdk::{
         clock::Slot,
         epoch_schedule::{Epoch, EpochSchedule},
         hash::Hash,
@@ -659,9 +659,9 @@ impl RepairWeight {
 mod test {
     use {
         super::*,
-        solana_ledger::{blockstore::Blockstore, get_tmp_ledger_path},
-        solana_runtime::{bank::Bank, bank_utils},
-        solana_sdk::hash::Hash,
+        nexis_ledger::{blockstore::Blockstore, get_tmp_ledger_path},
+        nexis_runtime::{bank::Bank, bank_utils},
+        nexis_sdk::hash::Hash,
         trees::tr,
     };
 

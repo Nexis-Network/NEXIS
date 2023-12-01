@@ -1,13 +1,13 @@
 use {
     crate::{alloc, BpfError},
     alloc::Alloc,
-    solana_program_runtime::{
+    nexis_program_runtime::{
         ic_logger_msg, ic_msg,
         invoke_context::{ComputeMeter, InvokeContext},
         stable_log,
         timings::ExecuteTimings,
     },
-    solana_rbpf::{
+    nexis_rbpf::{
         aligned_memory::AlignedMemory,
         ebpf,
         error::EbpfError,
@@ -15,7 +15,7 @@ use {
         question_mark,
         vm::{EbpfVm, SyscallObject, SyscallRegistry},
     },
-    solana_sdk::{
+    nexis_sdk::{
         account::{AccountSharedData, ReadableAccount, WritableAccount},
         account_info::AccountInfo,
         blake3, bpf_loader, bpf_loader_deprecated, bpf_loader_upgradeable,
@@ -25,7 +25,7 @@ use {
             disable_fees_sysvar, do_support_realloc, fixed_memcpy_nonoverlapping_check,
             prevent_calling_precompiles_as_programs,
             return_data_syscall_enabled, secp256k1_recover_syscall_enabled,
-            sol_log_data_syscall_enabled, update_syscall_base_costs,
+            nzt_log_data_syscall_enabled, update_syscall_base_costs,
         },
         hash::{Hasher, HASH_BYTES},
         instruction::{
@@ -126,46 +126,46 @@ pub fn register_syscalls(
     let mut syscall_registry = SyscallRegistry::default();
 
     syscall_registry.register_syscall_by_name(b"abort", SyscallAbort::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_panic_", SyscallPanic::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_log_", SyscallLog::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_log_64_", SyscallLogU64::call)?;
+    syscall_registry.register_syscall_by_name(b"nzt_panic_", SyscallPanic::call)?;
+    syscall_registry.register_syscall_by_name(b"nzt_log_", SyscallLog::call)?;
+    syscall_registry.register_syscall_by_name(b"nzt_log_64_", SyscallLogU64::call)?;
 
     syscall_registry
-        .register_syscall_by_name(b"sol_log_compute_units_", SyscallLogBpfComputeUnits::call)?;
+        .register_syscall_by_name(b"nzt_log_compute_units_", SyscallLogBpfComputeUnits::call)?;
 
-    syscall_registry.register_syscall_by_name(b"sol_log_pubkey", SyscallLogPubkey::call)?;
+    syscall_registry.register_syscall_by_name(b"nzt_log_pubkey", SyscallLogPubkey::call)?;
 
     syscall_registry.register_syscall_by_name(
-        b"sol_create_program_address",
+        b"nzt_create_program_address",
         SyscallCreateProgramAddress::call,
     )?;
     syscall_registry.register_syscall_by_name(
-        b"sol_try_find_program_address",
+        b"nzt_try_find_program_address",
         SyscallTryFindProgramAddress::call,
     )?;
 
-    syscall_registry.register_syscall_by_name(b"sol_sha256", SyscallSha256::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_keccak256", SyscallKeccak256::call)?;
+    syscall_registry.register_syscall_by_name(b"nzt_sha256", SyscallSha256::call)?;
+    syscall_registry.register_syscall_by_name(b"nzt_keccak256", SyscallKeccak256::call)?;
 
     if invoke_context
         .feature_set
         .is_active(&secp256k1_recover_syscall_enabled::id())
     {
         syscall_registry
-            .register_syscall_by_name(b"sol_secp256k1_recover", SyscallSecp256k1Recover::call)?;
+            .register_syscall_by_name(b"nzt_secp256k1_recover", SyscallSecp256k1Recover::call)?;
     }
 
     if invoke_context
         .feature_set
         .is_active(&blake3_syscall_enabled::id())
     {
-        syscall_registry.register_syscall_by_name(b"sol_blake3", SyscallBlake3::call)?;
+        syscall_registry.register_syscall_by_name(b"nzt_blake3", SyscallBlake3::call)?;
     }
 
     syscall_registry
-        .register_syscall_by_name(b"sol_get_clock_sysvar", SyscallGetClockSysvar::call)?;
+        .register_syscall_by_name(b"nzt_get_clock_sysvar", SyscallGetClockSysvar::call)?;
     syscall_registry.register_syscall_by_name(
-        b"sol_get_epoch_schedule_sysvar",
+        b"nzt_get_epoch_schedule_sysvar",
         SyscallGetEpochScheduleSysvar::call,
     )?;
     if !invoke_context
@@ -173,24 +173,24 @@ pub fn register_syscalls(
         .is_active(&disable_fees_sysvar::id())
     {
         syscall_registry
-            .register_syscall_by_name(b"sol_get_fees_sysvar", SyscallGetFeesSysvar::call)?;
+            .register_syscall_by_name(b"nzt_get_fees_sysvar", SyscallGetFeesSysvar::call)?;
     }
     syscall_registry
-        .register_syscall_by_name(b"sol_get_rent_sysvar", SyscallGetRentSysvar::call)?;
+        .register_syscall_by_name(b"nzt_get_rent_sysvar", SyscallGetRentSysvar::call)?;
 
-    syscall_registry.register_syscall_by_name(b"sol_memcpy_", SyscallMemcpy::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_memmove_", SyscallMemmove::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_memcmp_", SyscallMemcmp::call)?;
-    syscall_registry.register_syscall_by_name(b"sol_memset_", SyscallMemset::call)?;
+    syscall_registry.register_syscall_by_name(b"nzt_memcpy_", SyscallMemcpy::call)?;
+    syscall_registry.register_syscall_by_name(b"nzt_memmove_", SyscallMemmove::call)?;
+    syscall_registry.register_syscall_by_name(b"nzt_memcmp_", SyscallMemcmp::call)?;
+    syscall_registry.register_syscall_by_name(b"nzt_memset_", SyscallMemset::call)?;
 
     // Cross-program invocation syscalls
     syscall_registry
-        .register_syscall_by_name(b"sol_invoke_signed_c", SyscallInvokeSignedC::call)?;
+        .register_syscall_by_name(b"nzt_invoke_signed_c", SyscallInvokeSignedC::call)?;
     syscall_registry
-        .register_syscall_by_name(b"sol_invoke_signed_rust", SyscallInvokeSignedRust::call)?;
+        .register_syscall_by_name(b"nzt_invoke_signed_rust", SyscallInvokeSignedRust::call)?;
 
     // Memory allocator
-    syscall_registry.register_syscall_by_name(b"sol_alloc_free_", SyscallAllocFree::call)?;
+    syscall_registry.register_syscall_by_name(b"nzt_alloc_free_", SyscallAllocFree::call)?;
 
     // Return data
     if invoke_context
@@ -198,17 +198,17 @@ pub fn register_syscalls(
         .is_active(&return_data_syscall_enabled::id())
     {
         syscall_registry
-            .register_syscall_by_name(b"sol_set_return_data", SyscallSetReturnData::call)?;
+            .register_syscall_by_name(b"nzt_set_return_data", SyscallSetReturnData::call)?;
         syscall_registry
-            .register_syscall_by_name(b"sol_get_return_data", SyscallGetReturnData::call)?;
+            .register_syscall_by_name(b"nzt_get_return_data", SyscallGetReturnData::call)?;
     }
 
     // Log data
     if invoke_context
         .feature_set
-        .is_active(&sol_log_data_syscall_enabled::id())
+        .is_active(&nzt_log_data_syscall_enabled::id())
     {
-        syscall_registry.register_syscall_by_name(b"sol_log_data", SyscallLogData::call)?;
+        syscall_registry.register_syscall_by_name(b"nzt_log_data", SyscallLogData::call)?;
     }
 
     if invoke_context
@@ -216,7 +216,7 @@ pub fn register_syscalls(
         .is_active(&add_get_processed_sibling_instruction_syscall::id())
     {
         syscall_registry.register_syscall_by_name(
-            b"sol_get_processed_sibling_instruction",
+            b"nzt_get_processed_sibling_instruction",
             SyscallGetProcessedSiblingInstruction::call,
         )?;
     }
@@ -226,7 +226,7 @@ pub fn register_syscalls(
         .is_active(&add_get_processed_sibling_instruction_syscall::id())
     {
         syscall_registry
-            .register_syscall_by_name(b"sol_get_stack_height", SyscallGetStackHeight::call)?;
+            .register_syscall_by_name(b"nzt_get_stack_height", SyscallGetStackHeight::call)?;
     }
 
     Ok(syscall_registry)
@@ -263,9 +263,9 @@ pub fn bind_syscall_context_objects<'a, 'b>(
     let is_return_data_syscall_active = invoke_context
         .feature_set
         .is_active(&return_data_syscall_enabled::id());
-    let is_sol_log_data_syscall_active = invoke_context
+    let is_nzt_log_data_syscall_active = invoke_context
         .feature_set
-        .is_active(&sol_log_data_syscall_enabled::id());
+        .is_active(&nzt_log_data_syscall_enabled::id());
     let add_get_processed_sibling_instruction_syscall = invoke_context
         .feature_set
         .is_active(&add_get_processed_sibling_instruction_syscall::id());
@@ -419,10 +419,10 @@ pub fn bind_syscall_context_objects<'a, 'b>(
         }),
     );
 
-    // sol_log_data
+    // nzt_log_data
     bind_feature_gated_syscall_context_object!(
         vm,
-        is_sol_log_data_syscall_active,
+        is_nzt_log_data_syscall_active,
         Box::new(SyscallLogData {
             invoke_context: invoke_context.clone(),
         }),
@@ -597,7 +597,7 @@ impl SyscallObject<BpfError> for SyscallAbort {
     }
 }
 
-/// Panic syscall function, called when the BPF program calls 'sol_panic_()`
+/// Panic syscall function, called when the BPF program calls 'nzt_panic_()`
 /// Causes the BPF program to be halted immediately
 /// Log a user's info message
 pub struct SyscallPanic<'a, 'b> {
@@ -814,7 +814,7 @@ impl<'a, 'b> SyscallObject<BpfError> for SyscallLogPubkey<'a, 'b> {
 }
 
 /// Dynamic memory allocation syscall called when the BPF program calls
-/// `sol_alloc_free_()`.  The allocator is expected to allocate/free
+/// `nzt_alloc_free_()`.  The allocator is expected to allocate/free
 /// from/to a given chunk of memory and enforce size restrictions.  The
 /// memory chunk is given to the allocator during allocator creation and
 /// information about that memory (start address and size) is passed
@@ -2952,14 +2952,14 @@ impl<'a, 'b> SyscallObject<BpfError> for SyscallGetStackHeight<'a, 'b> {
 #[cfg(test)]
 mod tests {
     #[allow(deprecated)]
-    use solana_sdk::sysvar::fees::Fees;
+    use nexis_sdk::sysvar::fees::Fees;
     use {
         super::*,
-        solana_program_runtime::{invoke_context::InvokeContext, sysvar_cache::SysvarCache},
-        solana_rbpf::{
+        nexis_program_runtime::{invoke_context::InvokeContext, sysvar_cache::SysvarCache},
+        nexis_rbpf::{
             ebpf::HOST_ALIGN, memory_region::MemoryRegion, user_error::UserError, vm::Config,
         },
-        solana_sdk::{
+        nexis_sdk::{
             account::AccountSharedData,
             bpf_loader,
             fee_calculator::FeeCalculator,
@@ -3033,7 +3033,7 @@ mod tests {
     #[test]
     fn test_translate_type() {
         // Pubkey
-        let pubkey = solana_sdk::pubkey::new_rand();
+        let pubkey = nexis_sdk::pubkey::new_rand();
         let addr = &pubkey as *const _ as u64;
         let config = Config::default();
         let memory_mapping = MemoryMapping::new::<UserError>(
@@ -3056,9 +3056,9 @@ mod tests {
 
         // Instruction
         let instruction = Instruction::new_with_bincode(
-            solana_sdk::pubkey::new_rand(),
+            nexis_sdk::pubkey::new_rand(),
             &"foobar",
-            vec![AccountMeta::new(solana_sdk::pubkey::new_rand(), false)],
+            vec![AccountMeta::new(nexis_sdk::pubkey::new_rand(), false)],
         );
         let addr = &instruction as *const _ as u64;
         let mut memory_mapping = MemoryMapping::new::<UserError>(
@@ -3188,7 +3188,7 @@ mod tests {
         );
 
         // Pubkeys
-        let mut data = vec![solana_sdk::pubkey::new_rand(); 5];
+        let mut data = vec![nexis_sdk::pubkey::new_rand(); 5];
         let addr = data.as_ptr() as *const _ as u64;
         let memory_mapping = MemoryMapping::new::<UserError>(
             vec![
@@ -3212,7 +3212,7 @@ mod tests {
         )
         .unwrap();
         assert_eq!(data, translated_data);
-        data[0] = solana_sdk::pubkey::new_rand(); // Both should point to same place
+        data[0] = nexis_sdk::pubkey::new_rand(); // Both should point to same place
         assert_eq!(data, translated_data);
     }
 
@@ -3273,7 +3273,7 @@ mod tests {
 
     #[test]
     #[should_panic(expected = "UserError(SyscallError(Panic(\"Gaggablaghblagh!\", 42, 84)))")]
-    fn test_syscall_sol_panic() {
+    fn test_syscall_nzt_panic() {
         let program_id = Pubkey::new_unique();
         let program_account = AccountSharedData::new_ref(0, 0, &bpf_loader::id());
         let accounts = [(program_id, program_account)];
@@ -3350,7 +3350,7 @@ mod tests {
     }
 
     #[test]
-    fn test_syscall_sol_log() {
+    fn test_syscall_nzt_log() {
         let program_id = Pubkey::new_unique();
         let program_account = AccountSharedData::new_ref(0, 0, &bpf_loader::id());
         let accounts = [(program_id, program_account)];
@@ -3362,7 +3362,7 @@ mod tests {
         invoke_context
             .push(&message, &message.instructions()[0], &[0], &[])
             .unwrap();
-        let mut syscall_sol_log = SyscallLog {
+        let mut syscall_nzt_log = SyscallLog {
             invoke_context: Rc::new(RefCell::new(&mut invoke_context)),
         };
 
@@ -3384,14 +3384,14 @@ mod tests {
         )
         .unwrap();
 
-        syscall_sol_log
+        syscall_nzt_log
             .invoke_context
             .borrow_mut()
             .get_compute_meter()
             .borrow_mut()
             .mock_set_remaining(400 - 1);
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_log.call(
+        syscall_nzt_log.call(
             0x100000001, // AccessViolation
             string.len() as u64,
             0,
@@ -3402,7 +3402,7 @@ mod tests {
         );
         assert_access_violation!(result, 0x100000001, string.len() as u64);
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_log.call(
+        syscall_nzt_log.call(
             0x100000000,
             string.len() as u64 * 2, // AccessViolation
             0,
@@ -3414,7 +3414,7 @@ mod tests {
         assert_access_violation!(result, 0x100000000, string.len() as u64 * 2);
 
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_log.call(
+        syscall_nzt_log.call(
             0x100000000,
             string.len() as u64,
             0,
@@ -3425,7 +3425,7 @@ mod tests {
         );
         result.unwrap();
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_log.call(
+        syscall_nzt_log.call(
             0x100000000,
             string.len() as u64,
             0,
@@ -3442,7 +3442,7 @@ mod tests {
         );
 
         assert_eq!(
-            syscall_sol_log
+            syscall_nzt_log
                 .invoke_context
                 .borrow()
                 .get_log_collector()
@@ -3454,7 +3454,7 @@ mod tests {
     }
 
     #[test]
-    fn test_syscall_sol_log_u64() {
+    fn test_syscall_nzt_log_u64() {
         let program_id = Pubkey::new_unique();
         let program_account = AccountSharedData::new_ref(0, 0, &bpf_loader::id());
         let accounts = [(program_id, program_account)];
@@ -3467,11 +3467,11 @@ mod tests {
             .push(&message, &message.instructions()[0], &[0], &[])
             .unwrap();
         let cost = invoke_context.get_compute_budget().log_64_units;
-        let mut syscall_sol_log_u64 = SyscallLogU64 {
+        let mut syscall_nzt_log_u64 = SyscallLogU64 {
             invoke_context: Rc::new(RefCell::new(&mut invoke_context)),
         };
 
-        syscall_sol_log_u64
+        syscall_nzt_log_u64
             .invoke_context
             .borrow_mut()
             .get_compute_meter()
@@ -3480,11 +3480,11 @@ mod tests {
         let config = Config::default();
         let memory_mapping = MemoryMapping::new::<UserError>(vec![], &config).unwrap();
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_log_u64.call(1, 2, 3, 4, 5, &memory_mapping, &mut result);
+        syscall_nzt_log_u64.call(1, 2, 3, 4, 5, &memory_mapping, &mut result);
         result.unwrap();
 
         assert_eq!(
-            syscall_sol_log_u64
+            syscall_nzt_log_u64
                 .invoke_context
                 .borrow()
                 .get_log_collector()
@@ -3496,7 +3496,7 @@ mod tests {
     }
 
     #[test]
-    fn test_syscall_sol_pubkey() {
+    fn test_syscall_nzt_pubkey() {
         let program_id = Pubkey::new_unique();
         let program_account = AccountSharedData::new_ref(0, 0, &bpf_loader::id());
         let accounts = [(program_id, program_account)];
@@ -3509,7 +3509,7 @@ mod tests {
             .push(&message, &message.instructions()[0], &[0], &[])
             .unwrap();
         let cost = invoke_context.get_compute_budget().log_pubkey_units;
-        let mut syscall_sol_pubkey = SyscallLogPubkey {
+        let mut syscall_nzt_pubkey = SyscallLogPubkey {
             invoke_context: Rc::new(RefCell::new(&mut invoke_context)),
         };
 
@@ -3532,7 +3532,7 @@ mod tests {
         .unwrap();
 
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_pubkey.call(
+        syscall_nzt_pubkey.call(
             0x100000001, // AccessViolation
             32,
             0,
@@ -3543,14 +3543,14 @@ mod tests {
         );
         assert_access_violation!(result, 0x100000001, 32);
 
-        syscall_sol_pubkey
+        syscall_nzt_pubkey
             .invoke_context
             .borrow_mut()
             .get_compute_meter()
             .borrow_mut()
             .mock_set_remaining(1);
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_pubkey.call(100, 32, 0, 0, 0, &memory_mapping, &mut result);
+        syscall_nzt_pubkey.call(100, 32, 0, 0, 0, &memory_mapping, &mut result);
         assert_eq!(
             Err(EbpfError::UserError(BpfError::SyscallError(
                 SyscallError::InstructionError(InstructionError::ComputationalBudgetExceeded)
@@ -3558,18 +3558,18 @@ mod tests {
             result
         );
 
-        syscall_sol_pubkey
+        syscall_nzt_pubkey
             .invoke_context
             .borrow_mut()
             .get_compute_meter()
             .borrow_mut()
             .mock_set_remaining(cost);
         let mut result: Result<u64, EbpfError<BpfError>> = Ok(0);
-        syscall_sol_pubkey.call(0x100000000, 0, 0, 0, 0, &memory_mapping, &mut result);
+        syscall_nzt_pubkey.call(0x100000000, 0, 0, 0, 0, &memory_mapping, &mut result);
         result.unwrap();
 
         assert_eq!(
-            syscall_sol_pubkey
+            syscall_nzt_pubkey
                 .invoke_context
                 .borrow()
                 .get_log_collector()
@@ -3581,7 +3581,7 @@ mod tests {
     }
 
     #[test]
-    fn test_syscall_sol_alloc_free() {
+    fn test_syscall_nzt_alloc_free() {
         let config = Config::default();
         // large alloc
         {
@@ -4154,7 +4154,7 @@ mod tests {
 
     #[test]
     fn test_create_program_address() {
-        // These tests duplicate the direct tests in solana_program::pubkey
+        // These tests duplicate the direct tests in nexis_program::pubkey
 
         let program_id = Pubkey::new_unique();
         let program_account = AccountSharedData::new_ref(0, 0, &bpf_loader::id());

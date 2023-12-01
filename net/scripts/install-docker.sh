@@ -78,9 +78,9 @@ EOF
 systemctl daemon-reload
 systemctl enable --now /lib/systemd/system/docker.service
 
-# Grant the solana user access to docker
-if id solana; then
-  addgroup solana docker
+# Grant the nexisuser access to docker
+if id nexis; then
+  addgroup nexisdocker
 fi
 
 docker run hello-world
