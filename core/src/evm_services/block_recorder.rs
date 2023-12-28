@@ -1,3 +1,24 @@
+//The provided code is a Rust implementation of a service called `EvmRecorderService` that listens for incoming EVM (Ethereum Virtual Machine) blocks, writes the block headers and transactions to a blockstore, and can be gracefully stopped using an exit signal.
+
+//Let's break down the code and its functionality:
+
+// 1. The `EvmRecorderService` struct contains a single field `thread_hdl` of type `JoinHandle<()>`, which represents a handle to the spawned thread responsible for processing EVM blocks.
+
+//2. The `new` function is an associated function of `EvmRecorderService` used to create a new instance of the service. It takes three parameters:
+//- `evm_recorder_receiver`: A receiver channel for receiving EVM blocks.
+//- `blockstore`: An atomic reference-counted pointer to a `Blockstore` instance, which is used to store EVM block headers and transactions.
+//- `exit`: An atomic boolean flag used to signal the service to gracefully exit.
+
+//3. Inside the `new` function, a new thread is spawned using `Builder::new().spawn(move || {...})`. The closure passed to `spawn` contains the main loop for processing incoming EVM blocks. The loop continues until the `exit` flag is set to true, at which point it breaks out of the loop and the thread terminates.
+
+//4. The `write_evm_record` function is a private helper function used to write EVM block headers and transactions to the blockstore. It takes two parameters:
+//- `evm_records_receiver`: A reference to the EVM block receiver channel.
+//- `blockstore`: An atomic reference-counted pointer to the `Blockstore` instance.
+
+//5. Inside the `write_evm_record` function, it attempts to receive an EVM block from the receiver channel with a timeout of 1 second using `recv_timeout`. If a block is received, it extracts the block header and transactions, and writes them to the blockstore using methods like `write_evm_block_header` and `write_evm_transaction`.
+
+//6. The `join` function is used to wait for the spawned thread to finish and retrieve the result. It returns a `thread::Result<()>`, indicating whether the thread has completed successfully or with an error.
+
 use crossbeam_channel::{Receiver, RecvTimeoutError, Sender};
 use nexis_ledger::blockstore::Blockstore;
 use std::{
