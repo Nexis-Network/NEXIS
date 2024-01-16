@@ -5,7 +5,7 @@
 
 - **Native Token**: Nexis (NZT)
 - **Symbol**: NZT
-- **Total Supply**: 420 Million
+- **Total Supply**: 550 Million
 - **Block Finality**: Approx. 400ms
 - **Consensus Mechanism**: Delegated Proof-of-Stake (DPoS)
 - **Networking Ports**: P2P (TBD), JSON-RPC (8899)
