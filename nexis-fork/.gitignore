@@ -1,0 +1,4 @@
+nexis-changes-remote-*-*.txt
+nexis-changes-*-*.txt
+# Just nexis-changes with prefix :^ - mean that this pathspec should be ignored
+pathspec-*-*.txt
