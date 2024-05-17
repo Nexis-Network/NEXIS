@@ -1163,7 +1163,7 @@ dependencies = [
  "ciborium",
  "clap 3.2.25",
  "criterion-plot",
- "itertools",
+ "itertools 0.10.5",
  "lazy_static",
  "num-traits",
  "oorandom",
@@ -1184,7 +1184,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6b50826342786a51a89e2da3a28f1c32b06e387201bc2d19791f622c673706b1"
 dependencies = [
  "cast 0.3.0",
- "itertools",
+ "itertools 0.10.5",
 ]
 
 [[package]]
@@ -1992,7 +1992,7 @@ dependencies = [
  "fixed-hash 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "hex",
  "impl-rlp 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "itertools",
+ "itertools 0.13.0",
  "keccak-hash",
  "lazy_static",
  "log 0.4.21",
@@ -2988,6 +2988,15 @@ name = "itertools"
 version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b0fd2260e829bddf4cb6ea802289de2f86d6a7a690192fbe91b3f46e0f2c8473"
+dependencies = [
+ "either",
+]
+
+[[package]]
+name = "itertools"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
 dependencies = [
  "either",
 ]
@@ -4598,7 +4607,7 @@ checksum = "62941722fb675d463659e49c4f3fe1fe792ff24fe5bbaa9c08cd3b98a1c354f5"
 dependencies = [
  "bytes 1.6.0",
  "heck 0.3.3",
- "itertools",
+ "itertools 0.10.5",
  "lazy_static",
  "log 0.4.21",
  "multimap",
@@ -4618,7 +4627,7 @@ checksum = "119533552c9a7ffacc21e099c24a0ac8bb19c2a2a3f363de84cd9b844feab270"
 dependencies = [
  "bytes 1.6.0",
  "heck 0.4.1",
- "itertools",
+ "itertools 0.10.5",
  "lazy_static",
  "log 0.4.21",
  "multimap",
@@ -4639,7 +4648,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f9cc1a3263e07e0bf68e96268f37665207b49560d98739662cdfaae215c720fe"
 dependencies = [
  "anyhow",
- "itertools",
+ "itertools 0.10.5",
  "proc-macro2 1.0.82",
  "quote 1.0.36",
  "syn 1.0.109",
@@ -4652,7 +4661,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e5d2d8d10f3c6ded6da8b05b5fb3b8a5082514344d56c9f871412d29b4e075b4"
 dependencies = [
  "anyhow",
- "itertools",
+ "itertools 0.10.5",
  "proc-macro2 1.0.82",
  "quote 1.0.36",
  "syn 1.0.109",
@@ -6509,7 +6518,7 @@ dependencies = [
  "fs_extra",
  "hex",
  "histogram",
- "itertools",
+ "itertools 0.13.0",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -6826,7 +6835,7 @@ dependencies = [
  "clap 2.34.0",
  "flate2",
  "indexmap 1.9.3",
- "itertools",
+ "itertools 0.13.0",
  "log 0.4.21",
  "lru",
  "matches",
@@ -6890,7 +6899,7 @@ dependencies = [
  "evm-state",
  "fs_extra",
  "futures 0.3.30",
- "itertools",
+ "itertools 0.13.0",
  "lazy_static",
  "libc",
  "log 0.4.21",
@@ -6946,7 +6955,7 @@ dependencies = [
  "evm-rpc",
  "evm-state",
  "histogram",
- "itertools",
+ "itertools 0.13.0",
  "log 0.4.21",
  "quickcheck 1.0.3",
  "quickcheck_macros 1.0.0",
@@ -6985,7 +6994,7 @@ dependencies = [
  "crossbeam-channel",
  "fs_extra",
  "gag",
- "itertools",
+ "itertools 0.13.0",
  "log 0.4.21",
  "rand 0.7.3",
  "rayon",
@@ -7208,7 +7217,7 @@ dependencies = [
  "console_log",
  "curve25519-dalek",
  "getrandom 0.1.16",
- "itertools",
+ "itertools 0.10.5",
  "js-sys",
  "lazy_static",
  "libsecp256k1",
@@ -7253,7 +7262,7 @@ dependencies = [
  "console_log",
  "curve25519-dalek",
  "getrandom 0.1.16",
- "itertools",
+ "itertools 0.10.5",
  "js-sys",
  "lazy_static",
  "libsecp256k1",
@@ -7284,7 +7293,7 @@ dependencies = [
  "base64 0.13.1",
  "bincode",
  "evm-state",
- "itertools",
+ "itertools 0.10.5",
  "libc",
  "libloading 0.7.4",
  "log 0.4.21",
@@ -7407,7 +7416,7 @@ dependencies = [
  "dashmap",
  "evm-rpc",
  "evm-state",
- "itertools",
+ "itertools 0.13.0",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -7512,7 +7521,7 @@ dependencies = [
  "flate2",
  "fnv",
  "index_list",
- "itertools",
+ "itertools 0.13.0",
  "lazy_static",
  "libsecp256k1",
  "log 0.4.21",
@@ -7578,7 +7587,7 @@ dependencies = [
  "generic-array 0.14.7",
  "hex",
  "hmac 0.11.0",
- "itertools",
+ "itertools 0.13.0",
  "js-sys",
  "keccak-hasher",
  "lazy_static",
@@ -7760,7 +7769,7 @@ dependencies = [
  "crossbeam-channel",
  "futures-util",
  "histogram",
- "itertools",
+ "itertools 0.13.0",
  "libc",
  "log 0.4.21",
  "nix 0.23.2",
